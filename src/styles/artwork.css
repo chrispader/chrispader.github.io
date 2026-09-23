@@ -13,6 +13,7 @@
 .stack-bottom-slab path:nth-child(3), .stack-top-slab path:nth-child(3) { fill: #e76547; }
 .stack-bottom-slab path, .stack-top-slab path { stroke: rgba(255,250,239,.82); stroke-width: .8; stroke-linejoin: round; }
 .stack-engraving { fill: none; stroke: rgba(255,250,239,.88); stroke-width: 1; stroke-linecap: round; }
+.stack-bottom-slab, .stack-top-slab, .stack-engraving { transform-box: fill-box; transform-origin: center; }
 .record-stage { position: absolute; inset: 0; display: grid; place-items: center; }
 .vinyl { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 50%; background: radial-gradient(circle, #302b33 0 4%, #101012 4.2% 15%, #27252b 15.3% 15.8%, #0e0e10 16% 28%, #242226 28.3% 29%, #0d0d0f 29.3% 100%); box-shadow: 0 12px 20px rgba(24,20,26,.2); transform: rotate(var(--record-angle, 0deg)); transition: transform 850ms cubic-bezier(.2,.7,.2,1); container-type: inline-size; }
 .vinyl.is-dragging { transition: none; }
@@ -36,11 +37,30 @@
 .paper-note p { max-width: 9ch; margin: auto 0; font: 36px/.88 var(--font-display, Georgia), Georgia, serif; }
 .note-star { align-self: flex-end; font-size: 25px; }
 .note-sign { font: 700 10px var(--font-mono, monospace); letter-spacing: .08em; }
+.artwork-workmark { container-type: inline-size; }
+.workmark { position: absolute; inset: 7% 5%; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 9%; border: 1px solid var(--ink, #22241f); border-radius: 52% 48% 48% 52% / 12% 14% 15% 12%; background: var(--lime, #d7fd6a); color: var(--ink, #22241f); box-shadow: 9px 13px 0 rgba(34,36,31,.13); transform: rotate(-7deg); }
+.workmark-blue .workmark { border-color: #2636a9; background: #3b56ef; color: #fffaf0; transform: rotate(8deg); }
+.workmark::before { content: ''; position: absolute; top: 27%; left: -10%; width: 120%; height: 52%; border: 1px solid currentColor; border-radius: 50%; transform: rotate(-19deg); opacity: .3; }
+.workmark__index, .workmark__date { position: relative; z-index: 1; font: 700 clamp(7px, 3cqw, 13px)/1.2 var(--font-mono, monospace); letter-spacing: .1em; }
+.workmark strong { position: relative; z-index: 1; align-self: center; font: italic 400 clamp(16px, 14cqw, 66px)/1 var(--font-display, Georgia), Georgia, serif; letter-spacing: -.06em; white-space: nowrap; }
+.workmark strong i { font-style: normal; }
+.workmark__orbit { position: absolute; z-index: 1; top: 14%; right: 10%; font: 400 clamp(15px, 13cqw, 56px)/1 var(--font-display, Georgia), Georgia, serif; }
+.workmark__date { align-self: flex-end; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .stack-layer, .postcard { transition: transform .28s cubic-bezier(.2,.75,.2,1); }
-  :is(a, button):hover .stack-layer-front, :is(a, button):focus-visible .stack-layer-front { transform: rotate(-13deg) skewY(-5deg) translateY(-8px) translateZ(15px); }
-  :is(a, button):hover .postcard, :is(a, button):focus-visible .postcard { transform: rotate(-2deg) translateY(-5px); }
+  .stack-bottom-slab, .stack-top-slab, .stack-engraving,
+  .postcard, .postcard-photo img, .paper-note, .note-star, .workmark, .workmark__orbit { transition: transform .36s cubic-bezier(.2,.75,.2,1); }
+  .collection-object__link:is(:hover, :focus-visible) .stack-bottom-slab { transform: translate(4px, 7px) rotate(2deg); }
+  .collection-object__link:is(:hover, :focus-visible) .stack-top-slab,
+  .collection-object__link:is(:hover, :focus-visible) .stack-engraving { transform: translate(-5px, -12px) rotate(-3deg); }
+  .collection-object__link:is(:hover, :focus-visible) .postcard { transform: rotate(-2deg) translateY(-7px); }
+  .collection-object__link:is(:hover, :focus-visible) .postcard-photo img { transform: scale(1.055); }
+  .collection-object__link:is(:hover, :focus-visible) .paper-note { transform: rotate(-3deg) translateY(-8px); }
+  .collection-object__link:is(:hover, :focus-visible) .note-star { transform: rotate(50deg) scale(1.2); }
+  .collection-object__link:is(:hover, :focus-visible) .workmark { transform: rotate(0deg) translateY(-8px); }
+  .collection-object__link:is(:hover, :focus-visible) .workmark__orbit { transform: translate(10px, -10px) rotate(45deg); }
+  .collection-object__link:is(:hover, :focus-visible) .vinyl { animation: record-groove 2.8s linear infinite; }
 }
+@keyframes record-groove { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .vinyl { transition: none; } }
 @media (max-width: 760px) { .graph-curve-shadow { stroke-width: 12px; } .graph-curve { stroke-width: 10px; } .graph-handle-marker { width: 10px; } }

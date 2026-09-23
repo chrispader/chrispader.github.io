@@ -47,7 +47,7 @@ export function ItemDetail({ item, onBack, shared = false }: Props) {
           {item.artwork.kind === 'graph'
             ? <div className="artwork artwork-graph"><GraphArtwork samples={graphSamples} progress={progress} onProgressChange={setProgress} /></div>
             : item.artwork.kind === 'record'
-              ? <div className="artwork artwork-record" role="img" aria-label={item.artwork.label} onPointerDown={beginRecordDrag} onPointerMove={moveRecord} onPointerUp={endRecord} onPointerCancel={endRecord} onLostPointerCapture={endRecord} style={{ cursor: dragging ? 'grabbing' : 'grab' }}><RecordArtwork angle={spin} dragging={dragging} /></div>
+              ? <div className={`artwork artwork-record${dragging ? ' is-dragging' : ''}`} role="img" aria-label={item.artwork.label} onPointerDown={beginRecordDrag} onPointerMove={moveRecord} onPointerUp={endRecord} onPointerCancel={endRecord} onLostPointerCapture={endRecord}><RecordArtwork angle={spin} dragging={dragging} /></div>
               : <Artwork artwork={item.artwork} interactive />}
         </motion.div>
         {item.artwork.kind === 'graph' && <div className="graph-scrubber"><label htmlFor="graph-progress">Explore the curve</label><input id="graph-progress" type="range" min="0" max="1000" value={Math.round(progress * 1000)} onChange={event => setProgress(Number(event.currentTarget.value) / 1000)} aria-label="Scrub the illustrative graph" aria-valuetext={`Sample ${Math.round(progress * 100)} percent; graph value ${Math.round(graphValue)} out of 100`} aria-describedby="graph-reading"/><output id="graph-reading">{graphValue.toFixed(1)}<span> / 100</span></output></div>}
@@ -63,5 +63,9 @@ export function ItemDetail({ item, onBack, shared = false }: Props) {
         {item.tags.length > 0 && <ul className="detail-tags" aria-label="Topics">{item.tags.map(tag => <li key={tag}>{tag}</li>)}</ul>}
       </div>
     </div>
+    {item.detail.highlights && <section className="detail-highlights" aria-labelledby="detail-highlights-heading">
+      <div className="detail-highlights__heading"><p className="detail-eyebrow">SELECTED PUBLIC WORK</p><h2 id="detail-highlights-heading">A few things I’ve shipped<span>.</span></h2><p>Selected pull requests from the public Expensify repositories.</p></div>
+      <div className="detail-highlights__list">{item.detail.highlights.map((highlight, index) => <a key={highlight.href} href={highlight.href} target="_blank" rel="noreferrer" className="detail-highlight"><span className="detail-highlight__number">{String(index + 1).padStart(2, '0')}</span><span className="detail-highlight__copy"><small>{highlight.meta}</small><strong>{highlight.title}</strong><span>{highlight.description}</span></span><span className="detail-highlight__arrow" aria-hidden="true">↗</span></a>)}</div>
+    </section>}
   </article>
 }

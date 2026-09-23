@@ -16,7 +16,7 @@ export function CollectionObject({ item, index, seed, onNavigate, placement }: P
   const pose = reducedMotion ? { x: 0, y: 0, rotate: 0 } : collectionPose(item.id, index, seed)
 
   return (
-    <article className={`collection-object collection-object--${placement} collection-object--${item.artwork.kind}`} data-item-id={item.id}>
+    <article className={`collection-object collection-object--${placement} collection-object--${item.artwork.kind}`} data-item-id={item.id} data-drift-layer={(index % 3) + 1}>
       <a
         id={`object-link-${item.id}`}
         className="collection-object__link"

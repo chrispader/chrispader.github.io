@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CollectionObject } from './CollectionObject'
-import { splitFeatured } from './layout'
+import { arrangeCollection } from './layout'
 import type { CollectionItem, Navigate } from './types'
 
 type Props = {
@@ -11,11 +11,55 @@ type Props = {
 
 export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
   const [seed, setSeed] = useState(0)
-  const { featured, continuation } = useMemo(() => splitFeatured(items, featuredIds), [items, featuredIds])
-  const order = new Map(items.map((item, index) => [item.id, index]))
+  const scene = useRef<HTMLElement>(null)
+  const { featured, continuation } = useMemo(() => arrangeCollection(items, featuredIds, seed), [items, featuredIds, seed])
+  const order = useMemo(() => new Map(items.map((item, index) => [item.id, index])), [items])
+
+  useEffect(() => {
+    const motionAllowed = window.matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)')
+    let frame = 0
+    let x = 0
+    let y = 0
+
+    function update() {
+      frame = 0
+      const style = scene.current?.style
+      if (!style) return
+      for (const [layer, distance] of [6, 10, 14].entries()) {
+        style.setProperty(`--drift-x-${layer + 1}`, `${(x * distance).toFixed(2)}px`)
+        style.setProperty(`--drift-y-${layer + 1}`, `${(y * distance * .75).toFixed(2)}px`)
+      }
+    }
+
+    function schedule(nextX: number, nextY: number) {
+      x = nextX
+      y = nextY
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+
+    function move(event: PointerEvent) {
+      if (!motionAllowed.matches || event.pointerType === 'touch') return
+      schedule((event.clientX / window.innerWidth) * 2 - 1, (event.clientY / window.innerHeight) * 2 - 1)
+    }
+
+    function reset() { schedule(0, 0) }
+    function leave(event: PointerEvent) { if (!event.relatedTarget) reset() }
+
+    window.addEventListener('pointermove', move, { passive: true })
+    window.addEventListener('pointerout', leave)
+    window.addEventListener('blur', reset)
+    motionAllowed.addEventListener('change', reset)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerout', leave)
+      window.removeEventListener('blur', reset)
+      motionAllowed.removeEventListener('change', reset)
+    }
+  }, [])
 
   return (
-    <main className="collection-scene" id="main">
+    <main className="collection-scene" id="main" ref={scene}>
       <section className="collection-opening" aria-labelledby="collection-heading">
         <svg className="collection-thread" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
           <path d="M170 155 C100 260 130 285 255 330 S310 450 365 510 S565 740 755 580 S960 460 1080 520" />
@@ -25,8 +69,11 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
           <h1 id="collection-heading" tabIndex={-1}>A work<br />in play.</h1>
           <p>Pick something up. See where it goes.</p>
           <div className="collection-hero__actions">
-            <button className="collection-shuffle" type="button" aria-label="Rearrange objects" onClick={() => setSeed((value) => value + 1)}><span aria-hidden="true">+</span></button>
-            <span className="collection-shuffle-hint">a different<br />perspective ↗</span>
+            <button className="collection-shuffle" type="button" aria-label="Rearrange objects" onClick={() => setSeed((value) => value + 1)}>
+              <span className="collection-shuffle__icon" aria-hidden="true" style={{ transform: `rotate(${seed * 90}deg)` }}>+</span>
+              <span className="collection-shuffle__copy"><small>GIVE IT A SHAKE</small><strong>Change perspective</strong></span>
+              <span className="collection-shuffle__arrow" aria-hidden="true">↗</span>
+            </button>
             {seed > 0 && <button className="collection-reset" type="button" onClick={() => setSeed(0)}>Reset arrangement</button>}
           </div>
         </div>

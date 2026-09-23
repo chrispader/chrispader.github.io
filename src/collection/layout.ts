@@ -33,14 +33,29 @@ export function splitFeatured(items: readonly CollectionItem[], featuredIds: rea
   return { featured, continuation: items.filter((item) => !selected.has(item.id)) }
 }
 
+export function arrangeCollection(items: readonly CollectionItem[], featuredIds: readonly string[], seed: number) {
+  const { featured, continuation } = splitFeatured(items, featuredIds)
+  if (seed === 0 || items.length < 2) return { featured, continuation }
+
+  const ordered = [...featured, ...continuation]
+  const offset = ((seed - 1) % (ordered.length - 1)) + 1
+  const rearranged = [...ordered.slice(offset), ...ordered.slice(0, offset)]
+  return { featured: rearranged.slice(0, 4), continuation: rearranged.slice(4) }
+}
+
 export function collectionPose(id: string, index: number, seed: number): CollectionPose {
-  const baseline = [-7, 5, 6, -5][index % 4]
-  if (seed === 0) return { x: 0, y: 0, rotate: baseline }
+  const baseline = [
+    { x: -12, y: -10, rotate: -9 },
+    { x: 12, y: 9, rotate: 8 },
+    { x: -10, y: 12, rotate: 10 },
+    { x: 11, y: -9, rotate: -8 },
+  ][index % 4]
+  if (seed === 0) return baseline
   const random = seededRandom(`${id}:${seed}`)
   return {
-    x: Math.round((random() * 2 - 1) * 8),
-    y: Math.round((random() * 2 - 1) * 8),
-    rotate: Math.round((baseline + (random() * 2 - 1) * 5) * 10) / 10,
+    x: Math.round((random() * 2 - 1) * 13),
+    y: Math.round((random() * 2 - 1) * 13),
+    rotate: Math.round((baseline.rotate + (random() * 2 - 1) * 4) * 10) / 10,
   }
 }
 

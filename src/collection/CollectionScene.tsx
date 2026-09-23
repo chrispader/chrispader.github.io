@@ -58,6 +58,39 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
     }
   }, [])
 
+  useEffect(() => {
+    const touchMotion = window.matchMedia('(pointer: coarse) and (prefers-reduced-motion: no-preference)')
+    let frame = 0
+
+    function update() {
+      frame = 0
+      const objects = scene.current?.querySelectorAll<HTMLElement>('.collection-object')
+      if (!objects) return
+      const middle = window.innerHeight / 2
+      for (const object of objects) {
+        const rect = object.getBoundingClientRect()
+        const distance = (rect.top + rect.height / 2 - middle) / middle
+        const offset = touchMotion.matches ? Math.max(-13, Math.min(13, distance * -13)) : 0
+        object.style.setProperty('--scroll-y', `${offset.toFixed(1)}px`)
+      }
+    }
+
+    function schedule() {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+
+    schedule()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    touchMotion.addEventListener('change', schedule)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      touchMotion.removeEventListener('change', schedule)
+    }
+  }, [seed, items])
+
   return (
     <main className="collection-scene" id="main" ref={scene}>
       <section className="collection-gallery" aria-labelledby="collection-heading">

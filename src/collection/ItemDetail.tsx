@@ -22,10 +22,10 @@ export function ItemDetail({ item, onBack, shared = false }: Props) {
   }, [])
 
   function beginRecordDrag(event: PointerEvent<HTMLDivElement>) {
-    if (reducedMotion || event.pointerType === 'touch' || event.button !== 0) return
+    if (reducedMotion || event.button !== 0) return
     dragStart.current = { pointerId: event.pointerId, x: event.clientX, angle: spin, element: event.currentTarget }
     event.currentTarget.setPointerCapture(event.pointerId)
-    event.preventDefault()
+    if (event.pointerType !== 'touch') event.preventDefault()
     setDragging(true)
   }
   function moveRecord(event: PointerEvent<HTMLDivElement>) {

@@ -136,7 +136,8 @@
 .collection-object[data-drift-layer='2'] { --drift-x: var(--drift-x-2); --drift-y: var(--drift-y-2); }
 .collection-object[data-drift-layer='3'] { --drift-x: var(--drift-x-3); --drift-y: var(--drift-y-3); }
 .collection-object:hover, .collection-object:focus-within { position: relative; z-index: 2; }
-.collection-object__link { display: block; width: 100%; min-height: 44px; color: inherit; transform: translate3d(var(--drift-x, 0px), var(--drift-y, 0px), 0); transition: transform .28s ease; }
+.collection-object__link { display: block; width: 100%; min-height: 44px; color: inherit; touch-action: pan-y; transform: translate3d(calc(var(--drift-x, 0px) + var(--touch-x, 0px)), calc(var(--drift-y, 0px) + var(--scroll-y, 0px)), 0) rotate(var(--touch-rotate, 0deg)); transition: transform .28s ease; }
+.collection-object__link[data-touch-dragging='true'] { transition: none; }
 .collection-object__link:focus-visible { outline: 2px solid var(--collection-ink); outline-offset: 4px; }
 .collection-object__envelope {
   display: grid;

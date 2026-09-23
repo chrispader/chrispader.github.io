@@ -121,6 +121,19 @@ test('all six authored objects share the main collection and Off the clock links
   await expect(page.locator('.detail-prose')).toContainText('running')
   await expect(page.locator('.detail-prose')).toContainText('gym')
   await expect(page.getByRole('link', { name: 'See what I’m reading' })).toHaveAttribute('href', 'https://goodreads.com/chrispader')
+  const helloLink = page.locator('.detail-links').getByRole('link', { name: 'Say hello', exact: true })
+  await expect(helloLink).toHaveAttribute('href', '#/contact')
+  await helloLink.click()
+  await expect(page).toHaveURL(/#\/contact$/)
+  await expect(page.getByRole('heading', { name: /Got a good feeling/ })).toBeVisible()
+})
+
+test('native detail explains the library work and NitroFetch integration', async ({ page }) => {
+  await page.goto('/#/item/native')
+  await expect(page.locator('.detail-prose')).toContainText('I work on React Native libraries at Margelo')
+  await expect(page.locator('.detail-prose')).toContainText('I integrated NitroFetch into Expensify')
+  await expect(page.locator('.detail-prose')).toContainText('I wrote a detailed post')
+  await expect(page.getByRole('link', { name: 'Read the NitroFetch story' })).toHaveAttribute('href', 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch')
 })
 
 test('GitHub and Twitter are linked in the header and about detail', async ({ page }) => {

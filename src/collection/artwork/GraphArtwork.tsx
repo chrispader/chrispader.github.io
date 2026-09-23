@@ -32,7 +32,7 @@ export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props)
   }, [reducedMotion])
 
   function trackHover(event: PointerEvent<HTMLDivElement>) {
-    if (onProgressChange || reducedMotion || event.pointerType === 'touch') return
+    if (onProgressChange || reducedMotion) return
     const bounds = event.currentTarget.getBoundingClientRect()
     if (!bounds.width || !bounds.height) return
     waveX.current = clamp((event.clientX - bounds.left) / bounds.width) * 100
@@ -104,16 +104,20 @@ export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props)
   return <div className="graph-artwork-interaction"
     onPointerEnter={trackHover}
     onPointerDown={event => {
-      if (!onProgressChange || event.button !== 0) return
+      if (!onProgressChange) {
+        trackHover(event)
+        return
+      }
+      if (event.button !== 0) return
       pointerId.current = event.pointerId
       event.currentTarget.setPointerCapture(event.pointerId)
-      event.preventDefault()
+      if (event.pointerType !== 'touch') event.preventDefault()
       scrub(event)
     }}
     onPointerMove={event => { if (pointerId.current === event.pointerId) scrub(event); else trackHover(event) }}
     onPointerLeave={stopWave}
-    onPointerUp={event => finishPointer(event)}
-    onPointerCancel={event => finishPointer(event)}
+    onPointerUp={event => { finishPointer(event); if (event.pointerType === 'touch') stopWave() }}
+    onPointerCancel={event => { finishPointer(event); stopWave() }}
     onLostPointerCapture={event => { if (pointerId.current === event.pointerId) pointerId.current = null }}>
     <svg viewBox="-8 -8 116 116" preserveAspectRatio="none" className="graph-drawing" aria-hidden="true">
       <path className="graph-grid" d="M0 20H100M0 40H100M0 60H100M0 80H100M20 0V100M40 0V100M60 0V100M80 0V100" />

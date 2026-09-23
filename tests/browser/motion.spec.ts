@@ -145,6 +145,26 @@ test('every detail artwork reacts to a tap', async ({ page }) => {
   expect(Number(await page.getByRole('slider').inputValue())).toBeLessThan(250)
 })
 
+test('the stack engraving follows the upper slab in the detail view', async ({ page }) => {
+  await page.goto('/#/item/native')
+  const art = page.getByRole('button', { name: 'Lift the layers' })
+  await art.click()
+  await expect(art).toHaveAttribute('aria-pressed', 'true')
+
+  await expect.poll(() => art.evaluate((button) => {
+    const slab = button.querySelector('.stack-top-slab > path')
+    const engraving = button.querySelector('.stack-engraving > path')
+    if (!(slab instanceof SVGPathElement) || !(engraving instanceof SVGPathElement)) return false
+    const slabMatrix = slab.getScreenCTM()
+    const engravingMatrix = engraving.getScreenCTM()
+    if (!slabMatrix || !engravingMatrix) return false
+    const matrixKeys = ['a', 'b', 'c', 'd', 'e', 'f'] as const
+    return matrixKeys.every((key) =>
+      Math.abs(slabMatrix[key] - engravingMatrix[key]) < .01,
+    ) && getComputedStyle(engraving).stroke !== 'none'
+  })).toBe(true)
+})
+
 async function documentBox(locator: Locator) {
   return locator.evaluate((element) => {
     const box = element.getBoundingClientRect()

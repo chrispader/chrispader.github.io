@@ -1,5 +1,6 @@
 import { useMemo, useState, type MouseEvent } from 'react'
 import { Artwork } from './Artwork'
+import { ArrowUpRight } from './ArrowUpRight'
 import type { CollectionItem, Navigate } from './types'
 
 type Props = { items: readonly CollectionItem[]; onNavigate: Navigate; onBack: () => void; missingId?: string; query?: string; onQueryChange?: (value: string) => void }
@@ -31,7 +32,7 @@ export function CollectionIndex({ items, onNavigate, onBack, missingId, query: c
       <span className="index-count">{String(index + 1).padStart(2, '0')}</span>
       <span className="index-art"><Artwork artwork={item.artwork} /></span>
       <span className="index-row-copy"><span className="index-row-title">{item.title}</span><span className="index-row-teaser">{item.teaser}</span><span className="index-row-tags">{item.tags.join(' · ')}</span></span>
-      <span className="index-arrow" aria-hidden="true">↗</span>
+      <span className="index-arrow"><ArrowUpRight /></span>
     </a>)}{filteredItems.length === 0 && <p className="index-empty">Nothing here by that name. Try another word.</p>}</div>
     <p className="index-endnote">{filteredItems.length} {filteredItems.length === 1 ? 'object' : 'objects'}, still in progress.</p>
   </section>

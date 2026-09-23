@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
 import { CollectionObject } from './CollectionObject'
+import { ArrowUpRight } from './ArrowUpRight'
 import { arrangeCollection } from './layout'
 import type { CollectionItem, Navigate } from './types'
 
@@ -11,6 +13,7 @@ type Props = {
 
 export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
   const [seed, setSeed] = useState(0)
+  const reducedMotion = useReducedMotion()
   const scene = useRef<HTMLElement>(null)
   const { featured, continuation } = useMemo(() => arrangeCollection(items, featuredIds, seed), [items, featuredIds, seed])
   const order = useMemo(() => new Map(items.map((item, index) => [item.id, index])), [items])
@@ -94,6 +97,9 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
   return (
     <main className="collection-scene" id="main" ref={scene}>
       <section className="collection-gallery" aria-labelledby="collection-heading">
+        <div className="collection-shuffle-dock">
+          <ShuffleButton seed={seed} onClick={() => setSeed((value) => value + 1)} />
+        </div>
         <div className="collection-opening" data-object-count={featured.length}>
           <svg className="collection-thread" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
             <path d="M170 155 C100 260 130 285 255 330 S310 450 365 510 S565 740 755 580 S960 460 1080 520" />
@@ -103,18 +109,14 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
             <h1 id="collection-heading" tabIndex={-1}>A work<br />in play.</h1>
             <p>Pick something up. See where it goes.</p>
             <div className="collection-hero__actions">
-              <button className="collection-shuffle" type="button" aria-label="Rearrange objects" onClick={() => setSeed((value) => value + 1)}>
-                <span className="collection-shuffle__icon" aria-hidden="true" style={{ transform: `rotate(${seed * 90}deg)` }}>+</span>
-                <span className="collection-shuffle__copy"><small>GIVE IT A SHAKE</small><strong>Change perspective</strong></span>
-                <span className="collection-shuffle__arrow" aria-hidden="true">↗</span>
-              </button>
-              {seed > 0 && <button className="collection-reset" type="button" aria-label="Reset arrangement" onClick={() => setSeed(0)}>Reset</button>}
+              <ShuffleButton seed={seed} onClick={() => setSeed((value) => value + 1)} desktop />
+              <button className="collection-reset" type="button" aria-label="Reset arrangement" aria-hidden={seed === 0} data-visible={seed > 0} disabled={seed === 0} onClick={() => setSeed(0)}>Reset</button>
             </div>
           </div>
           {featured.map((item, index) => (
-            <div className={`collection-opening__slot collection-opening__slot--${index + 1}`} key={item.id}>
+            <motion.div className={`collection-opening__slot collection-opening__slot--${index + 1}`} key={item.id} layout={!reducedMotion && 'position'} transition={{ duration: .72, ease: [.22, 1, .36, 1] }}>
               <CollectionObject item={item} index={order.get(item.id) ?? index} seed={seed} onNavigate={onNavigate} placement="featured" />
-            </div>
+            </motion.div>
           ))}
         </div>
         {continuation.length > 0 && (
@@ -126,5 +128,15 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
         )}
       </section>
     </main>
+  )
+}
+
+function ShuffleButton({ seed, onClick, desktop = false }: { seed: number; onClick: () => void; desktop?: boolean }) {
+  return (
+    <button className={`collection-shuffle${desktop ? ' collection-shuffle--desktop' : ''}`} type="button" aria-label="Rearrange objects" onClick={onClick}>
+      <span className="collection-shuffle__icon" aria-hidden="true" style={{ transform: `rotate(${seed * 90}deg)` }}>+</span>
+      <span className="collection-shuffle__copy"><small>GIVE IT A SHAKE</small><strong>Change perspective</strong></span>
+      <span className="collection-shuffle__arrow"><ArrowUpRight /></span>
+    </button>
   )
 }

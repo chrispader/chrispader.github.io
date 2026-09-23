@@ -73,9 +73,9 @@ export function CollectionObject({ item, index, seed, onNavigate, placement }: P
             animate={pose}
             transition={reducedMotion ? { duration: 0 } : { duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
           >
-            <motion.div className="collection-object__art" data-art-frame layoutId={`object-${item.id}`}>
+            <div className="collection-object__art" data-art-frame>
               <Artwork artwork={item.artwork} />
-            </motion.div>
+            </div>
           </motion.div>
         </div>
         <span className="collection-object__caption">

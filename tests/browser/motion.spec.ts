@@ -28,7 +28,7 @@ test('first detail openings and returns keep artwork in place', async ({ page })
   }
 })
 
-test('mobile arrangement is staggered and reset stays on the viewport edge', async ({ page }, testInfo) => {
+test('mobile arrangement is staggered while shuffle follows the header', async ({ page }, testInfo) => {
   await page.goto('/')
   await page.evaluate(() => document.fonts.ready)
   const tops = await page.locator('.collection-opening__slot').evaluateAll((slots) => slots.map((slot) => slot.getBoundingClientRect().top))
@@ -38,20 +38,33 @@ test('mobile arrangement is staggered and reset stays on the viewport edge', asy
   await page.screenshot({ path: testInfo.outputPath('staggered-mobile.png'), fullPage: true })
 
   const originalOrder = await page.locator('[data-item-id]').evaluateAll((items) => items.map((item) => item.getAttribute('data-item-id')))
-  await page.getByRole('button', { name: 'Rearrange objects' }).tap()
+  const shuffle = page.getByRole('button', { name: 'Rearrange objects' })
+  const header = page.locator('.site-header')
+  const initialShuffle = await shuffle.boundingBox()
+  const headerBox = await header.boundingBox()
+  expect(initialShuffle).not.toBeNull()
+  expect(headerBox).not.toBeNull()
+  expect(initialShuffle!.y).toBeGreaterThan(headerBox!.height)
+
+  await shuffle.tap()
   const shuffledOrder = await page.locator('[data-item-id]').evaluateAll((items) => items.map((item) => item.getAttribute('data-item-id')))
   expect(shuffledOrder).not.toEqual(originalOrder)
   const reset = page.getByRole('button', { name: 'Reset arrangement' })
-  await expect(reset).toHaveCSS('position', 'fixed')
-  const before = await reset.boundingBox()
-  expect(before).not.toBeNull()
-  expect(before!.x + before!.width).toBeGreaterThan(380)
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0)
-  const after = await reset.boundingBox()
-  expect(after).not.toBeNull()
-  expect(Math.abs(after!.y - before!.y)).toBeLessThan(2)
-  await page.screenshot({ path: testInfo.outputPath('mobile-reset-tab.png') })
+  await expect(reset).not.toHaveCSS('position', 'fixed')
+  const resetBefore = await reset.boundingBox()
+  await page.screenshot({ path: testInfo.outputPath('mobile-reset-inline.png') })
+
+  await page.evaluate(() => window.scrollTo(0, 350))
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(250)
+  const stickyShuffle = await shuffle.boundingBox()
+  const resetAfter = await reset.boundingBox()
+  expect(stickyShuffle).not.toBeNull()
+  expect(resetAfter).not.toBeNull()
+  expect(Math.abs(stickyShuffle!.y - (headerBox!.height - stickyShuffle!.height / 2))).toBeLessThan(3)
+  expect(resetAfter!.y).toBeLessThan(resetBefore!.y - 250)
+  await page.screenshot({ path: testInfo.outputPath('mobile-sticky-shuffle.png') })
+
+  await page.evaluate(() => window.scrollTo(0, 0))
   await reset.tap()
   await expect(reset).toHaveCount(0)
   await expect.poll(() => page.locator('[data-item-id]').evaluateAll((items) => items.map((item) => item.getAttribute('data-item-id')))).toEqual(originalOrder)
@@ -65,6 +78,71 @@ test('work cards and header use drawn arrows', async ({ page }) => {
     expect(await arrow.textContent()).toBe('')
   }
   await expect(page.locator('.site-nav__arrow')).toHaveCount(1)
+  const shuffleArrow = page.locator('.collection-shuffle--desktop .collection-shuffle__arrow')
+  await expect(shuffleArrow.locator('svg')).toHaveCount(1)
+  expect(await shuffleArrow.textContent()).toBe('')
+})
+
+test('shuffling keeps the mobile page width and objects stable through the animation', async ({ page }) => {
+  for (const count of [6, 30]) {
+    await page.goto(`/?previewItems=${count}`)
+    await page.evaluate(() => document.fonts.ready)
+    const result = await page.evaluate(async () => {
+      const shuffle = document.querySelector<HTMLButtonElement>('.collection-shuffle-dock .collection-shuffle')
+      if (!shuffle) throw new Error('Missing mobile shuffle button')
+      const widths: number[] = []
+      const counts: number[] = []
+      const opacity: number[] = []
+      for (let turn = 0; turn < 3; turn += 1) {
+        shuffle.click()
+        await new Promise<void>((resolve) => {
+          const end = performance.now() + 800
+          function sample() {
+            widths.push(document.documentElement.scrollWidth)
+            counts.push(document.querySelectorAll('[data-item-id]').length)
+            opacity.push(Number(getComputedStyle(document.querySelector('.collection-layer')!).opacity))
+            if (performance.now() < end) requestAnimationFrame(sample)
+            else resolve()
+          }
+          requestAnimationFrame(sample)
+        })
+      }
+      return { viewport: document.documentElement.clientWidth, maxWidth: Math.max(...widths), minCount: Math.min(...counts), minOpacity: Math.min(...opacity) }
+    })
+    expect(result.maxWidth).toBeLessThanOrEqual(result.viewport + 1)
+    expect(result.minCount).toBe(count)
+    expect(result.minOpacity).toBe(1)
+  }
+})
+
+test('every detail artwork reacts to a tap', async ({ page }) => {
+  for (const [id, label, target] of [
+    ['about', 'Tilt the portrait', '.postcard'],
+    ['native', 'Lift the layers', '.stack-top-slab'],
+    ['margelo', 'Turn the work badge', '.workmark'],
+    ['expensify', 'Turn the work badge', '.workmark'],
+    ['example-11', 'Turn the note', '.paper-note'],
+  ] as const) {
+    await page.goto(`/?previewItems=16#/item/${id}`)
+    const art = page.getByRole('button', { name: label })
+    const before = await art.locator(target).evaluate((element) => getComputedStyle(element).transform)
+    await art.tap()
+    await expect(art).toHaveAttribute('aria-pressed', 'true')
+    await expect.poll(() => art.locator(target).evaluate((element) => getComputedStyle(element).transform)).not.toBe(before)
+    await art.tap()
+    await expect(art).toHaveAttribute('aria-pressed', 'false')
+  }
+
+  await page.goto('/#/item/record')
+  await page.getByRole('button', { name: 'Play the record artwork' }).tap()
+  await expect(page.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '540deg')
+
+  await page.goto('/#/item/graph')
+  const graph = page.locator('.detail-art-wrap .graph-artwork-interaction')
+  const size = await graph.boundingBox()
+  expect(size).not.toBeNull()
+  await graph.tap({ position: { x: size!.width * .2, y: size!.height * .5 } })
+  expect(Number(await page.getByRole('slider').inputValue())).toBeLessThan(250)
 })
 
 async function documentBox(locator: Locator) {

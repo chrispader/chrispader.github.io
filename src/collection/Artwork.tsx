@@ -17,6 +17,7 @@ export function Artwork({ artwork, interactive = false }: Props) {
     case 'record': return <div className="artwork artwork-record" {...common}><RecordArtwork /></div>
     case 'portrait': return <div className="artwork artwork-portrait" {...common}><PortraitArtwork {...artwork} /></div>
     case 'note': return <div className={`artwork artwork-note note-${artwork.color}`} {...common}><NoteArtwork text={artwork.text} /></div>
+    case 'workmark': return <div className={`artwork artwork-workmark workmark-${artwork.color}`} {...common}><div className="workmark"><span className="workmark__index">CP / WORK</span><strong>{artwork.name}<i>.</i></strong><span className="workmark__orbit" aria-hidden="true">↗</span><span className="workmark__date">SINCE {artwork.since}</span></div></div>
     default: {
       const exhaustive: never = artwork
       return exhaustive
@@ -31,6 +32,7 @@ function artworkLabel(artwork: ArtworkData) {
     case 'record': return artwork.label
     case 'portrait': return artwork.alt
     case 'note': return artwork.text
+    case 'workmark': return `${artwork.name}, since ${artwork.since}`
     default: {
       const exhaustive: never = artwork
       return exhaustive

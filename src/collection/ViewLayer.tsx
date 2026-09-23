@@ -21,7 +21,7 @@ export function ViewLayer({ children, elementRef, onScroll, onBack }: Props) {
       layoutRoot
       layoutScroll
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 1, pointerEvents: 'auto' }}
       exit={{ opacity: 0, pointerEvents: 'none' }}
       transition={{ duration: reducedMotion ? 0 : .2 }}
       onScroll={(event) => onScroll(event.currentTarget.scrollTop)}

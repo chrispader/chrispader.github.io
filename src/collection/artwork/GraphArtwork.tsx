@@ -1,4 +1,5 @@
-import { useRef, type PointerEvent } from 'react'
+import { useEffect, useRef, type PointerEvent } from 'react'
+import { useReducedMotion } from 'motion/react'
 
 type GraphPoint = { x: number; y: number; value: number }
 type Props = { samples: readonly number[]; progress?: number; onProgressChange?: (progress: number) => void }
@@ -8,9 +9,83 @@ const GRAPH_VIEWBOX_SIZE = 116
 
 export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props) {
   const pointerId = useRef<number | null>(null)
+  const waveFrame = useRef(0)
+  const waveX = useRef(50)
+  const waveY = useRef(50)
+  const waveStrength = useRef(0)
+  const lastFrame = useRef(0)
+  const hovering = useRef(false)
+  const curvePath = useRef<SVGPathElement>(null)
+  const shadowPath = useRef<SVGPathElement>(null)
+  const marker = useRef<HTMLSpanElement>(null)
+  const reducedMotion = useReducedMotion()
   const points = getPoints(samples)
   const curve = makeCurve(points)
   const handle = sampleGraphCurve(samples, progress)
+
+  useEffect(() => {
+    if (reducedMotion) resetWave()
+    return () => {
+      cancelAnimationFrame(waveFrame.current)
+      waveFrame.current = 0
+    }
+  }, [reducedMotion])
+
+  function trackHover(event: PointerEvent<HTMLDivElement>) {
+    if (onProgressChange || reducedMotion) return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    if (!bounds.width || !bounds.height) return
+    waveX.current = clamp((event.clientX - bounds.left) / bounds.width) * 100
+    waveY.current = clamp((event.clientY - bounds.top) / bounds.height) * 100
+    hovering.current = true
+    if (!waveFrame.current) waveFrame.current = requestAnimationFrame(animateWave)
+  }
+
+  function animateWave(time: number) {
+    waveFrame.current = 0
+    const elapsed = Math.min(64, time - (lastFrame.current || time - 16))
+    lastFrame.current = time
+    const response = 1 - Math.exp(-elapsed / (hovering.current ? 85 : 170))
+    waveStrength.current += ((hovering.current ? 1 : 0) - waveStrength.current) * response
+    if (!hovering.current && waveStrength.current < .015) {
+      resetWave()
+      return
+    }
+
+    const wave = makeSnakeCurve(samples, waveX.current, waveY.current, time, waveStrength.current)
+    curvePath.current?.setAttribute('d', wave.path)
+    shadowPath.current?.setAttribute('d', wave.path)
+    if (marker.current) {
+      const markerX = handle.x + (waveX.current - handle.x) * waveStrength.current
+      const markerY = handle.y + (wave.y - handle.y) * waveStrength.current
+      marker.current.style.left = `${((markerX + 8) / GRAPH_VIEWBOX_SIZE) * 100}%`
+      marker.current.style.top = `${((markerY + 8) / GRAPH_VIEWBOX_SIZE) * 100}%`
+    }
+    waveFrame.current = requestAnimationFrame(animateWave)
+  }
+
+  function stopWave() {
+    hovering.current = false
+    if (reducedMotion || waveStrength.current === 0) {
+      resetWave()
+      return
+    }
+    if (!waveFrame.current) waveFrame.current = requestAnimationFrame(animateWave)
+  }
+
+  function resetWave() {
+    hovering.current = false
+    cancelAnimationFrame(waveFrame.current)
+    waveFrame.current = 0
+    waveStrength.current = 0
+    lastFrame.current = 0
+    curvePath.current?.setAttribute('d', curve)
+    shadowPath.current?.setAttribute('d', curve)
+    if (marker.current) {
+      marker.current.style.left = `${((handle.x + 8) / GRAPH_VIEWBOX_SIZE) * 100}%`
+      marker.current.style.top = `${((handle.y + 8) / GRAPH_VIEWBOX_SIZE) * 100}%`
+    }
+  }
 
   function scrub(event: PointerEvent<HTMLDivElement>) {
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -27,24 +102,45 @@ export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props)
   }
 
   return <div className="graph-artwork-interaction"
+    onPointerEnter={trackHover}
     onPointerDown={event => {
-      if (!onProgressChange || event.button !== 0) return
+      if (!onProgressChange) {
+        trackHover(event)
+        return
+      }
+      if (event.button !== 0) return
       pointerId.current = event.pointerId
       event.currentTarget.setPointerCapture(event.pointerId)
-      event.preventDefault()
+      if (event.pointerType !== 'touch') event.preventDefault()
       scrub(event)
     }}
-    onPointerMove={event => { if (pointerId.current === event.pointerId) scrub(event) }}
-    onPointerUp={event => finishPointer(event)}
-    onPointerCancel={event => finishPointer(event)}
+    onPointerMove={event => { if (pointerId.current === event.pointerId) scrub(event); else trackHover(event) }}
+    onPointerLeave={stopWave}
+    onPointerUp={event => { finishPointer(event); if (event.pointerType === 'touch') stopWave() }}
+    onPointerCancel={event => { finishPointer(event); stopWave() }}
     onLostPointerCapture={event => { if (pointerId.current === event.pointerId) pointerId.current = null }}>
     <svg viewBox="-8 -8 116 116" preserveAspectRatio="none" className="graph-drawing" aria-hidden="true">
       <path className="graph-grid" d="M0 20H100M0 40H100M0 60H100M0 80H100M20 0V100M40 0V100M60 0V100M80 0V100" />
-      <path className="graph-curve-shadow" d={curve} pathLength="100" />
-      <path className="graph-curve" d={curve} pathLength="100" />
+      <path ref={shadowPath} className="graph-curve-shadow" d={curve} pathLength="100" />
+      <path ref={curvePath} className="graph-curve" d={curve} pathLength="100" />
     </svg>
-    <span className="graph-handle-marker" aria-hidden="true" style={{ left: `${((handle.x + 8) / GRAPH_VIEWBOX_SIZE) * 100}%`, top: `${((handle.y + 8) / GRAPH_VIEWBOX_SIZE) * 100}%` }} />
+    <span ref={marker} className="graph-handle-marker" aria-hidden="true" style={{ left: `${((handle.x + 8) / GRAPH_VIEWBOX_SIZE) * 100}%`, top: `${((handle.y + 8) / GRAPH_VIEWBOX_SIZE) * 100}%` }} />
   </div>
+}
+
+function makeSnakeCurve(samples: readonly number[], hoverX: number, hoverY: number, time: number, strength: number) {
+  const points = Array.from({ length: 51 }, (_, index) => {
+    const x = index * 2
+    const baseline = sampleGraphCurve(samples, x / 100).y
+    const distance = (x - hoverX) / 28
+    const influence = Math.exp(-distance * distance)
+    const ripple = Math.sin(x * .21 - time * .008) * 10 * influence * strength
+    const pull = (hoverY - baseline) * .16 * influence * strength
+    return { x, y: Math.max(6, Math.min(94, baseline + ripple + pull)) }
+  })
+  const path = points.map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x},${point.y.toFixed(2)}`).join(' ')
+  const markerIndex = Math.round(hoverX / 2)
+  return { path, y: points[markerIndex].y }
 }
 
 export function sampleGraphCurve(samples: readonly number[], progress: number): GraphPoint {

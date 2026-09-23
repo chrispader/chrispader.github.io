@@ -4,6 +4,7 @@ export type Artwork =
   | { kind: 'record'; label: string }
   | { kind: 'portrait'; src: string; alt: string; caption: string }
   | { kind: 'note'; text: string; color: 'lime' | 'violet' | 'orange' }
+  | { kind: 'workmark'; name: string; since: string; color: 'lime' | 'blue' }
 
 export type CollectionItem = {
   id: string
@@ -16,6 +17,7 @@ export type CollectionItem = {
     eyebrow: string
     paragraphs: readonly string[]
     links: readonly { label: string; href: string }[]
+    highlights?: readonly { title: string; description: string; meta: string; href: string }[]
   }
 }
 

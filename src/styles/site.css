@@ -9,6 +9,8 @@
 .site-nav a { font-size: 13px; min-height: 44px; display: inline-flex; align-items: center; gap: 6px; position: relative; }
 .site-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 8px; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 180ms ease; }
 .site-nav a:hover::after, .site-nav a[aria-current='page']::after { transform: scaleX(1); }
+.site-nav .site-nav__social { justify-content: center; width: 36px; gap: 0; }
+.site-nav__social svg { width: 18px; height: 18px; flex: none; }
 .site-footer { display: flex; justify-content: space-between; gap: 20px; width: min(100% - 112px, 1328px); margin: 0 auto; padding: 28px 0 36px; color: var(--muted); font: 10px var(--font-mono); }
 .site-footer span { white-space: nowrap; }
 .collection-layer { transition: opacity 180ms ease; }
@@ -30,13 +32,19 @@
   .brand-caption { display: none; }
   .brand-name { font-size: 10px; }
   .brand-location { font-size: 7px; }
-  .site-nav { gap: 18px; }
+  .site-nav { gap: 10px; }
   .site-nav a { font-size: 11px; }
+  .site-nav .site-nav__social { width: 30px; }
   .view-layer { padding: 8px 24px 0; }
   .site-footer { font-size: 8px; padding-block: 24px; }
 }
 @media (max-width: 370px) {
   .brand-caption { display: none; }
+  .site-header { gap: 6px; }
+  .brand-mark { font-size: 32px; }
+  .site-nav { gap: 6px; }
+  .site-nav a { font-size: 10px; }
+  .site-nav .site-nav__social { width: 24px; }
   .site-footer { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) {

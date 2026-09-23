@@ -1,0 +1,113 @@
+import { test, expect } from '@playwright/test'
+import { expectCollectionFits } from './geometry'
+
+test('graph opens, scrubs with the keyboard, and returns focus', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  await page.goto('/')
+  const opener = page.locator('#object-link-graph')
+  await opener.click()
+  await expect(page).toHaveURL(/#\/item\/graph$/)
+  await expect(page.getByRole('heading', { name: 'Make it move.' })).toBeFocused()
+  const slider = page.getByRole('slider')
+  await slider.focus()
+  await slider.press('Home')
+  await expect(slider).toHaveValue('0')
+  await slider.press('End')
+  await expect(slider).toHaveValue('1000')
+  await slider.press('Escape')
+  await expect(opener).toBeFocused()
+  await expect(page.locator('.view-layer')).toHaveCount(0)
+  expect(errors).toEqual([])
+})
+
+test('a continuation object preserves scroll through browser history', async ({ page }) => {
+  await page.goto('/?previewItems=30')
+  const opener = page.locator('#object-link-example-29')
+  await opener.scrollIntoViewIfNeeded()
+  const scrollBefore = await page.evaluate(() => window.scrollY)
+  await opener.click()
+  await expect(page.getByRole('heading', { name: 'A little experiment. 29' })).toBeVisible()
+  await page.goBack()
+  await expect(opener).toBeFocused()
+  expect(Math.abs(await page.evaluate(() => window.scrollY) - scrollBefore)).toBeLessThan(3)
+  await page.goForward()
+  await expect(page.getByRole('heading', { name: 'A little experiment. 29' })).toBeVisible()
+})
+
+test('index search, item links, contact, and direct links work', async ({ page }) => {
+  await page.goto('/?previewItems=16#/index')
+  await page.getByRole('searchbox').fill('A little experiment. 15')
+  await expect(page.locator('.index-row')).toHaveCount(1)
+  const link = page.locator('#index-link-example-15')
+  await expect(link).toHaveAttribute('href', '#/item/example-15')
+  await link.click()
+  await expect(page.getByRole('heading', { name: 'A little experiment. 15' })).toBeVisible()
+  await page.getByRole('button', { name: /^.*Back/ }).click()
+  await expect(page.getByRole('heading', { name: 'The index.' })).toBeVisible()
+  await expect(page.locator('#index-link-example-15')).toBeFocused()
+  await expect(page.getByRole('searchbox')).toHaveValue('A little experiment. 15')
+  await page.getByRole('link', { name: 'Say hello', exact: true }).click()
+  await expect(page.getByRole('link', { name: 'Write me a note' })).toHaveAttribute('href', 'mailto:christoph.pader@outlook.com')
+  await page.goto('/#/item/about')
+  await expect(page.getByRole('heading', { name: 'Hello, I’m Chris.' })).toBeVisible()
+  await page.goto('/#/item/missing-object')
+  await expect(page.getByRole('status')).toContainText('missing-object')
+})
+
+test('reduced motion keeps all controls usable', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/#/item/record')
+  await page.getByRole('button', { name: /Spin the record/ }).click()
+  await expect(page.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '180deg')
+  await page.getByRole('button', { name: /Back/ }).click()
+  await expect(page.getByRole('heading', { name: 'A work in play.' })).toBeVisible()
+  await page.getByRole('button', { name: 'Rearrange objects' }).click()
+  await expectCollectionFits(page, 4)
+})
+
+test('the graph follows pointer scrubbing and the record responds to touch activation', async ({ page, browser }) => {
+  await page.goto('/#/item/graph')
+  const graph = page.locator('.detail-art-wrap .graph-artwork-interaction')
+  await graph.scrollIntoViewIfNeeded()
+  const bounds = await graph.boundingBox()
+  expect(bounds).not.toBeNull()
+  if (!bounds) return
+  await page.mouse.move(bounds.x + bounds.width * .2, bounds.y + bounds.height * .5)
+  await page.mouse.down()
+  await page.mouse.move(bounds.x + bounds.width * .8, bounds.y + bounds.height * .5, { steps: 8 })
+  await page.mouse.up()
+  expect(Number(await page.getByRole('slider').inputValue())).toBeGreaterThan(700)
+
+  const touchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true })
+  const touchPage = await touchContext.newPage()
+  await touchPage.goto('http://127.0.0.1:5173/#/item/record')
+  await touchPage.getByRole('button', { name: /Spin the record/ }).tap()
+  await expect(touchPage.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '540deg')
+  await expect(touchPage.locator('.detail-art-wrap .artwork-record')).toHaveCSS('touch-action', 'pan-y')
+  await touchPage.getByRole('button', { name: /Back/ }).tap()
+  await expect(touchPage.getByRole('heading', { name: 'A work in play.' })).toBeVisible()
+  await touchContext.close()
+})
+
+test('rapid close and resize leave a single accessible view', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('#object-link-graph').click()
+  await page.keyboard.press('Escape')
+  await expect(page.locator('#object-link-graph')).toBeFocused()
+  await expect(page.getByRole('heading', { name: 'Make it move.' })).toHaveCount(0)
+  await page.locator('#object-link-about').click()
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(page.getByRole('heading', { name: 'Hello, I’m Chris.' })).toBeVisible()
+  await page.getByRole('button', { name: /Back/ }).click()
+  await expect(page.locator('#object-link-about')).toBeFocused()
+})
+
+for (const width of [390, 1440]) {
+  test(`30 objects remain reachable at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 })
+    await page.goto('/?previewItems=30')
+    await page.waitForTimeout(850)
+    await expectCollectionFits(page, 30)
+  })
+}

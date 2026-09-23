@@ -6,6 +6,7 @@ import { CollectionIndex } from './collection/CollectionIndex'
 import { ContactView } from './collection/ContactView'
 import { ItemDetail } from './collection/ItemDetail'
 import { ViewLayer } from './collection/ViewLayer'
+import { ArrowUpRight } from './collection/ArrowUpRight'
 import { useCollectionRoute, hashForRoute } from './collection/useCollectionRoute'
 import { previewItems } from './collection/previewItems'
 import type { CollectionRoute, Navigate } from './collection/types'
@@ -13,7 +14,7 @@ import type { CollectionRoute, Navigate } from './collection/types'
 const items = import.meta.env.DEV ? previewItems(collectionItems) : collectionItems
 
 export default function App() {
-  const { route, navigate, back, sourceId, returnFocusId } = useCollectionRoute(items)
+  const { route, navigate, back, returnFocusId } = useCollectionRoute(items)
   const layer = useRef<HTMLDivElement>(null)
   const viewScroll = useRef(new Map<string, number>())
   const [indexQuery, setIndexQuery] = useState('')
@@ -67,7 +68,7 @@ export default function App() {
               onScroll={(scrollTop) => viewScroll.current.set(routeKey, scrollTop)}
               onBack={back}
             >
-                {item && <ItemDetail key={item.id} item={item} onBack={back} shared={Boolean(sourceId?.startsWith('object-link-'))} />}
+                {item && <ItemDetail key={item.id} item={item} onBack={back} />}
                 {route.kind === 'index' && <CollectionIndex items={items} onNavigate={handleNavigate} onBack={() => handleNavigate({ kind: 'collection' })} missingId={route.missingId} query={indexQuery} onQueryChange={setIndexQuery} />}
                 {route.kind === 'contact' && <ContactView onBack={() => handleNavigate({ kind: 'collection' })} />}
             </ViewLayer>
@@ -91,7 +92,7 @@ function SiteHeader({ route, onNavigate }: { route: CollectionRoute; onNavigate:
       </a>
       <nav className="site-nav" aria-label="Main navigation">
         <a href={hashForRoute({ kind: 'index' })} aria-current={route.kind === 'index' ? 'page' : undefined} onClick={(event) => followRoute(event, { kind: 'index' }, onNavigate)}>The index</a>
-        <a href={hashForRoute({ kind: 'contact' })} aria-current={route.kind === 'contact' ? 'page' : undefined} onClick={(event) => followRoute(event, { kind: 'contact' }, onNavigate)}>Say hello <span aria-hidden="true">↗</span></a>
+        <a href={hashForRoute({ kind: 'contact' })} aria-current={route.kind === 'contact' ? 'page' : undefined} onClick={(event) => followRoute(event, { kind: 'contact' }, onNavigate)}>Say hello <ArrowUpRight className="site-nav__arrow" /></a>
         <a className="site-nav__social" href={links.github} target="_blank" rel="noreferrer" aria-label="GitHub">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.57.11.78-.25.78-.55v-2.05c-3.17.69-3.84-1.35-3.84-1.35-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.33.96.1-.74.4-1.25.73-1.54-2.53-.29-5.19-1.27-5.19-5.68 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.03 0 0 .96-.31 3.16 1.17a10.98 10.98 0 0 1 5.75 0c2.2-1.48 3.16-1.17 3.16-1.17.62 1.57.23 2.74.11 3.03.73.8 1.18 1.82 1.18 3.07 0 4.42-2.66 5.39-5.2 5.67.41.36.77 1.05.77 2.12v3.15c0 .3.21.67.79.55A11.5 11.5 0 0 0 12 .5Z"/></svg>
         </a>

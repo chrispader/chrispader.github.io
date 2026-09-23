@@ -18,8 +18,6 @@ export function ViewLayer({ children, elementRef, onScroll, onBack }: Props) {
       className="view-layer"
       inert={!isPresent}
       aria-hidden={!isPresent}
-      layoutRoot
-      layoutScroll
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, pointerEvents: 'auto' }}
       exit={{ opacity: 0, pointerEvents: 'none' }}

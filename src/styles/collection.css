@@ -248,8 +248,13 @@
 
 @media (max-width: 599px) {
   .collection-scene { padding: 20px 22px 35px; }
-  .collection-opening { column-gap: 10px; row-gap: 20px; }
-  .collection-opening__slot { translate: 0 0; }
+  .collection-opening { column-gap: 12px; row-gap: 48px; }
+  .collection-opening__slot--1 { width: 94%; justify-self: start; translate: -5px -12px; }
+  .collection-opening__slot--2 { width: 92%; justify-self: end; translate: 5px 22px; }
+  .collection-opening__slot--3 { width: 90%; justify-self: start; translate: 8px 12px; }
+  .collection-opening__slot--4 { width: 98%; justify-self: end; translate: -5px -13px; }
+  .collection-opening__slot--5 { width: 92%; justify-self: start; translate: -6px -12px; }
+  .collection-opening__slot--6 { width: 96%; justify-self: end; translate: 5px 19px; }
   .collection-hero { padding: 20px 0 35px; }
   .collection-hero h1 { margin-top: 25px; font-size: clamp(72px, 23vw, 92px); line-height: 1.02; }
   .collection-hero p { margin-top: 30px; }
@@ -257,7 +262,8 @@
   .collection-shuffle { width: 52px; min-height: 52px; padding: 4px; box-shadow: 3px 4px 0 var(--collection-ink); }
   .collection-shuffle__icon { width: 42px; height: 42px; font-size: 31px; }
   .collection-shuffle__copy, .collection-shuffle__arrow { display: none; }
-  .collection-reset { max-width: 110px; min-height: 44px; padding: 4px 0; font-size: 9px; line-height: 1.2; text-align: right; }
+  .collection-reset { position: fixed; z-index: 10; top: 55svh; right: -6px; width: 48px; min-height: 104px; padding: 12px 10px 12px 5px; border: 1px solid var(--collection-ink); border-radius: 14px 0 0 14px; background: var(--lime); color: var(--collection-ink); box-shadow: -3px 4px 0 var(--collection-ink); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-align: center; text-decoration: none; writing-mode: vertical-rl; transform: rotate(6deg); transform-origin: right center; }
+  .collection-reset:hover, .collection-reset:focus-visible { transform: translateX(-4px) rotate(6deg); }
   .collection-object__envelope { min-height: clamp(145px, 44vw, 195px); padding: 11px; }
   .collection-object--graph .collection-object__envelope,
   .collection-object--portrait .collection-object__envelope,
@@ -275,6 +281,8 @@
   .collection-continuation { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 10px; margin-top: 25px; }
   .collection-continuation .collection-object:nth-child(n) { padding-top: 0; }
   .collection-continuation .collection-object:nth-child(even) { padding-top: 25px; }
+  .collection-continuation .collection-object:nth-child(4n + 3) { padding-top: 8px; }
+  .collection-continuation .collection-object:nth-child(4n + 4) { padding-top: 34px; }
 }
 
 @media (max-width: 350px) {
@@ -282,6 +290,9 @@
   .collection-continuation { display: block; }
   .collection-opening__slot,
   .collection-continuation .collection-object { max-width: 250px; margin: 22px auto 0; padding: 0; }
+  .collection-opening__slot { width: min(100%, 250px); }
+  .collection-opening__slot--1, .collection-opening__slot--3, .collection-opening__slot--5 { translate: -7px 0; }
+  .collection-opening__slot--2, .collection-opening__slot--4, .collection-opening__slot--6 { translate: 7px 0; }
   .collection-object__envelope,
   .collection-object--graph .collection-object__envelope,
   .collection-object--portrait .collection-object__envelope,

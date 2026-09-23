@@ -8,6 +8,7 @@
 .site-nav { display: flex; gap: 30px; align-items: center; }
 .site-nav a { font-size: 13px; min-height: 44px; display: inline-flex; align-items: center; gap: 6px; position: relative; }
 .site-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 8px; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 180ms ease; }
+.site-nav__arrow { width: 14px; height: 14px; flex: none; }
 .site-nav a:hover::after, .site-nav a[aria-current='page']::after { transform: scaleX(1); }
 .site-nav .site-nav__social { justify-content: center; width: 36px; gap: 0; }
 .site-nav__social svg { width: 18px; height: 18px; flex: none; }

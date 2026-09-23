@@ -8,12 +8,12 @@
 .graph-handle-marker { position: absolute; z-index: 1; width: 12px; aspect-ratio: 1; border: 2px solid var(--blue, #3b56ef); border-radius: 50%; background: var(--lime, #d7fd6a); box-shadow: 0 0 0 6px rgba(215,253,106,.24); transform: translate(-50%, -50%); pointer-events: none; }
 .artwork-stack { perspective: 800px; }
 .stack-scene { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 10px 9px rgba(66,36,27,.15)); }
-.stack-bottom-slab path:first-child, .stack-top-slab path:first-child { fill: var(--orange, #fa734b); }
-.stack-bottom-slab path:nth-child(2), .stack-top-slab path:nth-child(2) { fill: #d85b40; }
-.stack-bottom-slab path:nth-child(3), .stack-top-slab path:nth-child(3) { fill: #e76547; }
-.stack-bottom-slab path, .stack-top-slab path { stroke: rgba(255,250,239,.82); stroke-width: .8; stroke-linejoin: round; }
+.stack-bottom-slab > path:first-child, .stack-top-slab > path:first-child { fill: var(--orange, #fa734b); }
+.stack-bottom-slab > path:nth-child(2), .stack-top-slab > path:nth-child(2) { fill: #d85b40; }
+.stack-bottom-slab > path:nth-child(3), .stack-top-slab > path:nth-child(3) { fill: #e76547; }
+.stack-bottom-slab > path, .stack-top-slab > path { stroke: rgba(255,250,239,.82); stroke-width: .8; stroke-linejoin: round; }
 .stack-engraving { fill: none; stroke: rgba(255,250,239,.88); stroke-width: 1; stroke-linecap: round; }
-.stack-bottom-slab, .stack-top-slab, .stack-engraving { transform-box: fill-box; transform-origin: center; }
+.stack-bottom-slab, .stack-top-slab { transform-box: fill-box; transform-origin: center; }
 .record-stage { position: absolute; inset: 0; display: grid; place-items: center; }
 .vinyl { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 50%; background: radial-gradient(circle, #302b33 0 4%, #101012 4.2% 15%, #27252b 15.3% 15.8%, #0e0e10 16% 28%, #242226 28.3% 29%, #0d0d0f 29.3% 100%); box-shadow: 0 12px 20px rgba(24,20,26,.2); transform: rotate(var(--record-angle, 0deg)); transition: transform 850ms cubic-bezier(.2,.7,.2,1); container-type: inline-size; }
 .vinyl.is-dragging { transition: none; }
@@ -54,11 +54,10 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .stack-bottom-slab, .stack-top-slab, .stack-engraving,
+  .stack-bottom-slab, .stack-top-slab,
   .postcard, .postcard-photo img, .paper-note, .note-star, .workmark, .workmark__orbit { transition: transform .36s cubic-bezier(.2,.75,.2,1); }
   .collection-object__link:is(:hover, :focus-visible) .stack-bottom-slab { transform: translate(4px, 7px) rotate(2deg); }
-  .collection-object__link:is(:hover, :focus-visible) .stack-top-slab,
-  .collection-object__link:is(:hover, :focus-visible) .stack-engraving { transform: translate(-5px, -12px) rotate(-3deg); }
+  .collection-object__link:is(:hover, :focus-visible) .stack-top-slab { transform: translate(-5px, -12px) rotate(-3deg); }
   .collection-object__link:is(:hover, :focus-visible) .postcard { transform: rotate(-2deg) translateY(-7px); }
   .collection-object__link:is(:hover, :focus-visible) .postcard-photo img { transform: scale(1.055); }
   .collection-object__link:is(:hover, :focus-visible) .paper-note { transform: rotate(-3deg) translateY(-8px); }

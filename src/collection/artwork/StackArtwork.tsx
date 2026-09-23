@@ -12,11 +12,11 @@ export function StackArtwork({ label }: Props) {
       <path d="M28 55 136 1 247 37 139 91Z" />
       <path d="m139 91 108-54v19l-108 54Z" />
       <path d="m28 55 111 36v19L28 74Z" />
-    </g>
-    <g className="stack-engraving">
-      <path d="m66 54 70 23" />
-      <path d="m77 47 70 23" />
-      <path d="m89 40 70 23" />
+      <g className="stack-engraving">
+        <path d="m66 54 70 23" />
+        <path d="m77 47 70 23" />
+        <path d="m89 40 70 23" />
+      </g>
     </g>
   </svg>
 }

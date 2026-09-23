@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { useReducedMotion } from 'motion/react'
 import { Artwork } from './Artwork'
 import { GraphArtwork, sampleGraphCurve } from './artwork/GraphArtwork'
 import { RecordArtwork } from './artwork/RecordArtwork'
 import type { CollectionItem } from './types'
 
-type Props = { item: CollectionItem; onBack: () => void; shared?: boolean }
+type Props = { item: CollectionItem; onBack: () => void }
 
-export function ItemDetail({ item, onBack, shared = false }: Props) {
+export function ItemDetail({ item, onBack }: Props) {
   const [progress, setProgress] = useState(1)
   const [spin, setSpin] = useState(0)
   const [dragging, setDragging] = useState(false)
@@ -43,13 +43,13 @@ export function ItemDetail({ item, onBack, shared = false }: Props) {
     <div className="detail-topline"><button className="detail-back" type="button" onClick={onBack}>← <span>Back</span></button><span className="detail-number">OBJECT {item.id.toUpperCase()}</span></div>
     <div className="detail-layout">
       <div className={`detail-art-wrap detail-art-${item.artwork.kind}`}>
-        <motion.div className="detail-art-frame" layoutId={shared ? `object-${item.id}` : undefined}>
+        <div className="detail-art-frame">
           {item.artwork.kind === 'graph'
             ? <div className="artwork artwork-graph"><GraphArtwork samples={graphSamples} progress={progress} onProgressChange={setProgress} /></div>
             : item.artwork.kind === 'record'
               ? <div className={`artwork artwork-record${dragging ? ' is-dragging' : ''}`} role="img" aria-label={item.artwork.label} onPointerDown={beginRecordDrag} onPointerMove={moveRecord} onPointerUp={endRecord} onPointerCancel={endRecord} onLostPointerCapture={endRecord}><RecordArtwork angle={spin} dragging={dragging} /></div>
               : <Artwork artwork={item.artwork} interactive />}
-        </motion.div>
+        </div>
         {item.artwork.kind === 'graph' && <div className="graph-scrubber"><label htmlFor="graph-progress">Explore the curve</label><input id="graph-progress" type="range" min="0" max="1000" value={Math.round(progress * 1000)} onChange={event => setProgress(Number(event.currentTarget.value) / 1000)} aria-label="Scrub the illustrative graph" aria-valuetext={`Sample ${Math.round(progress * 100)} percent; graph value ${Math.round(graphValue)} out of 100`} aria-describedby="graph-reading"/><output id="graph-reading">{graphValue.toFixed(1)}<span> / 100</span></output></div>}
         {item.artwork.kind === 'record' && <button type="button" className="spin-button" onClick={() => setSpin(value => value + (reducedMotion ? 180 : 540))}>↻ <span>Spin the record</span></button>}
         {item.artwork.kind === 'graph' && <p className="art-note">An illustrative sample, pulled into motion.</p>}

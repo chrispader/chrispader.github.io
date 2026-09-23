@@ -295,7 +295,7 @@ test('the graph follows pointer scrubbing and the record responds to touch activ
 
   const touchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true })
   const touchPage = await touchContext.newPage()
-  await touchPage.goto('http://127.0.0.1:5173/#/item/record')
+  await touchPage.goto(new URL('/#/item/record', page.url()).toString())
   await touchPage.getByRole('button', { name: /Spin the record/ }).tap()
   await expect(touchPage.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '540deg')
   await expect(touchPage.locator('.detail-art-wrap .artwork-record')).toHaveCSS('touch-action', 'pan-y')

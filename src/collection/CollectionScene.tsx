@@ -108,7 +108,7 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
                 <span className="collection-shuffle__copy"><small>GIVE IT A SHAKE</small><strong>Change perspective</strong></span>
                 <span className="collection-shuffle__arrow" aria-hidden="true">↗</span>
               </button>
-              {seed > 0 && <button className="collection-reset" type="button" onClick={() => setSeed(0)}>Reset arrangement</button>}
+              {seed > 0 && <button className="collection-reset" type="button" aria-label="Reset arrangement" onClick={() => setSeed(0)}>Reset</button>}
             </div>
           </div>
           {featured.map((item, index) => (

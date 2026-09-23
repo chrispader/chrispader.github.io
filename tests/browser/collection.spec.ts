@@ -94,6 +94,35 @@ test('Margelo and Expensify details show the dates and public work', async ({ pa
   await expect(page.getByRole('link', { name: /Onyx meets Nitro SQLite/ })).toHaveAttribute('href', 'https://github.com/Expensify/react-native-onyx/pull/602')
 })
 
+test('all six authored objects share the main collection and Off the clock links Goodreads', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.goto('/')
+  await expect(page.locator('.collection-opening__slot')).toHaveCount(6)
+  await expect(page.locator('.collection-continuation')).toHaveCount(0)
+  await expect(page.getByText('More to explore.')).toHaveCount(0)
+  const visibleOnDesktop = await page.locator('.collection-opening__slot').evaluateAll(elements => elements.filter(element => {
+    const box = element.getBoundingClientRect()
+    return box.top >= 0 && box.bottom <= window.innerHeight
+  }).length)
+  expect(visibleOnDesktop).toBe(6)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(page.locator('.collection-opening__slot')).toHaveCount(6)
+  const visibleOnMobile = await page.locator('.collection-opening__slot').evaluateAll(elements => elements.filter(element => {
+    const box = element.getBoundingClientRect()
+    return box.top >= 0 && box.bottom <= window.innerHeight
+  }).length)
+  expect(visibleOnMobile).toBeLessThan(visibleOnDesktop)
+  await page.goto('/?previewItems=8')
+  await expect(page.locator('.collection-continuation [data-item-id]')).toHaveCount(2)
+  await expect(page.getByText('More to explore.')).toHaveCount(0)
+  await page.goto('/#/item/record')
+  await expect(page.locator('.detail-prose')).toContainText('Popular science, novels')
+  await expect(page.locator('.detail-prose')).toContainText('tennis')
+  await expect(page.locator('.detail-prose')).toContainText('running')
+  await expect(page.locator('.detail-prose')).toContainText('gym')
+  await expect(page.getByRole('link', { name: 'See what I’m reading' })).toHaveAttribute('href', 'https://goodreads.com/chrispader')
+})
+
 test('GitHub and Twitter are linked in the header and about detail', async ({ page }) => {
   for (const width of [280, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 })

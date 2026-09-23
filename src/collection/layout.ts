@@ -1,6 +1,7 @@
 import type { CollectionItem } from './types'
 
 export type CollectionPose = Readonly<{ x: number; y: number; rotate: number }>
+const FEATURED_LIMIT = 6
 
 export function validateCollection(items: readonly CollectionItem[], featuredIds: readonly string[]): void {
   const ids = new Set<string>()
@@ -20,11 +21,11 @@ export function validateCollection(items: readonly CollectionItem[], featuredIds
 export function splitFeatured(items: readonly CollectionItem[], featuredIds: readonly string[]) {
   validateCollection(items, featuredIds.filter((id) => items.some((item) => item.id === id)))
   const byId = new Map(items.map((item) => [item.id, item]))
-  const featured = featuredIds.map((id) => byId.get(id)).filter(isItem).slice(0, 4)
+  const featured = featuredIds.map((id) => byId.get(id)).filter(isItem).slice(0, FEATURED_LIMIT)
   const selected = new Set(featured.map((item) => item.id))
 
   for (const item of items) {
-    if (featured.length === 4) break
+    if (featured.length === FEATURED_LIMIT) break
     if (selected.has(item.id)) continue
     featured.push(item)
     selected.add(item.id)
@@ -40,7 +41,7 @@ export function arrangeCollection(items: readonly CollectionItem[], featuredIds:
   const ordered = [...featured, ...continuation]
   const offset = ((seed - 1) % (ordered.length - 1)) + 1
   const rearranged = [...ordered.slice(offset), ...ordered.slice(0, offset)]
-  return { featured: rearranged.slice(0, 4), continuation: rearranged.slice(4) }
+  return { featured: rearranged.slice(0, FEATURED_LIMIT), continuation: rearranged.slice(FEATURED_LIMIT) }
 }
 
 export function collectionPose(id: string, index: number, seed: number): CollectionPose {

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { expectCollectionFits } from './geometry'
 
-for (const count of [1, 4, 8, 16, 30]) {
+for (const count of [1, 4, 6, 8, 16, 30]) {
   for (const width of [320, 390, 768, 1024, 1440]) {
     test(`${count} objects fit at ${width}px before and after rearranging`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 })

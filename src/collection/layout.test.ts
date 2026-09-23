@@ -13,18 +13,18 @@ const item = (index: number): CollectionItem => ({
 })
 
 describe('collection layout', () => {
-  it.each([1, 4, 8, 16, 30])('shows each of %i items exactly once', (count) => {
+  it.each([1, 4, 6, 8, 16, 30])('shows each of %i items exactly once', (count) => {
     const items = Array.from({ length: count }, (_, index) => item(index))
     const { featured, continuation } = splitFeatured(items, ['item-0'])
-    expect(featured).toHaveLength(Math.min(count, 4))
+    expect(featured).toHaveLength(Math.min(count, 6))
     expect([...featured, ...continuation].map((entry) => entry.id).sort()).toEqual(items.map((entry) => entry.id).sort())
   })
 
   it('keeps featured IDs in requested order and fills empty slots from content order', () => {
     const items = Array.from({ length: 8 }, (_, index) => item(index))
     const { featured, continuation } = splitFeatured(items, ['item-5', 'item-2'])
-    expect(featured.map((entry) => entry.id)).toEqual(['item-5', 'item-2', 'item-0', 'item-1'])
-    expect(continuation.map((entry) => entry.id)).toEqual(['item-3', 'item-4', 'item-6', 'item-7'])
+    expect(featured.map((entry) => entry.id)).toEqual(['item-5', 'item-2', 'item-0', 'item-1', 'item-3', 'item-4'])
+    expect(continuation.map((entry) => entry.id)).toEqual(['item-6', 'item-7'])
   })
 
   it('fills missing featured references for a smaller collection fixture', () => {
@@ -46,7 +46,7 @@ describe('collection layout', () => {
     const after = [...rearranged.featured, ...rearranged.continuation].map((entry) => entry.id)
     expect(after).toHaveLength(before.length)
     expect(after.every((id, index) => id !== before[index])).toBe(true)
-    expect(rearranged.featured.map((entry) => entry.id)).toContain('item-4')
+    expect(rearranged.featured.map((entry) => entry.id)).toContain('item-6')
     expect(after.sort()).toEqual(before.sort())
   })
 

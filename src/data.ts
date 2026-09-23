@@ -5,6 +5,7 @@ export const links = {
   github: 'https://github.com/chrispader',
   linkedin: 'https://www.linkedin.com/in/chrispader',
   x: 'https://x.com/ChristophPader',
+  goodreads: 'https://goodreads.com/chrispader',
 } satisfies Record<string, string>
 
 export const collectionItems: readonly CollectionItem[] = [
@@ -115,16 +116,19 @@ export const collectionItems: readonly CollectionItem[] = [
     id: 'record',
     label: 'Off the clock',
     title: 'A different tempo.',
-    teaser: 'A few things away from the keyboard.',
-    tags: ['Music', 'Vienna', 'Life'],
+    teaser: 'Books, a racket, and a little room to run.',
+    tags: ['Reading', 'Tennis', 'Running', 'Vienna'],
     artwork: { kind: 'record', label: 'SIDE A' },
     detail: {
       eyebrow: '06 / OFF THE CLOCK',
       paragraphs: [
-        'There’s more to life than a good commit.',
-        'Usually, you’ll find me somewhere in Vienna, listening to music, finding something good to eat, or enjoying a little time away from the screen.',
+        'Away from the keyboard, I love to read. Popular science, novels, and just about anything that catches my eye end up on the pile.',
+        'I play tennis, go running, and spend time at the gym. Music and a good meal around Vienna usually find their way into the week too.',
       ],
-      links: [{ label: 'Say hello', href: links.email }],
+      links: [
+        { label: 'See what I’m reading', href: links.goodreads },
+        { label: 'Say hello', href: links.email },
+      ],
     },
   },
 ]

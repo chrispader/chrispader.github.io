@@ -1,5 +1,14 @@
 import { expect, test } from '@playwright/test'
 
+test('the page title and default cursor are available before the app starts', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false })
+  const page = await context.newPage()
+  await page.goto('/')
+  await expect(page).toHaveTitle('Christoph Pader · Software Engineer based in Vienna')
+  await expect(page.locator('html')).toHaveCSS('cursor', /data:image\/svg\+xml/)
+  await context.close()
+})
+
 test('header keeps the identity and navigation together until they need to wrap', async ({ page }) => {
   await page.setViewportSize({ width: 500, height: 900 })
   await page.goto('/')

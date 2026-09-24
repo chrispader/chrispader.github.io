@@ -43,7 +43,6 @@ h1, h2, h3, p, figure { margin: 0; }
   *, *::before, *::after { scroll-behavior: auto !important; }
 }
 @media (hover: hover) and (pointer: fine) {
-  html, body { cursor: url('/cursors/default.svg') 3 2, auto; }
   a { cursor: url('/cursors/open.svg') 16 16, pointer; }
   button { cursor: url('/cursors/action.svg') 16 16, pointer; }
   .collection-object__link { cursor: url('/cursors/open.svg') 16 16, pointer; }

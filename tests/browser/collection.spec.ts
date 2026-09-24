@@ -156,19 +156,22 @@ test('native detail explains the library work and NitroFetch integration', async
   await expect(page.getByRole('link', { name: 'Read the NitroFetch story' })).toHaveAttribute('href', 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch')
 })
 
-test('GitHub and Twitter are linked in the header and about detail', async ({ page }) => {
+test('GitHub, Twitter, and Bluesky are linked from the header and contact pages', async ({ page }) => {
   for (const width of [280, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/')
     const navigation = page.getByRole('navigation', { name: 'Main navigation' })
     await expect(navigation.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/chrispader')
     await expect(navigation.getByRole('link', { name: 'Twitter' })).toHaveAttribute('href', 'https://x.com/ChristophPader')
-    await expect(navigation.getByRole('link', { name: 'Twitter' })).toBeInViewport()
+    await expect(navigation.getByRole('link', { name: 'Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/chrispader.com')
+    await expect(navigation.getByRole('link', { name: 'Bluesky' })).toBeInViewport()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   }
   await page.goto('/#/item/about')
   await expect(page.getByRole('link', { name: 'Find me on GitHub' })).toHaveAttribute('href', 'https://github.com/chrispader')
   await expect(page.getByRole('link', { name: 'Find me on Twitter' })).toHaveAttribute('href', 'https://x.com/ChristophPader')
+  await page.goto('/#/contact')
+  await expect(page.locator('.contact-socials').getByRole('link', { name: 'Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/chrispader.com')
 })
 
 test('reduced motion keeps all controls usable', async ({ page }) => {

@@ -59,7 +59,5 @@ The animated banner is `public/profile-banner.gif`. It shows the logo, portrait,
 The `chrispader/chrispader` profile README embeds it with:
 
 ```md
-[![Christoph Pader on GitHub. Explore my repositories and work below.](https://chrispader.com/profile-banner.gif)](https://chrispader.com/)
-
-[See the banner](https://chrispader.com/profile-banner.html) · [Explore the full site](https://chrispader.com/)
+[![Christoph Pader on GitHub. Explore my repositories and work below.](https://chrispader.com/profile-banner.gif?v=2)](https://chrispader.com/)
 ```

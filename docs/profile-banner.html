@@ -21,7 +21,7 @@
       .head { position: absolute; top: 28px; left: 42px; z-index: 3; }
       .mark { font-size: 43px; font-weight: 800; line-height: .8; letter-spacing: -.105em; }
       .mark span { color: #b9e84f; }
-      .eyebrow, .object-label { font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 400; letter-spacing: .06em; }
+      .eyebrow { font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 400; letter-spacing: .06em; }
       .copy { position: absolute; top: 109px; left: 78px; z-index: 2; }
       .eyebrow { display: block; margin-bottom: 14px; }
       h1 { margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 76px; font-weight: 400; line-height: .82; letter-spacing: -.028em; }
@@ -29,16 +29,14 @@
       .thread { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
       .thread path { fill: none; stroke: #d8d6ca; stroke-width: 1.2; stroke-dasharray: 2 6; }
       .object { position: absolute; display: block; }
-      .object-label { position: absolute; white-space: nowrap; color: #55594d; }
-      .postcard { top: 78px; left: 55%; width: 137px; height: 176px; padding: 8px 8px 23px; background: #fffefa; box-shadow: 0 10px 20px #22241f25; transform: rotate(-9deg); }
+      .postcard { top: 50px; left: 51%; width: 137px; height: 176px; padding: 8px 8px 23px; background: #fffefa; box-shadow: 0 10px 20px #22241f25; transform: rotate(-9deg); }
       .postcard::before { position: absolute; left: 46px; top: -9px; width: 53px; height: 18px; content: ''; background: #d7fd6aca; transform: rotate(-3deg); clip-path: polygon(0 11%, 100% 0, 95% 100%, 4% 89%); }
       .postcard img { width: 100%; height: 100%; object-fit: cover; object-position: center 24%; filter: saturate(.78); }
-      .postcard .object-label { left: 4px; bottom: -22px; transform: rotate(9deg); }
-      .graph { top: 78px; left: 70%; width: 169px; height: 133px; transform: rotate(8deg); }
+      .graph { top: 160px; left: 66%; width: 169px; height: 133px; transform: rotate(8deg); }
       .graph svg { overflow: visible; width: 100%; height: 100%; }
       .graph-grid { stroke: #22241f; stroke-width: .6; stroke-dasharray: 1.5 4; opacity: .16; }
       .graph-line { fill: none; stroke: #3b56ef; stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; }
-      .record { left: 85%; top: 92px; width: 142px; height: 142px; border-radius: 50%; background: repeating-radial-gradient(circle, #151518 0 3px, #2b2a2c 3.6px 4.1px, #151518 4.5px 8px); box-shadow: 0 9px 16px #22241f32; transform: rotate(12deg); }
+      .record { left: 83%; top: 92px; width: 142px; height: 142px; border-radius: 50%; background: repeating-radial-gradient(circle, #151518 0 3px, #2b2a2c 3.6px 4.1px, #151518 4.5px 8px); box-shadow: 0 9px 16px #22241f32; transform: rotate(12deg); }
       .record::before { position: absolute; inset: 35%; border: 1px solid #22241f; border-radius: 50%; background: #b5a3e8; content: ''; }
       .record::after { position: absolute; left: calc(50% - 2px); top: calc(50% - 2px); width: 4px; height: 4px; border-radius: 50%; background: #22241f; content: ''; }
       .record-center { position: absolute; inset: 39%; display: grid; place-items: center; color: #22241f; font-size: 17px; font-weight: 800; letter-spacing: -.1em; }
@@ -67,9 +65,9 @@
         .copy { top: 115px; left: 30px; }
         h1 { font-size: 67px; }
         .tagline { max-width: 270px; font-size: 12px; }
-        .postcard { left: 11%; top: 339px; width: 112px; height: 140px; }
-        .graph { left: 49%; top: 352px; width: 132px; }
-        .record { left: 57%; top: 467px; width: 108px; height: 108px; }
+        .postcard { left: 8%; top: 323px; width: 100px; height: 130px; }
+        .graph { left: 33%; top: 392px; width: 110px; height: 87px; }
+        .record { left: 60%; top: 469px; width: 100px; height: 100px; }
       }
     </style>
   </head>
@@ -78,7 +76,7 @@
       <svg class="thread" viewBox="0 0 1200 360" preserveAspectRatio="none" aria-hidden="true"><path d="M558 102 C635 25 780 31 761 151 S930 344 1143 265" /></svg>
       <header class="head"><span class="mark" aria-label="Christoph Pader">cp<span>.</span></span></header>
       <div class="copy"><span class="eyebrow">CHRISTOPH PADER</span><h1>This is my<br />GitHub.</h1><p class="tagline">Explore my repositories and work below.</p></div>
-      <div class="object postcard"><img src="./images/profilePicture.png" alt="Christoph Pader" /><span class="object-label">01 / A FACE TO THE CODE</span></div>
+      <div class="object postcard"><img src="./images/profilePicture.png" alt="Christoph Pader" /></div>
       <div class="object graph" aria-hidden="true"><svg viewBox="0 0 169 133"><path class="graph-grid" d="M0 26H169M0 65H169M0 104H169M35 0V133M84 0V133M133 0V133"/><path class="graph-line" d="M4 102 C24 107 33 88 46 82 S66 87 76 55 S100 24 114 43 S139 78 164 18"/></svg></div>
       <div class="object record" aria-hidden="true"><span class="record-center">cp.</span></div>
     </main>

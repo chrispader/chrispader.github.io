@@ -184,7 +184,7 @@ test('social links appear in the header and detail pages', async ({ page }) => {
 })
 
 test('header moves directly from one row to a left-aligned stack', async ({ page }) => {
-  for (const width of [390, 680, 740, 741, 900]) {
+  for (const width of [390, 600, 601, 680, 740, 900]) {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/')
     await page.evaluate(() => document.fonts.ready)
@@ -196,6 +196,7 @@ test('header moves directly from one row to a left-aligned stack', async ({ page
       const nav = document.querySelector('.site-nav')!.getBoundingClientRect()
       return {
         brandX: brand.x,
+        brandY: brand.y,
         brandBottom: brand.bottom,
         brandMiddle: brand.top + brand.height / 2,
         markMiddle: mark.top + mark.height / 2,
@@ -207,13 +208,14 @@ test('header moves directly from one row to a left-aligned stack', async ({ page
       }
     })
 
-    if (width <= 740) {
+    if (width <= 600) {
       expect(Math.abs(positions.navX - positions.brandX)).toBeLessThan(1)
       expect(positions.navTop - positions.brandBottom).toBeGreaterThanOrEqual(16)
     } else {
       expect(Math.abs(positions.navMiddle - positions.brandMiddle)).toBeLessThan(2)
     }
     expect(Math.abs(positions.markMiddle - positions.captionMiddle)).toBeLessThanOrEqual(4)
+    expect(Math.abs(positions.brandY - 33)).toBeLessThan(3)
     expect(positions.pageWidth).toBeLessThanOrEqual(width)
   }
 })

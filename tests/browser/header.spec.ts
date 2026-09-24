@@ -9,8 +9,8 @@ test('the page title and default cursor are available before the app starts', as
   await context.close()
 })
 
-test('header keeps the identity and navigation together until they need to wrap', async ({ page }) => {
-  await page.setViewportSize({ width: 500, height: 900 })
+test('header keeps full-size identity above navigation on narrow screens', async ({ page }) => {
+  await page.setViewportSize({ width: 700, height: 900 })
   await page.goto('/')
   await page.evaluate(() => document.fonts.ready)
 
@@ -22,7 +22,8 @@ test('header keeps the identity and navigation together until they need to wrap'
   expect(navigationWide).not.toBeNull()
   expect(Math.abs(brandWide!.y + brandWide!.height / 2 - navigationWide!.y - navigationWide!.height / 2)).toBeLessThan(2)
 
-  for (const width of [390, 320, 280]) {
+  const wideLogoSize = await page.locator('.brand-mark').evaluate(element => getComputedStyle(element).fontSize)
+  for (const width of [500, 390, 320, 280]) {
     await page.setViewportSize({ width, height: 900 })
     const brandBox = await brand.boundingBox()
     const navigationBox = await navigation.boundingBox()
@@ -31,6 +32,7 @@ test('header keeps the identity and navigation together until they need to wrap'
     expect(navigationBox).not.toBeNull()
     expect(headerBox).not.toBeNull()
     expect(navigationBox!.y).toBeGreaterThanOrEqual(brandBox!.y + brandBox!.height - 1)
+    expect(await page.locator('.brand-mark').evaluate(element => getComputedStyle(element).fontSize)).toBe(wideLogoSize)
     expect(navigationBox!.x + navigationBox!.width).toBeLessThanOrEqual(headerBox!.x + headerBox!.width + 1)
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   }

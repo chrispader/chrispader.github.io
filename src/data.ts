@@ -106,7 +106,7 @@ export const collectionItems: readonly CollectionItem[] = [
     label: 'Native things',
     title: 'Closer to the metal.',
     teaser: 'Under the interface, down to the details.',
-    tags: ['React Native', 'Nitro', 'SQLite', 'Performance', 'Writing'],
+    tags: ['React Native', 'Expo', 'Nitro', 'SQLite', 'Performance', 'Writing'],
     artwork: { kind: 'stack', label: 'NATIVE / 05' },
     detail: {
       eyebrow: '05 / NATIVE SYSTEMS',
@@ -115,10 +115,12 @@ export const collectionItems: readonly CollectionItem[] = [
         'Nitro SQLite brings fast local storage through Nitro Modules. I’ve also worked on moving Expensify’s Onyx storage onto it, so this library work has been tested against a large production app.',
         'I integrated NitroFetch into Expensify’s native app and added prefetching for a critical startup request. That lets the request begin while the JavaScript bundle loads. I wrote a detailed post about the integration and the performance results on Margelo’s blog.',
         'In that rollout, I measured 15–30% shorter average request durations and a critical startup request that completed more than 200 ms sooner.',
+        'I also built expo-native-variants. It generates development, preview, and production app variants in one Expo prebuild, so I can choose the app I need in Xcode or Android Studio without keeping generated native folders in Git.',
       ],
       links: [
         { label: 'Explore Nitro SQLite', href: 'https://github.com/margelo/react-native-nitro-sqlite' },
         { label: 'Read the NitroFetch story', href: 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch' },
+        { label: 'Explore expo-native-variants', href: 'https://github.com/chrispader/expo-native-variants' },
       ],
     },
   },

@@ -61,6 +61,10 @@ test('mobile arrangement is staggered while shuffle follows the header', async (
   expect(stickyShuffle).not.toBeNull()
   expect(resetAfter).not.toBeNull()
   expect(Math.abs(stickyShuffle!.y - (headerBox!.height - stickyShuffle!.height / 2))).toBeLessThan(3)
+  expect((await header.boundingBox())!.y).toBe(0)
+  const navigation = await page.locator('.site-nav').boundingBox()
+  expect(navigation).not.toBeNull()
+  expect(stickyShuffle!.x).toBeGreaterThanOrEqual(navigation!.x + navigation!.width - 58)
   expect(resetAfter!.y).toBeLessThan(resetBefore!.y - 250)
   await page.screenshot({ path: testInfo.outputPath('mobile-sticky-shuffle.png') })
 

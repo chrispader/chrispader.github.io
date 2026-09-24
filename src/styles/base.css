@@ -36,7 +36,12 @@ h1, h2, h3, p, figure { margin: 0; }
 .skip-link { position: fixed; top: 12px; left: 12px; z-index: 100; padding: 12px 18px; background: var(--lime); transform: translateY(-180%); }
 .skip-link:focus { transform: translateY(0); }
 @media (max-width: 600px) {
-  :root { --header-height: 108px; }
+  :root { --header-height: calc(110px + env(safe-area-inset-top)); }
+}
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 600px) {
+    :root { --header-height: calc(110px + max(env(safe-area-inset-top), 54px)); }
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

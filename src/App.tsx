@@ -119,6 +119,9 @@ function SiteHeader({ route, onNavigate }: { route: CollectionRoute; onNavigate:
         <a className="site-nav__social" href={links.bluesky} target="_blank" rel="noreferrer" aria-label="Bluesky">
           <img src="/bluesky.svg" alt="" aria-hidden="true" />
         </a>
+        <a className="site-nav__social" href={links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M16 1.146C16 .513 15.487 0 14.854 0H1.146C.513 0 0 .513 0 1.146v13.708C0 15.487.513 16 1.146 16h13.708c.633 0 1.146-.513 1.146-1.146V1.146ZM4.943 13.394H2.542V5.67h2.401v7.724ZM3.743 4.615a1.392 1.392 0 1 1 0-2.784 1.392 1.392 0 0 1 0 2.784Zm9.651 8.779h-2.398V9.638c0-.896-.016-2.05-1.249-2.05-1.25 0-1.442.976-1.442 1.985v3.821H5.907V5.67h2.302v1.055h.032c.32-.606 1.104-1.247 2.271-1.247 2.428 0 2.878 1.598 2.878 3.674v4.242Z"/></svg>
+        </a>
       </nav>
     </header>
   )

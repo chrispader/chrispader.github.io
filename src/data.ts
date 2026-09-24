@@ -7,6 +7,7 @@ export const links = {
   x: 'https://x.com/ChristophPader',
   bluesky: 'https://bsky.app/profile/chrispader.com',
   goodreads: 'https://goodreads.com/chrispader',
+  appleMusic: 'https://music.apple.com/profile/chrispader',
 } satisfies Record<string, string>
 
 export const collectionItems: readonly CollectionItem[] = [
@@ -27,6 +28,8 @@ export const collectionItems: readonly CollectionItem[] = [
       links: [
         { label: 'Find me on GitHub', href: links.github },
         { label: 'Find me on Twitter', href: links.x },
+        { label: 'Find me on Bluesky', href: links.bluesky },
+        { label: 'Find me on LinkedIn', href: links.linkedin },
       ],
     },
   },
@@ -123,18 +126,19 @@ export const collectionItems: readonly CollectionItem[] = [
     id: 'record',
     label: 'Off the clock',
     title: 'A different tempo.',
-    teaser: 'Books, a racket, and a little room to run.',
-    tags: ['Reading', 'Tennis', 'Running', 'Vienna'],
+    teaser: 'Books, music, a racket, and a little room to run.',
+    tags: ['Reading', 'Music', 'Tennis', 'Running', 'Vienna'],
     artwork: { kind: 'record', label: 'SIDE A' },
     detail: {
       eyebrow: '06 / OFF THE CLOCK',
       paragraphs: [
         'Away from the keyboard, I love to read. Popular science, novels, and just about anything that catches my eye end up on the pile.',
-        'I play tennis, go running, and spend time at the gym. Music and a good meal around Vienna usually find their way into the week too.',
+        'I play tennis, go running, and spend time at the gym. Music is usually on in the background, and you can find me on Apple Music.',
         'My reading list wanders around. I’ll pick up a book about how the world works, follow it with a novel, and then find something I hadn’t planned to read at all.',
       ],
       links: [
         { label: 'See what I’m reading', href: links.goodreads },
+        { label: 'Find me on Apple Music', href: links.appleMusic },
         { label: 'Say hello', href: '#/contact' },
       ],
     },

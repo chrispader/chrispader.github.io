@@ -114,7 +114,7 @@ test('Margelo and Expensify details show the dates and public work', async ({ pa
   await expect(page.getByRole('link', { name: /Onyx meets Nitro SQLite/ })).toHaveAttribute('href', 'https://github.com/Expensify/react-native-onyx/pull/602')
 })
 
-test('all six authored objects share the main collection and Off the clock links Goodreads', async ({ page }) => {
+test('all six authored objects share the main collection and Off the clock links reading and music', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto('/')
   await expect(page.locator('.collection-opening__slot')).toHaveCount(6)
@@ -141,6 +141,7 @@ test('all six authored objects share the main collection and Off the clock links
   await expect(page.locator('.detail-prose')).toContainText('running')
   await expect(page.locator('.detail-prose')).toContainText('gym')
   await expect(page.getByRole('link', { name: 'See what I’m reading' })).toHaveAttribute('href', 'https://goodreads.com/chrispader')
+  await expect(page.getByRole('link', { name: 'Find me on Apple Music' })).toHaveAttribute('href', 'https://music.apple.com/profile/chrispader')
   const helloLink = page.locator('.detail-links').getByRole('link', { name: 'Say hello', exact: true })
   await expect(helloLink).toHaveAttribute('href', '#/contact')
   await helloLink.click()
@@ -156,7 +157,7 @@ test('native detail explains the library work and NitroFetch integration', async
   await expect(page.getByRole('link', { name: 'Read the NitroFetch story' })).toHaveAttribute('href', 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch')
 })
 
-test('GitHub, Twitter, and Bluesky are linked from the header and contact pages', async ({ page }) => {
+test('social links appear in the header and detail pages', async ({ page }) => {
   for (const width of [280, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/')
@@ -164,12 +165,15 @@ test('GitHub, Twitter, and Bluesky are linked from the header and contact pages'
     await expect(navigation.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/chrispader')
     await expect(navigation.getByRole('link', { name: 'Twitter' })).toHaveAttribute('href', 'https://x.com/ChristophPader')
     await expect(navigation.getByRole('link', { name: 'Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/chrispader.com')
-    await expect(navigation.getByRole('link', { name: 'Bluesky' })).toBeInViewport()
+    await expect(navigation.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/chrispader')
+    await expect(navigation.getByRole('link', { name: 'LinkedIn' })).toBeInViewport()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   }
   await page.goto('/#/item/about')
   await expect(page.getByRole('link', { name: 'Find me on GitHub' })).toHaveAttribute('href', 'https://github.com/chrispader')
   await expect(page.getByRole('link', { name: 'Find me on Twitter' })).toHaveAttribute('href', 'https://x.com/ChristophPader')
+  await expect(page.getByRole('link', { name: 'Find me on Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/chrispader.com')
+  await expect(page.getByRole('link', { name: 'Find me on LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/chrispader')
   await page.goto('/#/contact')
   await expect(page.locator('.contact-socials').getByRole('link', { name: 'Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/chrispader.com')
 })

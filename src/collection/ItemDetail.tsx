@@ -4,6 +4,7 @@ import { Artwork } from './Artwork'
 import { GraphArtwork, sampleGraphCurve } from './artwork/GraphArtwork'
 import { RecordArtwork } from './artwork/RecordArtwork'
 import { ArrowUpRight } from './ArrowUpRight'
+import { InlineCodeText } from './InlineCodeText'
 import type { CollectionItem } from './types'
 
 type Props = { item: CollectionItem; onBack: () => void }
@@ -61,14 +62,14 @@ export function ItemDetail({ item, onBack }: Props) {
         <p className="detail-eyebrow">{item.detail.eyebrow}</p>
         <h1 id="view-heading" tabIndex={-1}>{item.title}</h1>
         <p className="detail-teaser">{item.teaser}</p>
-        <div className="detail-prose">{item.detail.paragraphs.map((paragraph, index) => <p key={`${item.id}-paragraph-${index}`}>{paragraph}</p>)}</div>
-        {item.detail.links.length > 0 && <nav className="detail-links" aria-label="Related links">{item.detail.links.map(link => <a key={link.href} href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined}>{link.label}<ArrowUpRight /></a>)}</nav>}
+        <div className="detail-prose">{item.detail.paragraphs.map((paragraph, index) => <p key={`${item.id}-paragraph-${index}`}><InlineCodeText text={paragraph} /></p>)}</div>
+        {item.detail.links.length > 0 && <nav className="detail-links" aria-label="Related links">{item.detail.links.map(link => <a key={link.href} href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined}><span><InlineCodeText text={link.label} /></span><ArrowUpRight /></a>)}</nav>}
         {item.tags.length > 0 && <ul className="detail-tags" aria-label="Topics">{item.tags.map(tag => <li key={tag}>{tag}</li>)}</ul>}
       </div>
     </div>
     {item.detail.highlights && <section className="detail-highlights" aria-labelledby="detail-highlights-heading">
       <div className="detail-highlights__heading"><p className="detail-eyebrow">SELECTED PUBLIC WORK</p><h2 id="detail-highlights-heading">A few things I’ve shipped<span>.</span></h2><p>Selected pull requests from the public Expensify repositories.</p></div>
-      <div className="detail-highlights__list">{item.detail.highlights.map((highlight, index) => <a key={highlight.href} href={highlight.href} target="_blank" rel="noreferrer" className="detail-highlight"><span className="detail-highlight__number">{String(index + 1).padStart(2, '0')}</span><span className="detail-highlight__copy"><small>{highlight.meta}</small><strong>{highlight.title}</strong><span>{highlight.description}</span></span><span className="detail-highlight__arrow"><ArrowUpRight /></span></a>)}</div>
+      <div className="detail-highlights__list">{item.detail.highlights.map((highlight, index) => <a key={highlight.href} href={highlight.href} target="_blank" rel="noreferrer" className="detail-highlight"><span className="detail-highlight__number">{String(index + 1).padStart(2, '0')}</span><span className="detail-highlight__copy"><small>{highlight.meta}</small><strong><InlineCodeText text={highlight.title} /></strong><span><InlineCodeText text={highlight.description} /></span></span><span className="detail-highlight__arrow"><ArrowUpRight /></span></a>)}</div>
     </section>}
   </article>
 }

@@ -111,7 +111,8 @@ test('Margelo and Expensify details show the dates and public work', async ({ pa
   await expect(page.locator('.detail-prose')).toContainText('since 2022')
   await expect(page.locator('.detail-prose')).toContainText('post-quantum end-to-end encryption library')
   await expect(page.locator('.detail-highlight')).toHaveCount(7)
-  await expect(page.getByRole('link', { name: /Onyx meets Nitro SQLite/ })).toHaveAttribute('href', 'https://github.com/Expensify/react-native-onyx/pull/602')
+  await expect(page.getByRole('link', { name: /Onyx meets NitroSQLite/ })).toHaveAttribute('href', 'https://github.com/Expensify/react-native-onyx/pull/602')
+  await expect(page.locator('.detail-highlight__copy strong code').filter({ hasText: 'NitroSQLite' })).toHaveCount(1)
 })
 
 test('all six authored objects share the main collection and Off the clock links reading and music', async ({ page }) => {
@@ -154,7 +155,10 @@ test('native detail explains the library work and NitroFetch integration', async
   await expect(page.locator('.detail-prose')).toContainText('I work on React Native libraries at Margelo')
   await expect(page.locator('.detail-prose')).toContainText('I integrated NitroFetch into Expensify')
   await expect(page.locator('.detail-prose')).toContainText('I wrote a detailed post')
+  await expect(page.locator('.detail-prose code').filter({ hasText: 'NitroSQLite' })).toHaveCount(2)
+  await expect(page.locator('.detail-prose code').first()).toHaveCSS('font-family', /Space Mono/)
   await expect(page.getByRole('link', { name: 'Read the NitroFetch story' })).toHaveAttribute('href', 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch')
+  await expect(page.getByRole('link', { name: 'Explore react-native-nitro-sqlite' }).locator('code')).toHaveText('react-native-nitro-sqlite')
 })
 
 test('social links appear in the header and detail pages', async ({ page }) => {

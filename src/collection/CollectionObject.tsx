@@ -18,13 +18,13 @@ export function CollectionObject({ item, index, seed, onNavigate, placement }: P
   const reducedMotion = useReducedMotion()
   const pose = reducedMotion ? { x: 0, y: 0, rotate: 0 } : collectionPose(item.id, index, seed)
 
-  function startTouch(event: PointerEvent<HTMLAnchorElement>) {
+  function startTouch(event: PointerEvent<HTMLButtonElement>) {
     if (event.pointerType !== 'touch' || reducedMotion) return
     touch.current = { id: event.pointerId, x: event.clientX, y: event.clientY, dragged: false }
     suppressClick.current = false
   }
 
-  function moveTouch(event: PointerEvent<HTMLAnchorElement>) {
+  function moveTouch(event: PointerEvent<HTMLButtonElement>) {
     const start = touch.current
     if (!start || start.id !== event.pointerId) return
     const dx = event.clientX - start.x
@@ -37,7 +37,7 @@ export function CollectionObject({ item, index, seed, onNavigate, placement }: P
     event.currentTarget.dataset.touchDragging = 'true'
   }
 
-  function endTouch(event: PointerEvent<HTMLAnchorElement>) {
+  function endTouch(event: PointerEvent<HTMLButtonElement>) {
     if (touch.current?.id !== event.pointerId) return
     touch.current = null
     event.currentTarget.style.removeProperty('--touch-x')
@@ -47,23 +47,22 @@ export function CollectionObject({ item, index, seed, onNavigate, placement }: P
 
   return (
     <article className={`collection-object collection-object--${placement} collection-object--${item.artwork.kind}`} data-item-id={item.id} data-drift-layer={(index % 3) + 1}>
-      <a
+      <button
         id={`object-link-${item.id}`}
         className="collection-object__link"
-        href={`#/item/${encodeURIComponent(item.id)}`}
+        type="button"
+        draggable={false}
         aria-label={`${item.label}: ${item.title}`}
+        onDragStart={(event) => event.preventDefault()}
         onPointerDown={startTouch}
         onPointerMove={moveTouch}
         onPointerUp={endTouch}
         onPointerCancel={endTouch}
-        onClick={(event) => {
+        onClick={() => {
           if (suppressClick.current) {
             suppressClick.current = false
-            event.preventDefault()
             return
           }
-          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return
-          event.preventDefault()
           onNavigate({ kind: 'item', id: item.id }, `object-link-${item.id}`)
         }}
       >
@@ -81,7 +80,7 @@ export function CollectionObject({ item, index, seed, onNavigate, placement }: P
         <span className="collection-object__caption">
           <span className="collection-object__number">{String(index + 1).padStart(2, '0')} / {item.label}</span>
         </span>
-      </a>
+      </button>
     </article>
   )
 }

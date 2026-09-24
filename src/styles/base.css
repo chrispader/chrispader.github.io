@@ -21,7 +21,7 @@
 }
 * { box-sizing: border-box; }
 html { scrollbar-gutter: stable; scroll-behavior: smooth; }
-body { margin: 0; min-width: 280px; }
+body { margin: 0; min-width: 280px; overflow-x: clip; }
 body[data-view-open='true'] { overflow: hidden; }
 button, input { font: inherit; color: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -46,6 +46,7 @@ h1, h2, h3, p, figure { margin: 0; }
   html, body { cursor: url('/cursors/default.svg') 3 2, auto; }
   a { cursor: url('/cursors/open.svg') 16 16, pointer; }
   button { cursor: url('/cursors/action.svg') 16 16, pointer; }
+  .collection-object__link { cursor: url('/cursors/open.svg') 16 16, pointer; }
   .detail-back { cursor: url('/cursors/back.svg') 16 16, pointer; }
   .graph-artwork-interaction { cursor: crosshair; }
   .detail-art-record .artwork-record { cursor: url('/cursors/drag.svg') 16 16, grab; }

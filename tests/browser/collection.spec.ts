@@ -102,6 +102,74 @@ test('index starts with Chris and collection buttons always return home', async 
   await expect(page).toHaveURL(/\/$/)
 })
 
+test('index rows animate their artwork and graph strokes fit each view', async ({ page }) => {
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/')
+    const homeStroke = await page.locator('#object-link-graph .graph-curve').evaluate(element => parseFloat(getComputedStyle(element).strokeWidth))
+    await page.goto('/index/')
+    const graphRow = page.locator('#index-link-graph')
+    const graphCurve = graphRow.locator('.graph-curve')
+    const restingCurve = await graphCurve.getAttribute('d')
+    const indexStroke = await graphCurve.evaluate(element => parseFloat(getComputedStyle(element).strokeWidth))
+    await graphRow.locator('.index-row-title').hover()
+    await expect.poll(() => graphCurve.getAttribute('d')).not.toBe(restingCurve)
+    await page.mouse.move(0, 0)
+    await expect(graphCurve).toHaveAttribute('d', restingCurve ?? '')
+
+    await page.goto('/item/graph/')
+    const detailStroke = await page.locator('.detail-art-graph .graph-curve').evaluate(element => parseFloat(getComputedStyle(element).strokeWidth))
+    expect(indexStroke).toBeLessThan(homeStroke)
+    expect(homeStroke).toBeLessThan(detailStroke)
+  }
+
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/index/')
+  const movingArtworks = [
+    ['about', '.postcard'],
+    ['margelo', '.workmark'],
+    ['expensify', '.workmark'],
+    ['native', '.stack-top-slab'],
+  ] as const
+  for (const [id, selector] of movingArtworks) {
+    const row = page.locator(`#index-link-${id}`)
+    const artwork = row.locator(selector)
+    const restingTransform = await artwork.evaluate(element => getComputedStyle(element).transform)
+    await row.locator('.index-row-title').hover()
+    await expect.poll(() => artwork.evaluate(element => getComputedStyle(element).transform)).not.toBe(restingTransform)
+  }
+
+  await page.mouse.move(0, 0)
+  const focusedGraph = page.locator('#index-link-graph')
+  const focusedCurve = focusedGraph.locator('.graph-curve')
+  const focusedRestingCurve = await focusedCurve.getAttribute('d')
+  await focusedGraph.focus()
+  await expect.poll(() => focusedCurve.getAttribute('d')).not.toBe(focusedRestingCurve)
+  await page.locator('.detail-back').focus()
+  await expect(focusedCurve).toHaveAttribute('d', focusedRestingCurve ?? '')
+
+  const recordRow = page.locator('#index-link-record')
+  await recordRow.locator('.index-row-title').hover()
+  await expect(recordRow.locator('.vinyl')).toHaveCSS('animation-name', 'record-groove')
+})
+
+test('index artwork stays still with reduced motion enabled', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/index/')
+  const graphRow = page.locator('#index-link-graph')
+  const graphCurve = graphRow.locator('.graph-curve')
+  const restingCurve = await graphCurve.getAttribute('d')
+  await graphRow.locator('.index-row-title').hover()
+  await page.waitForTimeout(180)
+  await expect(graphCurve).toHaveAttribute('d', restingCurve ?? '')
+
+  const workmarkRow = page.locator('#index-link-margelo')
+  const workmark = workmarkRow.locator('.workmark')
+  const restingTransform = await workmark.evaluate(element => getComputedStyle(element).transform)
+  await workmarkRow.locator('.index-row-title').hover()
+  expect(await workmark.evaluate(element => getComputedStyle(element).transform)).toBe(restingTransform)
+})
+
 test('Margelo and Expensify details show the dates and public work', async ({ page }) => {
   await page.goto('/#/item/margelo')
   await expect(page.getByRole('heading', { name: 'Made at Margelo.' })).toBeVisible()

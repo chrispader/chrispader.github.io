@@ -66,6 +66,9 @@
 .graph-scrubber input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; accent-color: var(--blue, #3b56ef); cursor: ew-resize; }
 .graph-scrubber input:focus-visible { position: static; grid-column: 1 / -1; width: 100%; height: 44px; clip-path: none; outline: 2px solid var(--blue, #3b56ef); outline-offset: 3px; }
 .detail-art-graph .graph-artwork-interaction { touch-action: none; }
+.detail-art-graph .graph-curve { stroke-width: 28px; }
+.detail-art-graph .graph-curve-shadow { stroke-width: 34px; }
+.detail-art-graph .graph-handle-marker { width: 18px; box-shadow: 0 0 0 7px rgba(215,253,106,.24); }
 .art-note { margin: 0; color: var(--muted, #66665d); font: 10px var(--font-body); }
 .spin-button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 0 17px; border: 1px solid var(--line, #d6d0c3); border-radius: 999px; background: transparent; color: var(--ink, #22241f); font-size: 13px; touch-action: manipulation; }
 .spin-button:first-letter { font-size: 21px; }
@@ -92,6 +95,9 @@
 .index-count { align-self: start; margin-top: 12px; }
 .index-art { position: relative; width: 100px; height: 112px; display: grid; place-items: center; }
 .index-art .artwork { width: 100%; height: 100%; }
+.index-art .graph-curve { stroke-width: 9px; }
+.index-art .graph-curve-shadow { stroke-width: 11px; }
+.index-art .graph-handle-marker { width: 7px; border-width: 1px; box-shadow: 0 0 0 3px rgba(215,253,106,.24); }
 .index-row-copy { display: grid; gap: 7px; }
 .index-row-title { font: 400 clamp(25px, 4vw, 43px)/1 var(--font-display, Georgia), Georgia, serif; letter-spacing: -.03em; }
 .index-row-teaser { max-width: 62ch; color: #57574f; font-size: 13px; line-height: 1.5; }
@@ -130,6 +136,11 @@
   .index-intro { margin-bottom: 38px; }
   .index-row { grid-template-columns: 25px 72px minmax(0,1fr) 27px; gap: 12px; min-height: 128px; padding-block: 12px; }
   .index-art { width: 68px; height: 90px; }
+  .index-art .graph-curve { stroke-width: 6px; }
+  .index-art .graph-curve-shadow { stroke-width: 8px; }
+  .detail-art-graph .graph-curve { stroke-width: clamp(18px, 6.4vw, 28px); }
+  .detail-art-graph .graph-curve-shadow { stroke-width: clamp(22px, 7.7vw, 34px); }
+  .detail-art-graph .graph-handle-marker { width: 16px; }
   .index-count { font-size: 9px; }
   .index-row-teaser { font-size: 11px; }
   .index-row-tags { font-size: 8px; }
@@ -148,6 +159,8 @@
   .detail-back { gap: 6px; font-size: 12px; }
   .index-row { grid-template-columns: 19px 55px minmax(0,1fr) 24px; gap: 9px; }
   .index-art { width: 54px; height: 75px; }
+  .index-art .graph-curve { stroke-width: 5px; }
+  .index-art .graph-curve-shadow { stroke-width: 6px; }
   .index-row-title { font-size: 24px; }
   .index-row-teaser { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
   .index-row-tags { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }

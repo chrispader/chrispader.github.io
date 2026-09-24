@@ -6,14 +6,14 @@ import { NoteArtwork } from './artwork/NoteArtwork'
 import { ArrowUpRight } from './ArrowUpRight'
 import type { Artwork as ArtworkData } from './types'
 
-type Props = { artwork: ArtworkData; interactive?: boolean }
+type Props = { artwork: ArtworkData; interactive?: boolean; active?: boolean }
 
-export function Artwork({ artwork, interactive = false }: Props) {
+export function Artwork({ artwork, interactive = false, active = false }: Props) {
   const label = interactive ? artworkLabel(artwork) : undefined
   const common = interactive ? { role: 'img' as const, 'aria-label': label } : { 'aria-hidden': true as const }
 
   switch (artwork.kind) {
-    case 'graph': return <div className="artwork artwork-graph" {...common}><GraphArtwork samples={artwork.samples} /></div>
+    case 'graph': return <div className="artwork artwork-graph" {...common}><GraphArtwork samples={artwork.samples} active={active} /></div>
     case 'stack': return <div className="artwork artwork-stack" {...common}><StackArtwork label={artwork.label} /></div>
     case 'record': return <div className="artwork artwork-record" {...common}><RecordArtwork /></div>
     case 'portrait': return <div className="artwork artwork-portrait" {...common}><PortraitArtwork {...artwork} /></div>

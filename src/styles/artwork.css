@@ -56,15 +56,15 @@
 @media (prefers-reduced-motion: no-preference) {
   .stack-bottom-slab, .stack-top-slab,
   .postcard, .postcard-photo img, .paper-note, .note-star, .workmark, .workmark__orbit { transition: transform .36s cubic-bezier(.2,.75,.2,1); }
-  .collection-object__link:is(:hover, :focus-visible) .stack-bottom-slab { transform: translate(4px, 7px) rotate(2deg); }
-  .collection-object__link:is(:hover, :focus-visible) .stack-top-slab { transform: translate(-5px, -12px) rotate(-3deg); }
-  .collection-object__link:is(:hover, :focus-visible) .postcard { transform: rotate(-2deg) translateY(-7px); }
-  .collection-object__link:is(:hover, :focus-visible) .postcard-photo img { transform: scale(1.055); }
-  .collection-object__link:is(:hover, :focus-visible) .paper-note { transform: rotate(-3deg) translateY(-8px); }
-  .collection-object__link:is(:hover, :focus-visible) .note-star { transform: rotate(50deg) scale(1.2); }
-  .collection-object__link:is(:hover, :focus-visible) .workmark { transform: rotate(0deg) translateY(-8px); }
-  .collection-object__link:is(:hover, :focus-visible) .workmark__orbit { transform: translate(3cqw, -3cqw) rotate(45deg); }
-  .collection-object__link:is(:hover, :focus-visible) .vinyl { animation: record-groove 2.8s linear infinite; }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .stack-bottom-slab { transform: translate(4px, 7px) rotate(2deg); }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .stack-top-slab { transform: translate(-5px, -12px) rotate(-3deg); }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .postcard { transform: rotate(-2deg) translateY(-7px); }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .postcard-photo img { transform: scale(1.055); }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .paper-note { transform: rotate(-3deg) translateY(-8px); }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .note-star { transform: rotate(50deg) scale(1.2); }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .workmark { transform: rotate(0deg) translateY(-8px); }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .workmark__orbit { transform: translate(3cqw, -3cqw) rotate(45deg); }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .vinyl { animation: record-groove 2.8s linear infinite; }
 }
 @keyframes record-groove { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .vinyl { transition: none; } }

@@ -2,12 +2,12 @@ import { useEffect, useRef, type PointerEvent } from 'react'
 import { useReducedMotion } from 'motion/react'
 
 type GraphPoint = { x: number; y: number; value: number }
-type Props = { samples: readonly number[]; progress?: number; onProgressChange?: (progress: number) => void }
+type Props = { samples: readonly number[]; progress?: number; onProgressChange?: (progress: number) => void; active?: boolean }
 
 const GRAPH_VIEWBOX_START = -8
 const GRAPH_VIEWBOX_SIZE = 116
 
-export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props) {
+export function GraphArtwork({ samples, progress = 1, onProgressChange, active = false }: Props) {
   const pointerId = useRef<number | null>(null)
   const waveFrame = useRef(0)
   const waveX = useRef(50)
@@ -30,6 +30,15 @@ export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props)
       waveFrame.current = 0
     }
   }, [reducedMotion])
+
+  useEffect(() => {
+    if (!active || reducedMotion || onProgressChange) {
+      if (!active) stopWave()
+      return
+    }
+    hovering.current = true
+    if (!waveFrame.current) waveFrame.current = requestAnimationFrame(animateWave)
+  }, [active, reducedMotion, onProgressChange])
 
   function trackWave(event: PointerEvent<HTMLDivElement>) {
     if (reducedMotion || (onProgressChange && pointerId.current !== event.pointerId)) return
@@ -65,7 +74,8 @@ export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props)
   }
 
   function stopWave() {
-    hovering.current = false
+    hovering.current = active
+    if (active) return
     if (reducedMotion || waveStrength.current === 0) {
       resetWave()
       return

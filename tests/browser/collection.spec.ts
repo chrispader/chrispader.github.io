@@ -156,19 +156,22 @@ test('native detail explains the library work and NitroFetch integration', async
   await expect(page.getByRole('link', { name: 'Read the NitroFetch story' })).toHaveAttribute('href', 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch')
 })
 
-test('GitHub and Twitter are linked in the header and about detail', async ({ page }) => {
+test('GitHub, Twitter, and Bluesky are linked from the header and contact pages', async ({ page }) => {
   for (const width of [280, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/')
     const navigation = page.getByRole('navigation', { name: 'Main navigation' })
     await expect(navigation.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/chrispader')
     await expect(navigation.getByRole('link', { name: 'Twitter' })).toHaveAttribute('href', 'https://x.com/ChristophPader')
-    await expect(navigation.getByRole('link', { name: 'Twitter' })).toBeInViewport()
+    await expect(navigation.getByRole('link', { name: 'Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/chrispader.com')
+    await expect(navigation.getByRole('link', { name: 'Bluesky' })).toBeInViewport()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   }
   await page.goto('/#/item/about')
   await expect(page.getByRole('link', { name: 'Find me on GitHub' })).toHaveAttribute('href', 'https://github.com/chrispader')
   await expect(page.getByRole('link', { name: 'Find me on Twitter' })).toHaveAttribute('href', 'https://x.com/ChristophPader')
+  await page.goto('/#/contact')
+  await expect(page.locator('.contact-socials').getByRole('link', { name: 'Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/chrispader.com')
 })
 
 test('reduced motion keeps all controls usable', async ({ page }) => {
@@ -274,6 +277,76 @@ test('the center stays fixed through rearrangements and the opening stays center
     await page.waitForTimeout(850)
     await expectCollectionFits(page, 6)
   }
+})
+
+test('desktop collection fits the window and interactions do not grow its scroll area', async ({ page }) => {
+  for (const viewport of [{ width: 1024, height: 650 }, { width: 1024, height: 768 }, { width: 1200, height: 700 }, { width: 1440, height: 900 }, { width: 1920, height: 1080 }]) {
+    await page.setViewportSize(viewport)
+    await page.goto('/')
+    await page.evaluate(() => document.fonts.ready)
+
+    const bounds = await page.evaluate(() => ({
+      height: document.documentElement.scrollHeight,
+      width: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }))
+    expect(bounds.height).toBeLessThanOrEqual(viewport.height)
+    expect(bounds.width).toBeLessThanOrEqual(bounds.clientWidth)
+    await expect(page.locator('.site-footer')).toBeInViewport()
+
+    await page.locator('#object-link-record .vinyl').hover()
+    const duringShuffle = await page.evaluate(async () => {
+      document.querySelector<HTMLButtonElement>('.collection-shuffle--desktop')?.click()
+      const sizes: { height: number; width: number; clientWidth: number }[] = []
+      for (let frame = 0; frame < 50; frame += 1) {
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+        sizes.push({
+          height: document.documentElement.scrollHeight,
+          width: document.documentElement.scrollWidth,
+          clientWidth: document.documentElement.clientWidth,
+        })
+      }
+      return sizes
+    })
+    expect(duringShuffle.every(size => size.height <= viewport.height && size.width <= size.clientWidth)).toBe(true)
+    await page.waitForTimeout(300)
+    await expectCollectionFits(page, 6)
+  }
+
+  await page.goto('/#/item/record')
+  const scrollArea = page.locator('.view-layer')
+  const initialHeight = await scrollArea.evaluate(element => element.scrollHeight)
+  await page.getByRole('button', { name: /Spin the record/ }).click()
+  await expect.poll(() => scrollArea.evaluate(element => element.scrollHeight)).toBe(initialHeight)
+  expect(await scrollArea.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+
+  const record = await page.getByRole('button', { name: 'Play the record artwork' }).boundingBox()
+  expect(record).not.toBeNull()
+  if (!record) return
+  await page.mouse.move(record.x + record.width / 2, record.y + record.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(record.x + record.width / 2 + 50, record.y + record.height / 2 + 30, { steps: 8 })
+  expect(await scrollArea.evaluate(element => element.scrollHeight)).toBe(initialHeight)
+  expect(await scrollArea.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await page.mouse.up()
+  expect(await scrollArea.evaluate(element => element.scrollHeight)).toBe(initialHeight)
+})
+
+test('collection objects open by keyboard without starting a link drag', async ({ page }) => {
+  await page.goto('/')
+  const object = page.locator('#object-link-expensify')
+  await expect(object).toHaveAttribute('type', 'button')
+  expect(await object.getAttribute('href')).toBeNull()
+  const dragPrevented = await object.evaluate(element => {
+    const event = new DragEvent('dragstart', { bubbles: true, cancelable: true })
+    element.dispatchEvent(event)
+    return event.defaultPrevented
+  })
+  expect(dragPrevented).toBe(true)
+
+  await object.focus()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/#\/item\/expensify$/)
 })
 
 test('detail content starts near the top and interactive controls have distinct cursors', async ({ page }, testInfo) => {

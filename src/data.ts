@@ -5,6 +5,7 @@ export const links = {
   github: 'https://github.com/chrispader',
   linkedin: 'https://www.linkedin.com/in/chrispader',
   x: 'https://x.com/ChristophPader',
+  bluesky: 'https://bsky.app/profile/chrispader.com',
   goodreads: 'https://goodreads.com/chrispader',
 } satisfies Record<string, string>
 

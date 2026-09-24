@@ -19,6 +19,18 @@
 .collection-gallery { width: 100%; }
 .collection-shuffle-dock { display: none; }
 
+@media (min-width: 1024px) {
+  .collection-scene { overflow: clip; }
+}
+
+@media (min-width: 1024px) and (min-height: 650px) {
+  .collection-layer:not(:has(.collection-continuation)) { display: flex; flex-direction: column; height: calc(100svh - var(--header-height, 112px)); overflow: clip; }
+  .collection-layer:not(:has(.collection-continuation)) .collection-scene { flex: 1; min-height: 0; }
+  .collection-layer:not(:has(.collection-continuation)) .collection-gallery { height: 100%; }
+  .collection-layer:not(:has(.collection-continuation)) .collection-opening { height: 100%; }
+  .collection-layer:not(:has(.collection-continuation)) .site-footer { flex: none; }
+}
+
 .collection-opening {
   position: relative;
   isolation: isolate;
@@ -137,7 +149,8 @@
 .collection-object[data-drift-layer='2'] { --drift-x: var(--drift-x-2); --drift-y: var(--drift-y-2); }
 .collection-object[data-drift-layer='3'] { --drift-x: var(--drift-x-3); --drift-y: var(--drift-y-3); }
 .collection-object:hover, .collection-object:focus-within { position: relative; z-index: 2; }
-.collection-object__link { display: block; width: 100%; min-height: 44px; color: inherit; touch-action: pan-y; transform: translate3d(calc(var(--drift-x, 0px) + var(--touch-x, 0px)), calc(var(--drift-y, 0px) + var(--scroll-y, 0px)), 0) rotate(var(--touch-rotate, 0deg)); transition: transform .28s ease; }
+.collection-object__link { display: block; width: 100%; min-height: 44px; padding: 0; border: 0; background: transparent; color: inherit; text-align: inherit; touch-action: pan-y; transform: translate3d(calc(var(--drift-x, 0px) + var(--touch-x, 0px)), calc(var(--drift-y, 0px) + var(--scroll-y, 0px)), 0) rotate(var(--touch-rotate, 0deg)); transition: transform .28s ease; }
+.collection-object__link img { -webkit-user-drag: none; }
 .collection-object__link[data-touch-dragging='true'] { transition: none; }
 .collection-object__link:focus-visible { outline: 2px solid var(--collection-ink); outline-offset: 4px; }
 .collection-object__envelope {
@@ -169,7 +182,7 @@
   .collection-opening .collection-object__pose { width: min(calc(100% - 28px), clamp(140px, min(10vw, calc(20svh - 20px)), 340px)); }
   .collection-opening .collection-object--portrait .collection-object__envelope,
   .collection-opening .collection-object--record .collection-object__envelope { height: clamp(210px, min(13vw, calc(23svh - 20px)), 420px); }
-  .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), clamp(130px, min(9vw, calc(18svh - 24px)), 310px)); }
+  .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), clamp(125px, min(8vw, calc(18svh - 32px)), 310px)); }
   .collection-opening .collection-object--record .collection-object__pose { width: min(calc(100% - 28px), clamp(145px, min(10vw, calc(20svh - 20px)), 340px)); }
   .collection-opening .collection-object--stack .collection-object__pose { width: min(calc(100% - 28px), clamp(145px, min(10.5vw, calc(20svh - 20px)), 340px)); }
   .collection-opening .collection-object--stack .collection-object__envelope { height: clamp(180px, min(11.5vw, calc(21svh - 20px)), 335px); }
@@ -192,38 +205,46 @@
 .collection-continuation .collection-object:nth-child(4n + 3) { padding-top: 15px; }
 .collection-continuation .collection-object:nth-child(4n + 4) { padding-top: 55px; }
 
-@media (min-width: 1024px) and (max-height: 900px) {
-  .collection-opening { height: clamp(640px, calc(100svh - var(--header-height, 112px) - 68px), 700px); }
-  .collection-opening__slot--1 { top: 8%; }
-  .collection-opening__slot--3 { top: 39%; }
-  .collection-opening__slot--4 { top: 31%; }
-  .collection-opening__slot--6 { bottom: 6%; }
-  .collection-opening .collection-object__envelope { height: 170px; }
-  .collection-opening .collection-object__pose { width: min(calc(100% - 28px), 125px); }
-  .collection-opening .collection-object--portrait .collection-object__envelope { height: 180px; }
-  .collection-opening .collection-object--record .collection-object__envelope { height: 180px; }
-  .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), 115px); }
-  .collection-opening .collection-object--record .collection-object__pose { width: min(calc(100% - 28px), 135px); }
-  .collection-opening .collection-object--stack .collection-object__envelope { height: 160px; }
-  .collection-opening .collection-object--stack .collection-object__pose { width: min(calc(100% - 28px), 130px); }
-  .collection-opening .collection-object--graph .collection-object__envelope { height: 135px; }
-  .collection-opening .collection-object--graph .collection-object__pose { width: min(calc(100% - 28px), 150px); }
+@media (min-width: 1024px) and (max-height: 1000px) {
+  .collection-opening__slot--1 { top: 2%; }
+  .collection-opening__slot--3 { top: 38%; }
+  .collection-opening__slot--4 { top: 35%; }
+  .collection-opening__slot--6 { bottom: 3%; }
+  .collection-opening .collection-object__envelope { height: clamp(115px, calc(27svh - 75px), 190px); }
+  .collection-opening .collection-object__pose { width: min(calc(100% - 28px), clamp(100px, calc(16svh - 5px), 140px)); }
+  .collection-opening .collection-object--portrait .collection-object__envelope,
+  .collection-opening .collection-object--record .collection-object__envelope { height: clamp(130px, calc(30svh - 80px), 210px); }
+  .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), clamp(85px, calc(13svh - 5px), 120px)); }
+  .collection-opening .collection-object--record .collection-object__pose { width: min(calc(100% - 28px), clamp(100px, 16svh, 145px)); }
+  .collection-opening .collection-object--workmark .collection-object__envelope { height: clamp(130px, calc(30svh - 80px), 190px); }
+  .collection-opening .collection-object--workmark .collection-object__pose { width: min(calc(100% - 28px), clamp(95px, calc(14svh - 3px), 130px)); }
+  .collection-opening .collection-object--stack .collection-object__envelope { height: clamp(105px, calc(25svh - 70px), 180px); }
+  .collection-opening .collection-object--stack .collection-object__pose { width: min(calc(100% - 28px), clamp(95px, 15svh, 145px)); }
+  .collection-opening .collection-object--graph .collection-object__envelope { height: clamp(95px, calc(20svh - 45px), 155px); }
+  .collection-opening .collection-object--graph .collection-object__pose { width: min(calc(100% - 28px), clamp(110px, calc(20svh - 5px), 170px)); }
 }
 
 @media (min-width: 1024px) and (max-height: 760px) {
-  .collection-opening { height: clamp(560px, calc(100svh - var(--header-height, 112px) - 20px), 620px); }
   .collection-hero h1 { margin-top: 22px; font-size: clamp(83px, 8.2vw, 112px); }
   .collection-hero p, .collection-hero__actions { margin-top: 20px; }
-  .collection-opening .collection-object__envelope { height: 140px; padding: 8px; }
-  .collection-opening .collection-object__pose { width: min(calc(100% - 28px), 105px); }
-  .collection-opening .collection-object--portrait .collection-object__envelope { height: 145px; }
-  .collection-opening .collection-object--record .collection-object__envelope { height: 145px; }
-  .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), 95px); }
-  .collection-opening .collection-object--record .collection-object__pose { width: min(calc(100% - 28px), 110px); }
-  .collection-opening .collection-object--stack .collection-object__envelope { height: 130px; }
-  .collection-opening .collection-object--stack .collection-object__pose { width: min(calc(100% - 28px), 110px); }
-  .collection-opening .collection-object--graph .collection-object__envelope { height: 110px; }
-  .collection-opening .collection-object--graph .collection-object__pose { width: min(calc(100% - 28px), 130px); }
+}
+
+@media (min-width: 1024px) and (max-height: 720px) {
+  .collection-opening__slot--1 { top: 0; }
+  .collection-opening__slot--3 { top: 35%; }
+  .collection-opening__slot--4 { top: 32%; }
+  .collection-opening .collection-object__envelope { height: clamp(90px, 14svh, 100px); padding: 8px; }
+  .collection-opening .collection-object__pose { width: min(calc(100% - 28px), clamp(75px, 13svh, 95px)); }
+  .collection-opening .collection-object--portrait .collection-object__envelope,
+  .collection-opening .collection-object--record .collection-object__envelope { height: clamp(100px, calc(20svh - 26px), 115px); }
+  .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), clamp(65px, 11svh, 80px)); }
+  .collection-opening .collection-object--record .collection-object__pose { width: min(calc(100% - 28px), clamp(75px, 13svh, 95px)); }
+  .collection-opening .collection-object--workmark .collection-object__envelope { height: clamp(95px, 15svh, 108px); }
+  .collection-opening .collection-object--workmark .collection-object__pose { width: min(calc(100% - 28px), clamp(72px, 12svh, 85px)); }
+  .collection-opening .collection-object--stack .collection-object__envelope { height: clamp(85px, 13svh, 95px); }
+  .collection-opening .collection-object--stack .collection-object__pose { width: min(calc(100% - 28px), clamp(70px, 12svh, 85px)); }
+  .collection-opening .collection-object--graph .collection-object__envelope { height: clamp(75px, 12svh, 86px); }
+  .collection-opening .collection-object--graph .collection-object__pose { width: min(calc(100% - 28px), clamp(95px, 16svh, 115px)); }
 }
 
 @media (max-width: 1023px) {

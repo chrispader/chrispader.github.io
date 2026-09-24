@@ -29,14 +29,10 @@
   .brand { gap: 20px; }
   .view-layer-inner { padding-inline: 0; }
 }
-@media (max-width: 740px) {
-  .site-header { width: 100%; min-height: 0; padding: calc(env(safe-area-inset-top) + 8px) max(28px, env(safe-area-inset-right)) 12px max(28px, env(safe-area-inset-left)); flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 18px; }
-  .brand { width: max-content; max-width: 100%; }
-  .site-nav { width: 100%; max-width: none; margin: 0; justify-content: flex-start; gap: 2px 4px; }
-}
 @media (max-width: 600px) {
-  .site-header { padding-right: max(20px, env(safe-area-inset-right)); padding-bottom: 8px; padding-left: max(20px, env(safe-area-inset-left)); }
-  .site-nav { padding-right: 58px; }
+  .site-header { width: 100%; min-height: 0; padding: max(33px, calc(env(safe-area-inset-top) + 8px)) max(20px, env(safe-area-inset-right)) 8px max(20px, env(safe-area-inset-left)); flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 18px; }
+  .brand { width: max-content; max-width: 100%; }
+  .site-nav { width: 100%; max-width: none; margin: 0; padding-right: 58px; justify-content: flex-start; gap: 2px 4px; }
   .site-nav__socials { gap: 4px; }
   .site-nav .site-nav__social { width: 30px; }
   .site-footer { width: calc(100% - 40px); }

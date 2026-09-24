@@ -34,6 +34,8 @@ test('header keeps full-size identity above navigation on narrow screens', async
     expect(navigationBox!.y).toBeGreaterThanOrEqual(brandBox!.y + brandBox!.height - 1)
     expect(await page.locator('.brand-mark').evaluate(element => getComputedStyle(element).fontSize)).toBe(wideLogoSize)
     expect(navigationBox!.x + navigationBox!.width).toBeLessThanOrEqual(headerBox!.x + headerBox!.width + 1)
+    const socialTops = await page.locator('.site-nav__social').evaluateAll(links => links.map(link => link.getBoundingClientRect().top))
+    expect(Math.max(...socialTops) - Math.min(...socialTops)).toBeLessThan(1)
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   }
 })

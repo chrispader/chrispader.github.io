@@ -18,6 +18,10 @@
   --font-display: 'Instrument Serif', Georgia, serif;
   --font-mono: 'Space Mono', monospace;
   --header-height: 112px;
+  --header-scroll: 0px;
+  --header-collapse-limit: 0px;
+  --header-hidden: clamp(0px, var(--header-scroll), var(--header-collapse-limit));
+  --header-brand-opacity: 1;
 }
 * { box-sizing: border-box; }
 html { scrollbar-gutter: stable; scroll-behavior: smooth; }

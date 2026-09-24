@@ -25,9 +25,19 @@ export default function App() {
 
   useEffect(() => updateDocumentSeo(route, items), [route])
 
+  useEffect(() => {
+    if (isOpen) return
+    const update = () => setHeaderScroll(window.scrollY)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [isOpen])
+
   useLayoutEffect(() => {
     document.body.dataset.viewOpen = String(isOpen)
-    if (layer.current) layer.current.scrollTop = viewScroll.current.get(routeKey) ?? 0
+    const restoredScroll = viewScroll.current.get(routeKey) ?? 0
+    if (layer.current) layer.current.scrollTop = restoredScroll
+    setHeaderScroll(isOpen ? restoredScroll : window.scrollY)
     const frame = requestAnimationFrame(() => {
       const restored = returnFocusId ? document.getElementById(returnFocusId) : null
       const target = restored && !restored.closest('[inert]')
@@ -68,7 +78,10 @@ export default function App() {
             <ViewLayer
               key="detail-layer"
               elementRef={layer}
-              onScroll={(scrollTop) => viewScroll.current.set(routeKey, scrollTop)}
+              onScroll={(scrollTop) => {
+                viewScroll.current.set(routeKey, scrollTop)
+                setHeaderScroll(scrollTop)
+              }}
               onBack={back}
             >
                 {item && <ItemDetail key={item.id} item={item} onBack={back} onNavigate={handleNavigate} />}
@@ -85,32 +98,44 @@ export default function App() {
 
 function SiteHeader({ route, onNavigate }: { route: CollectionRoute; onNavigate: Navigate }) {
   const header = useRef<HTMLElement>(null)
+  const brand = useRef<HTMLAnchorElement>(null)
+  const navigation = useRef<HTMLElement>(null)
 
   useLayoutEffect(() => {
     const element = header.current
     if (!element) return
 
-    const updateHeight = () => document.documentElement.style.setProperty('--header-height', `${element.getBoundingClientRect().height}px`)
+    const updateHeight = () => {
+      const root = document.documentElement.style
+      root.setProperty('--header-height', `${element.getBoundingClientRect().height}px`)
+      if (brand.current && navigation.current) {
+        const distance = navigation.current.getBoundingClientRect().top - brand.current.getBoundingClientRect().top
+        root.setProperty('--header-collapse-limit', `${Math.max(0, distance)}px`)
+      }
+    }
     const observer = new ResizeObserver(updateHeight)
     updateHeight()
     observer.observe(element)
+    if (brand.current) observer.observe(brand.current)
+    if (navigation.current) observer.observe(navigation.current)
 
     return () => {
       observer.disconnect()
       document.documentElement.style.removeProperty('--header-height')
+      document.documentElement.style.removeProperty('--header-collapse-limit')
     }
   }, [])
 
   return (
     <header ref={header} className="site-header">
-      <a className="brand" href="/" aria-label="Christoph Pader, back to collection" onClick={(event) => followRoute(event, { kind: 'collection' }, onNavigate)}>
+      <a ref={brand} className="brand" href="/" aria-label="Christoph Pader, back to collection" onClick={(event) => followRoute(event, { kind: 'collection' }, onNavigate)}>
         <span className="brand-mark" aria-hidden="true">cp<span>.</span></span>
         <span className="brand-caption">
           <span className="brand-name">Christoph Pader</span>
           <span className="brand-location">ENGINEER / VIENNA</span>
         </span>
       </a>
-      <nav className="site-nav" aria-label="Main navigation">
+      <nav ref={navigation} className="site-nav" aria-label="Main navigation">
         <a href={pathForRoute({ kind: 'index' })} aria-current={route.kind === 'index' ? 'page' : undefined} onClick={(event) => followRoute(event, { kind: 'index' }, onNavigate)}>The index</a>
         <a href={pathForRoute({ kind: 'contact' })} aria-current={route.kind === 'contact' ? 'page' : undefined} onClick={(event) => followRoute(event, { kind: 'contact' }, onNavigate)}>Say hello <ArrowUpRight className="site-nav__arrow" /></a>
         <span className="site-nav__socials">
@@ -130,6 +155,12 @@ function SiteHeader({ route, onNavigate }: { route: CollectionRoute; onNavigate:
       </nav>
     </header>
   )
+}
+
+function setHeaderScroll(scrollTop: number) {
+  const distance = Math.max(0, scrollTop)
+  document.documentElement.style.setProperty('--header-scroll', `${distance}px`)
+  document.documentElement.style.setProperty('--header-brand-opacity', String(Math.max(0, 1 - distance / 40)))
 }
 
 function followRoute(event: MouseEvent<HTMLAnchorElement>, destination: CollectionRoute, navigate: Navigate) {

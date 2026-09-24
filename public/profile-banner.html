@@ -21,11 +21,11 @@
       .head { position: absolute; top: 28px; left: 42px; z-index: 3; }
       .mark { font-size: 43px; font-weight: 800; line-height: .8; letter-spacing: -.105em; }
       .mark span { color: #b9e84f; }
-      .eyebrow { font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 400; letter-spacing: .06em; }
+      .eyebrow { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 400; letter-spacing: .06em; }
       .copy { position: absolute; top: 109px; left: 78px; z-index: 2; }
       .eyebrow { display: block; margin-bottom: 14px; }
       h1 { margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 76px; font-weight: 400; line-height: .82; letter-spacing: -.028em; }
-      .tagline { margin: 19px 0 0; font-size: 13px; line-height: 1.4; }
+      .tagline { margin: 19px 0 0; font-size: 16px; line-height: 1.4; }
       .thread { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
       .thread path { fill: none; stroke: #d8d6ca; stroke-width: 1.2; stroke-dasharray: 2 6; }
       .object { position: absolute; display: block; }
@@ -41,16 +41,16 @@
       .record::after { position: absolute; left: calc(50% - 2px); top: calc(50% - 2px); width: 4px; height: 4px; border-radius: 50%; background: #22241f; content: ''; }
       .record-center { position: absolute; inset: 39%; display: grid; place-items: center; color: #22241f; font-size: 17px; font-weight: 800; letter-spacing: -.1em; }
       @media (prefers-reduced-motion: no-preference) {
-        .postcard { animation: float-a 3.6s ease-in-out infinite; }
-        .graph { animation: float-b 4.3s ease-in-out infinite; }
-        .graph-line { stroke-dasharray: 305; stroke-dashoffset: 305; animation: draw 3.5s ease-in-out infinite alternate; }
-        .record { animation: float-record 5.2s ease-in-out infinite, spin 8s linear infinite; }
+        .postcard { animation: float-a 4s ease-in-out infinite; }
+        .graph { animation: float-b 4s ease-in-out infinite; }
+        .graph-line { stroke-dasharray: 250 250; animation: draw 4s ease-in-out infinite; }
+        .record { animation: float-record 4s ease-in-out infinite, spin 8s linear infinite; }
       }
-      @keyframes float-a { 50% { translate: 0 -10px; } }
-      @keyframes float-b { 50% { translate: 0 9px; } }
-      @keyframes float-record { 50% { translate: 0 9px; } }
-      @keyframes spin { to { transform: rotate(372deg); } }
-      @keyframes draw { 0%, 15% { stroke-dashoffset: 305; } 85%, 100% { stroke-dashoffset: 0; } }
+      @keyframes float-a { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+      @keyframes float-b { 0%, 100% { translate: 0 0; } 50% { translate: 0 9px; } }
+      @keyframes float-record { 0%, 100% { translate: 0 0; } 50% { translate: 0 9px; } }
+      @keyframes spin { from { transform: rotate(12deg); } to { transform: rotate(372deg); } }
+      @keyframes draw { 0%, 5% { stroke-dashoffset: 250; } 45%, 55% { stroke-dashoffset: 0; } 95%, 100% { stroke-dashoffset: -250; } }
       @media (max-width: 800px) {
         .banner { min-height: 440px; }
         .head { left: 26px; }
@@ -63,9 +63,9 @@
       @media (max-width: 540px) {
         .banner { min-height: 610px; }
         .head { top: 27px; }
-        .copy { top: 115px; left: 30px; }
+        .copy { top: 100px; left: 30px; }
         h1 { font-size: 67px; }
-        .tagline { max-width: 270px; font-size: 12px; }
+        .tagline { max-width: 320px; font-size: 14px; }
         .postcard { left: 5%; top: 316px; width: 94px; height: 122px; }
         .graph { left: 31%; top: 418px; width: 94px; height: 74px; }
         .record { left: 58%; top: 488px; width: 94px; height: 94px; }

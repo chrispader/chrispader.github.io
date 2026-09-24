@@ -2,11 +2,11 @@
 
 An interactive collection of work, open source, and life in Vienna. The site uses React, TypeScript, Vite, Motion, and CSS/SVG artwork. It builds as a static site for GitHub Pages.
 
-The opening contains up to four featured objects. More objects continue down the page and appear in the searchable index. Selecting an object reveals its story. The graph can be scrubbed, the record can be spun, and the plus button rearranges the collection.
+The opening contains up to six objects. More objects continue down the page and appear in the searchable index. Selecting an object reveals its story. The graph can be scrubbed, the record can be spun, and the plus button rearranges the collection.
 
 ## Editing the collection
 
-The content and social links live in `src/data.ts`. Add an entry to `collectionItems` with a unique, stable ID. Existing artwork types are `graph`, `stack`, `record`, `portrait`, and `note`.
+The content and social links live in `src/data.ts`. Add an entry to `collectionItems` with a unique, stable ID. Existing artwork types are `graph`, `stack`, `record`, `portrait`, `note`, and `workmark`.
 
 For example, a new note can use this shape:
 
@@ -30,7 +30,7 @@ For example, a new note can use this shape:
 }
 ```
 
-The new item automatically appears in the continuation and the index. Change `featuredIds` to choose the opening objects, in upper-left, upper-right, lower-left, and lower-right order. The layout fills missing featured positions from the remaining content.
+The new item appears in the collection and the index. With the current six authored objects, additions appear in the continuation. Change `featuredIds` to prioritize opening objects. The layout fills the remaining opening positions from the authored content order, up to six objects total.
 
 Keep IDs stable when editing titles so shared item URLs continue to work. Each item supports a link such as `#/item/small-experiment`. Labels can wrap, but short labels make the opening easier to scan.
 

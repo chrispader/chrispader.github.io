@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CollectionItem, CollectionRoute, Navigate } from './types'
+import { pathForRoute } from './routePath'
+
+export { pathForRoute } from './routePath'
 
 type RouteState = {
   route: CollectionRoute
@@ -15,19 +18,22 @@ type HistoryEntry = {
 
 export function useCollectionRoute(items: readonly CollectionItem[]) {
   const itemIds = new Set(items.map((item) => item.id))
-  const [state, setState] = useState<RouteState>(() => ({ route: parseCollectionHash(window.location.hash, itemIds) }))
+  const [state, setState] = useState<RouteState>(() => ({ route: parseCollectionLocation(window.location.pathname, window.location.hash, itemIds) }))
   const stateRef = useRef(state)
   const depthRef = useRef(0)
 
   useEffect(() => {
     const existing = readHistoryEntry(window.history.state)
+    const route = parseCollectionLocation(window.location.pathname, window.location.hash, itemIds)
+    const url = shouldNormalizeLegacyRoute(window.location.hash, route) ? `${pathForRoute(route)}${window.location.search}` : window.location.href
     if (existing) {
       depthRef.current = existing.depth
-      stateRef.current = { route: parseCollectionHash(window.location.hash, itemIds), sourceId: existing.sourceId }
+      stateRef.current = { route, sourceId: existing.sourceId }
       setState(stateRef.current)
+      if (url !== window.location.href) window.history.replaceState(existing, '', url)
       return
     }
-    window.history.replaceState({ collectionRoute: true, depth: 0 } satisfies HistoryEntry, '', window.location.href)
+    window.history.replaceState({ collectionRoute: true, depth: 0 } satisfies HistoryEntry, '', url)
   }, [])
 
   useEffect(() => {
@@ -35,7 +41,10 @@ export function useCollectionRoute(items: readonly CollectionItem[]) {
       const previous = stateRef.current
       const historyEntry = readHistoryEntry(window.history.state)
       depthRef.current = historyEntry?.depth ?? 0
-      const route = parseCollectionHash(window.location.hash, itemIds)
+      const route = parseCollectionLocation(window.location.pathname, window.location.hash, itemIds)
+      if (shouldNormalizeLegacyRoute(window.location.hash, route)) {
+        window.history.replaceState(historyEntry ?? { collectionRoute: true, depth: 0 } satisfies HistoryEntry, '', `${pathForRoute(route)}${window.location.search}`)
+      }
       if (sameRoute(previous.route, route) && previous.sourceId === historyEntry?.sourceId) return
       const next: RouteState = {
         route,
@@ -66,7 +75,7 @@ export function useCollectionRoute(items: readonly CollectionItem[]) {
     window.history.pushState(
       { collectionRoute: true, depth: depthRef.current, sourceId: next.sourceId } satisfies HistoryEntry,
       '',
-      hashForRoute(route),
+      `${pathForRoute(route)}${window.location.search}`,
     )
     stateRef.current = next
     setState(next)
@@ -79,12 +88,25 @@ export function useCollectionRoute(items: readonly CollectionItem[]) {
     }
     const previous = stateRef.current
     const next: RouteState = { route: { kind: 'collection' }, returnFocusId: previous.sourceId }
-    window.history.replaceState({ collectionRoute: true, depth: 0 } satisfies HistoryEntry, '', '#/collection')
+    window.history.replaceState({ collectionRoute: true, depth: 0 } satisfies HistoryEntry, '', `/${window.location.search}`)
     stateRef.current = next
     setState(next)
   }, [])
 
   return { route: state.route, sourceId: state.sourceId, returnFocusId: state.returnFocusId, navigate, back }
+}
+
+export function parseCollectionLocation(pathname: string, hash: string, itemIds: ReadonlySet<string>): CollectionRoute {
+  return isLegacyRouteHash(hash) ? parseCollectionHash(hash, itemIds) : parseCollectionPath(pathname, itemIds)
+}
+
+export function parseCollectionPath(pathname: string, itemIds: ReadonlySet<string>): CollectionRoute {
+  const path = pathname.replace(/^\/+|\/+$/g, '')
+  if (path === '' || path === 'collection') return { kind: 'collection' }
+  if (path === 'index') return { kind: 'index' }
+  if (path === 'contact') return { kind: 'contact' }
+  if (path.startsWith('item/')) return parseItemId(path.slice(5), itemIds)
+  return { kind: 'index', missingId: path }
 }
 
 export function parseCollectionHash(hash: string, itemIds: ReadonlySet<string>): CollectionRoute {
@@ -93,25 +115,26 @@ export function parseCollectionHash(hash: string, itemIds: ReadonlySet<string>):
   if (path === 'index' || path === 'writing') return { kind: 'index' }
   if (path === 'contact') return { kind: 'contact' }
   if (path === 'about') return itemIds.has('about') ? { kind: 'item', id: 'about' } : { kind: 'index', missingId: 'about' }
-  if (path.startsWith('item/')) {
-    let id: string
-    try {
-      id = decodeURIComponent(path.slice(5))
-    } catch {
-      return { kind: 'index', missingId: path.slice(5) }
-    }
-    return itemIds.has(id) ? { kind: 'item', id } : { kind: 'index', missingId: id }
-  }
+  if (path.startsWith('item/')) return parseItemId(path.slice(5), itemIds)
   return { kind: 'index', missingId: path }
 }
 
-export function hashForRoute(route: CollectionRoute): string {
-  switch (route.kind) {
-    case 'collection': return '#/collection'
-    case 'item': return `#/item/${encodeURIComponent(route.id)}`
-    case 'index': return '#/index'
-    case 'contact': return '#/contact'
+function parseItemId(encodedId: string, itemIds: ReadonlySet<string>): CollectionRoute {
+  let id: string
+  try {
+    id = decodeURIComponent(encodedId)
+  } catch {
+    return { kind: 'index', missingId: encodedId }
   }
+  return itemIds.has(id) ? { kind: 'item', id } : { kind: 'index', missingId: id }
+}
+
+function isLegacyRouteHash(hash: string): boolean {
+  return hash.startsWith('#/') || ['#work', '#top', '#about', '#writing'].includes(hash)
+}
+
+function shouldNormalizeLegacyRoute(hash: string, route: CollectionRoute): boolean {
+  return isLegacyRouteHash(hash) && !(route.kind === 'index' && route.missingId)
 }
 
 function normalizeRoute(route: CollectionRoute, itemIds: ReadonlySet<string>): CollectionRoute {

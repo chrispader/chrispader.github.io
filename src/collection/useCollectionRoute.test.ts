@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { hashForRoute, parseCollectionHash } from './useCollectionRoute'
+import { parseCollectionHash, parseCollectionLocation, parseCollectionPath, pathForRoute } from './useCollectionRoute'
 
 const ids = new Set(['graph', 'about', 'one more'])
 
-describe('collection hashes', () => {
+describe('collection routes', () => {
   it('parses direct item, index, and contact links', () => {
     expect(parseCollectionHash('#/item/graph', ids)).toEqual({ kind: 'item', id: 'graph' })
     expect(parseCollectionHash('#/item/one%20more', ids)).toEqual({ kind: 'item', id: 'one more' })
@@ -20,6 +20,14 @@ describe('collection hashes', () => {
   })
 
   it('encodes item IDs for shareable links', () => {
-    expect(hashForRoute({ kind: 'item', id: 'one more' })).toBe('#/item/one%20more')
+    expect(pathForRoute({ kind: 'item', id: 'one more' })).toBe('/item/one%20more/')
+    expect(parseCollectionPath('/item/one%20more/', ids)).toEqual({ kind: 'item', id: 'one more' })
+    expect(parseCollectionPath('/index/', ids)).toEqual({ kind: 'index' })
+    expect(parseCollectionPath('/contact/', ids)).toEqual({ kind: 'contact' })
+  })
+
+  it('keeps old hash bookmarks working while preferring real paths', () => {
+    expect(parseCollectionLocation('/', '#/item/graph', ids)).toEqual({ kind: 'item', id: 'graph' })
+    expect(parseCollectionLocation('/item/graph/', '', ids)).toEqual({ kind: 'item', id: 'graph' })
   })
 })

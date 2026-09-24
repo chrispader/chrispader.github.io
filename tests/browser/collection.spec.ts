@@ -7,7 +7,7 @@ test('graph opens, scrubs with the keyboard, and returns focus', async ({ page }
   await page.goto('/')
   const opener = page.locator('#object-link-graph')
   await opener.click()
-  await expect(page).toHaveURL(/#\/item\/graph$/)
+  await expect(page).toHaveURL(/\/item\/graph\/$/)
   await expect(page.getByRole('heading', { name: 'Make it move.' })).toBeFocused()
   const slider = page.getByRole('slider')
   await slider.focus()
@@ -60,7 +60,7 @@ test('index search, item links, contact, and direct links work', async ({ page }
   await page.getByRole('searchbox').fill('A little experiment. 15')
   await expect(page.locator('.index-row')).toHaveCount(1)
   const link = page.locator('#index-link-example-15')
-  await expect(link).toHaveAttribute('href', '#/item/example-15')
+  await expect(link).toHaveAttribute('href', '/item/example-15/')
   await link.click()
   await expect(page.getByRole('heading', { name: 'A little experiment. 15' })).toBeVisible()
   await page.getByRole('button', { name: /^.*Back/ }).click()
@@ -95,11 +95,11 @@ test('index starts with Chris and collection buttons always return home', async 
   })
   expect(contactGap).toBeLessThan(170)
   await page.getByRole('button', { name: 'Back to collection' }).click()
-  await expect(page).toHaveURL(/#\/collection$/)
+  await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { name: 'A work in play.' })).toBeVisible()
   await page.getByRole('link', { name: 'The index' }).click()
   await page.getByRole('button', { name: 'Back to collection' }).click()
-  await expect(page).toHaveURL(/#\/collection$/)
+  await expect(page).toHaveURL(/\/$/)
 })
 
 test('Margelo and Expensify details show the dates and public work', async ({ page }) => {
@@ -112,7 +112,7 @@ test('Margelo and Expensify details show the dates and public work', async ({ pa
   await expect(page.locator('.detail-prose')).toContainText('post-quantum end-to-end encryption library')
   await expect(page.locator('.detail-highlight')).toHaveCount(7)
   await expect(page.getByRole('link', { name: /Onyx meets NitroSQLite/ })).toHaveAttribute('href', 'https://github.com/Expensify/react-native-onyx/pull/602')
-  await expect(page.locator('.detail-highlight__copy strong code').filter({ hasText: 'NitroSQLite' })).toHaveCount(1)
+  await expect(page.locator('.detail-highlight__copy strong').filter({ hasText: 'NitroSQLite' })).toHaveCount(1)
 })
 
 test('all six authored objects share the main collection and Off the clock links reading and music', async ({ page }) => {
@@ -144,9 +144,9 @@ test('all six authored objects share the main collection and Off the clock links
   await expect(page.getByRole('link', { name: 'See what I’m reading' })).toHaveAttribute('href', 'https://goodreads.com/chrispader')
   await expect(page.getByRole('link', { name: 'Find me on Apple Music' })).toHaveAttribute('href', 'https://music.apple.com/profile/chrispader')
   const helloLink = page.locator('.detail-links').getByRole('link', { name: 'Say hello', exact: true })
-  await expect(helloLink).toHaveAttribute('href', '#/contact')
+  await expect(helloLink).toHaveAttribute('href', '/contact/')
   await helloLink.click()
-  await expect(page).toHaveURL(/#\/contact$/)
+  await expect(page).toHaveURL(/\/contact\/$/)
   await expect(page.getByRole('heading', { name: /Got a good feeling/ })).toBeVisible()
 })
 
@@ -392,7 +392,7 @@ test('collection objects open by keyboard without starting a link drag', async (
 
   await object.focus()
   await page.keyboard.press('Enter')
-  await expect(page).toHaveURL(/#\/item\/expensify$/)
+  await expect(page).toHaveURL(/\/item\/expensify\/$/)
 })
 
 test('detail content starts near the top and interactive controls have distinct cursors', async ({ page }, testInfo) => {

@@ -93,7 +93,7 @@ The intended component boundaries are:
 
 ## Navigation and motion
 
-Use a small route union derived from the URL: collection, item, index, or contact. Hash URLs such as `#/item/graph`, `#/index`, and `#/contact` allow direct links without additional GitHub Pages route files. An unknown item ID opens the index with a short explanation. Map existing section links such as `#work` to their closest new destination.
+Use a small route union derived from the URL: collection, item, index, or contact. Static pages for paths such as `/item/graph/`, `/index/`, and `/contact/` allow direct links on GitHub Pages. An unknown item ID opens the index with a short explanation. Map legacy hash links such as `#work` to their closest new destination.
 
 Opening an item records its source view, scroll position, and activating control. Closing returns there. A directly loaded detail has a Collection return destination. Browser Back and Forward follow the same state transitions. The logo always returns to the collection.
 

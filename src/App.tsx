@@ -81,8 +81,25 @@ export default function App() {
 }
 
 function SiteHeader({ route, onNavigate }: { route: CollectionRoute; onNavigate: Navigate }) {
+  const header = useRef<HTMLElement>(null)
+
+  useLayoutEffect(() => {
+    const element = header.current
+    if (!element) return
+
+    const updateHeight = () => document.documentElement.style.setProperty('--header-height', `${element.getBoundingClientRect().height}px`)
+    const observer = new ResizeObserver(updateHeight)
+    updateHeight()
+    observer.observe(element)
+
+    return () => {
+      observer.disconnect()
+      document.documentElement.style.removeProperty('--header-height')
+    }
+  }, [])
+
   return (
-    <header className="site-header">
+    <header ref={header} className="site-header">
       <a className="brand" href="#/collection" aria-label="Christoph Pader, back to collection" onClick={(event) => followRoute(event, { kind: 'collection' }, onNavigate)}>
         <span className="brand-mark" aria-hidden="true">cp<span>.</span></span>
         <span className="brand-caption">

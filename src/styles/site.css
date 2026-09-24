@@ -4,7 +4,7 @@
 .brand-mark span { color: #c5f258; }
 .brand-caption { display: grid; gap: 5px; min-width: 0; }
 .brand-name { font-size: 14px; letter-spacing: -.02em; }
-.brand-location { font: 9px var(--font-mono); color: var(--muted); }
+.brand-location { font: 9px var(--font-body); color: var(--muted); }
 .brand-name, .brand-location { overflow-wrap: anywhere; }
 .site-nav { display: flex; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: 8px; align-items: center; max-width: 100%; margin-left: auto; }
 .site-nav a { font-size: 13px; min-height: 44px; display: inline-flex; flex: none; align-items: center; gap: 6px; position: relative; white-space: nowrap; }
@@ -15,7 +15,7 @@
 .site-nav a:hover::after, .site-nav a[aria-current='page']::after { transform: scaleX(1); }
 .site-nav .site-nav__social { justify-content: center; width: 36px; gap: 0; }
 .site-nav__social svg, .site-nav__social img { width: 18px; height: 18px; flex: none; }
-.site-footer { display: flex; justify-content: space-between; gap: 20px; width: min(100% - 112px, 1328px); margin: 0 auto; padding: 28px 0 36px; color: var(--muted); font: 10px var(--font-mono); }
+.site-footer { display: flex; justify-content: space-between; gap: 20px; width: min(100% - 112px, 1328px); margin: 0 auto; padding: 28px 0 36px; color: var(--muted); font: 10px var(--font-body); }
 .site-footer span { white-space: nowrap; }
 .site-footer__coordinates { white-space: nowrap; user-select: text; -webkit-user-select: text; }
 .collection-layer { overflow-x: clip; transition: opacity 180ms ease; }
@@ -23,7 +23,7 @@
 .view-layer { position: fixed; z-index: 20; inset: var(--header-height) 0 0; overflow-x: clip; overflow-y: auto; overscroll-behavior: contain; background: var(--paper); padding: 24px max(28px, calc((100vw - 1328px) / 2)); scrollbar-gutter: stable; }
 .view-layer-inner { min-height: 100%; width: 100%; max-width: 1280px; margin: 0 auto; padding: 10px 28px 60px; }
 .view-layer:focus { outline: none; }
-.preview-banner { position: fixed; bottom: 0; left: 0; z-index: 100; background: var(--ink); color: var(--paper); padding: 8px 12px; font: 11px var(--font-mono); }
+.preview-banner { position: fixed; bottom: 0; left: 0; z-index: 100; background: var(--ink); color: var(--paper); padding: 8px 12px; font: 11px var(--font-body); }
 @media (max-width: 900px) {
   .site-header, .site-footer { width: calc(100% - 56px); }
   .brand { gap: 20px; }

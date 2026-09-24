@@ -8,6 +8,7 @@ type Props = { items: readonly CollectionItem[]; onNavigate: Navigate; onBack: (
 
 export function CollectionIndex({ items, onNavigate, onBack, missingId, query: controlledQuery, onQueryChange }: Props) {
   const [localQuery, setLocalQuery] = useState('')
+  const [activeArtworkId, setActiveArtworkId] = useState<string | null>(null)
   const query = controlledQuery ?? localQuery
   const updateQuery = onQueryChange ?? setLocalQuery
   const filteredItems = useMemo(() => {
@@ -29,9 +30,9 @@ export function CollectionIndex({ items, onNavigate, onBack, missingId, query: c
     <h1 id="view-heading" tabIndex={-1}>The index<span>.</span></h1>
     <p className="index-intro">A few things I’ve made, learned from, and kept close.</p>
     {items.length > 8 && <label className="index-search">Find an object<input type="search" value={query} onChange={event => updateQuery(event.currentTarget.value)} placeholder="Title or topic" /></label>}
-    <div className="index-list" aria-live="polite">{filteredItems.map((item, index) => <a className="index-row" id={`index-link-${item.id}`} href={pathForRoute({ kind: 'item', id: item.id })} key={item.id} onClick={event => followItem(event, item)}>
+    <div className="index-list" aria-live="polite">{filteredItems.map((item, index) => <a className="index-row" id={`index-link-${item.id}`} href={pathForRoute({ kind: 'item', id: item.id })} key={item.id} onClick={event => followItem(event, item)} onPointerEnter={() => setActiveArtworkId(item.id)} onPointerLeave={() => setActiveArtworkId(null)} onFocus={() => setActiveArtworkId(item.id)} onBlur={() => setActiveArtworkId(null)}>
       <span className="index-count">{String(index + 1).padStart(2, '0')}</span>
-      <span className="index-art"><Artwork artwork={item.artwork} /></span>
+      <span className="index-art"><Artwork artwork={item.artwork} active={activeArtworkId === item.id} /></span>
       <span className="index-row-copy"><span className="index-row-title">{item.title}</span><span className="index-row-teaser">{item.teaser}</span><span className="index-row-tags">{item.tags.join(' · ')}</span></span>
       <span className="index-arrow"><ArrowUpRight /></span>
     </a>)}{filteredItems.length === 0 && <p className="index-empty">Nothing here by that name. Try another word.</p>}</div>

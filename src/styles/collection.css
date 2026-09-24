@@ -70,11 +70,9 @@
 
 .collection-hero__actions {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  align-content: flex-start;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
   min-height: 130px;
   margin-top: 35px;
 }

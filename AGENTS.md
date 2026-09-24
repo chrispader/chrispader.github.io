@@ -1,11 +1,11 @@
 # Website guidance for agents
 
-This is Christoph Pader's personal site: an interactive collection of work and life in Vienna. Follow the approved direction in `planning/kinetic-collection-plan.md`. Preserve the `cp.` mark, warm paper background, serif display type, small mono labels, vivid artwork, and deliberately asymmetric placement. Keep the first view light on copy and reveal more through interaction, details, and the index. Build small, purposeful motion with CSS, SVG, and Motion; the page should feel like a collection to explore, not a grid of static cards or a full game.
+This is Christoph Pader's personal site: an interactive collection of work and life in Vienna. Follow the approved direction in `planning/kinetic-collection-plan.md`. Preserve the `cp.` mark, warm paper background, serif display type, small labels, vivid artwork, and deliberately asymmetric placement. Keep the first view light on copy and reveal more through interaction, details, and the index. Build small, purposeful motion with CSS, SVG, and Motion; the page should feel like a collection to explore, not a grid of static cards or a full game.
 
 ## Source of truth
 
 - `src/data.ts` owns the authored objects, their stories, public links, and `featuredIds`. Keep object IDs unique and stable because `#/item/<id>` is shareable. Put profile URLs in `links` and reuse them across the header, About me, Say hello, and detail views.
-- Spell library names as their projects do, including `NitroSQLite` and `NitroFetch`. Wrap code and library names in backticks in detail paragraphs, link labels, and highlights; `InlineCodeText` renders those marks in the site's mono style.
+- Spell library names as their projects do, including `NitroSQLite` and `NitroFetch`. Use backticks in authored content only for lowercase hyphenated package names such as `react-native-nitro-sqlite`; `InlineCodeText` renders those names in Space Mono. Keep other names and labels in the body font.
 - `src/collection/layout.ts` chooses up to six opening objects and places any others in the continuation. Shuffle can rearrange all objects; reset restores the authored order. Keep the center hero fixed while objects move around it.
 - `src/collection/Artwork.tsx` dispatches artwork types defined in `src/collection/types.ts`. New art belongs in a focused component under `src/collection/artwork/`, with bounded dimensions and an explicit interaction. Use `ArrowUpRight` or drawn SVG for arrows, never emoji substitutes.
 - `src/App.tsx` owns the header, hash navigation, focus restoration, and the detail overlay. Preserve direct URLs, browser history, collection scroll position, and a reliable return to the collection. The index must remain searchable as items are added.

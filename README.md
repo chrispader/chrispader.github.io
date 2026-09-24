@@ -54,12 +54,12 @@ The site respects reduced motion, supports keyboard navigation, and retains norm
 
 ## GitHub profile banner
 
-The animated banner is `public/profile-banner.gif`. It opens a [small interactive version](https://chrispader.com/profile-banner.html) where visitors can rearrange the objects or pick one to explore. GitHub profile READMEs display the GIF and make the whole image clickable; they do not run the page's controls inside the README.
+The animated banner is `public/profile-banner.gif`. It shows the logo, portrait, graph, and record with subtle motion. The profile README makes the whole image a link to the website.
 
 The `chrispader/chrispader` profile README embeds it with:
 
 ```md
-[![Christoph Pader's collection: A work in play. Open the interactive version.](https://chrispader.com/profile-banner.gif)](https://chrispader.com/profile-banner.html)
+[![Christoph Pader on GitHub. Explore my repositories and work below.](https://chrispader.com/profile-banner.gif)](https://chrispader.com/)
 
-[Source for the collection](https://github.com/chrispader/chrispader.github.io)
+[See the banner](https://chrispader.com/profile-banner.html) · [Explore the full site](https://chrispader.com/)
 ```

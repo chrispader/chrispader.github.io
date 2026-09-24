@@ -63,6 +63,7 @@
 .graph-scrubber output span { color: var(--muted, #66665d); }
 .graph-scrubber input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; accent-color: var(--blue, #3b56ef); cursor: ew-resize; }
 .graph-scrubber input:focus-visible { position: static; grid-column: 1 / -1; width: 100%; height: 44px; clip-path: none; outline: 2px solid var(--blue, #3b56ef); outline-offset: 3px; }
+.detail-art-graph .graph-artwork-interaction { touch-action: none; }
 .art-note { margin: 0; color: var(--muted, #66665d); font: 10px var(--font-mono, monospace); }
 .spin-button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 0 17px; border: 1px solid var(--line, #d6d0c3); border-radius: 999px; background: transparent; color: var(--ink, #22241f); font-size: 13px; touch-action: manipulation; }
 .spin-button:first-letter { font-size: 21px; }

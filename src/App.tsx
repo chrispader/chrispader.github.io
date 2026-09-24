@@ -56,8 +56,8 @@ export default function App() {
         <div className="collection-layer" data-obscured={isOpen} inert={isOpen} aria-hidden={isOpen}>
           <StableCollectionScene items={items} featuredIds={featuredIds} onNavigate={handleNavigate} />
           <footer className="site-footer">
-            <span>48.2082° N&nbsp; 16.3738° E</span>
-            <span>COLLECTION № 01&nbsp; /&nbsp; VIENNA</span>
+            <a className="site-footer__coordinates" href="https://hoodmaps.com/vienna-neighborhood-map?lat=48.20817&amp;lng=16.37382&amp;zoom=12.00" aria-label="48.2082 degrees north, 16.3738 degrees east. Open map of Vienna">48.2082° N&nbsp; 16.3738° E</a>
+            <span>COLLECTION № 01</span>
           </footer>
         </div>
         <AnimatePresence initial={false}>

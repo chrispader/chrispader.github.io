@@ -72,3 +72,26 @@ test('mobile record can be dragged and the graph returns to its resting shape', 
   await expect(graph.locator('.graph-curve')).toHaveAttribute('d', restingCurve ?? '')
   await context.close()
 })
+
+test('detail graph follows a finger drag and settles after release', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
+  const page = await context.newPage()
+  const devtools = await context.newCDPSession(page)
+  await page.goto('/#/item/graph')
+
+  const graph = page.locator('.detail-art-graph .graph-artwork-interaction')
+  const curve = graph.locator('.graph-curve')
+  const restingCurve = await curve.getAttribute('d')
+  const bounds = await graph.boundingBox()
+  expect(bounds).not.toBeNull()
+  const x = Math.round(bounds!.x + bounds!.width / 2)
+  const y = Math.round(bounds!.y + bounds!.height / 2)
+
+  await devtools.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] })
+  await devtools.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + 30, y: y + 20 }] })
+  await expect.poll(() => curve.getAttribute('d')).not.toBe(restingCurve)
+  await devtools.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  await expect(curve).toHaveAttribute('d', restingCurve ?? '')
+
+  await context.close()
+})

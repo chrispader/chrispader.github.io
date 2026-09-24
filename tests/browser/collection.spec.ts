@@ -21,6 +21,26 @@ test('graph opens, scrubs with the keyboard, and returns focus', async ({ page }
   expect(errors).toEqual([])
 })
 
+test('detail graph snakes only while pressed and returns to its curve', async ({ page }) => {
+  await page.goto('/#/item/graph')
+  const graph = page.locator('.detail-art-graph .graph-artwork-interaction')
+  const curve = graph.locator('.graph-curve')
+  const resting = await curve.getAttribute('d')
+  const bounds = await graph.boundingBox()
+  expect(bounds).not.toBeNull()
+  const x = bounds!.x + bounds!.width / 2
+  const y = bounds!.y + bounds!.height / 2
+
+  await page.mouse.move(x, y)
+  await page.waitForTimeout(150)
+  await expect(curve).toHaveAttribute('d', resting ?? '')
+  await page.mouse.down()
+  await page.mouse.move(x + 35, y + 15, { steps: 5 })
+  await expect.poll(() => curve.getAttribute('d')).not.toBe(resting)
+  await page.mouse.up()
+  await expect(curve).toHaveAttribute('d', resting ?? '')
+})
+
 test('a continuation object preserves scroll through browser history', async ({ page }) => {
   await page.goto('/?previewItems=30')
   const opener = page.locator('#object-link-example-29')

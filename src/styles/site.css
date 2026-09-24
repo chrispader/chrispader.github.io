@@ -9,6 +9,7 @@
 .site-nav { display: flex; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: 8px; align-items: center; max-width: 100%; margin-left: auto; }
 .site-nav a { font-size: 13px; min-height: 44px; display: inline-flex; flex: none; align-items: center; gap: 6px; position: relative; white-space: nowrap; }
 .site-nav > a:nth-child(-n + 2) { margin-right: 6px; }
+.site-nav__socials { display: inline-flex; flex: none; align-items: center; gap: 8px; }
 .site-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 8px; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 180ms ease; }
 .site-nav__arrow { width: 14px; height: 14px; flex: none; }
 .site-nav a:hover::after, .site-nav a[aria-current='page']::after { transform: scaleX(1); }
@@ -29,19 +30,14 @@
   .view-layer-inner { padding-inline: 0; }
 }
 @media (max-width: 600px) {
-  .site-header { position: fixed; inset: 0 0 auto; width: 100%; min-height: 0; padding: calc(env(safe-area-inset-top) + 8px) max(20px, env(safe-area-inset-right)) 8px max(20px, env(safe-area-inset-left)); display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; justify-content: stretch; row-gap: 4px; }
+  .site-header { position: sticky; top: 0; width: 100%; min-height: 0; padding: calc(env(safe-area-inset-top) + 8px) max(20px, env(safe-area-inset-right)) 8px max(20px, env(safe-area-inset-left)); display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; justify-content: stretch; row-gap: 4px; }
   .brand { width: max-content; max-width: 100%; }
   .site-nav { width: 100%; max-width: none; margin: 0; padding-right: 58px; justify-content: flex-start; gap: 2px 4px; }
+  .site-nav__socials { gap: 4px; }
   .site-nav .site-nav__social { width: 30px; }
-  .collection-layer { padding-top: var(--header-height); }
   .site-footer { width: calc(100% - 40px); }
   .view-layer { padding: 8px 24px 0; }
   .site-footer { font-size: 8px; padding-block: 24px; }
-}
-@supports (-webkit-touch-callout: none) {
-  @media (max-width: 600px) {
-    .site-header { padding-top: calc(max(env(safe-area-inset-top), 54px) + 8px); }
-  }
 }
 @media (max-width: 370px) {
   .site-footer { flex-wrap: wrap; }

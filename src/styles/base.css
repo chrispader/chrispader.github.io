@@ -38,11 +38,6 @@ h1, h2, h3, p, figure { margin: 0; }
 @media (max-width: 600px) {
   :root { --header-height: calc(110px + env(safe-area-inset-top)); }
 }
-@supports (-webkit-touch-callout: none) {
-  @media (max-width: 600px) {
-    :root { --header-height: calc(110px + max(env(safe-area-inset-top), 54px)); }
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; }

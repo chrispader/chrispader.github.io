@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { Artwork } from './Artwork'
 import { GraphArtwork, sampleGraphCurve } from './artwork/GraphArtwork'
 import { RecordArtwork } from './artwork/RecordArtwork'
 import { ArrowUpRight } from './ArrowUpRight'
 import { InlineCodeText } from './InlineCodeText'
-import type { CollectionItem } from './types'
+import type { CollectionItem, Navigate } from './types'
 
-type Props = { item: CollectionItem; onBack: () => void }
+type Props = { item: CollectionItem; onBack: () => void; onNavigate: Navigate }
 
-export function ItemDetail({ item, onBack }: Props) {
+export function ItemDetail({ item, onBack, onNavigate }: Props) {
   const [progress, setProgress] = useState(1)
   const [spin, setSpin] = useState(0)
   const [dragging, setDragging] = useState(false)
@@ -43,6 +43,12 @@ export function ItemDetail({ item, onBack }: Props) {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
   }
 
+  function followInternalLink(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    if (href !== '/contact/' || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    event.preventDefault()
+    onNavigate({ kind: 'contact' })
+  }
+
   return <article className="detail-view" aria-labelledby="view-heading">
     <div className="detail-topline"><button className="detail-back" type="button" onClick={onBack}>← <span>Back</span></button><span className="detail-number">OBJECT {item.id.toUpperCase()}</span></div>
     <div className="detail-layout">
@@ -63,7 +69,7 @@ export function ItemDetail({ item, onBack }: Props) {
         <h1 id="view-heading" tabIndex={-1}>{item.title}</h1>
         <p className="detail-teaser">{item.teaser}</p>
         <div className="detail-prose">{item.detail.paragraphs.map((paragraph, index) => <p key={`${item.id}-paragraph-${index}`}><InlineCodeText text={paragraph} /></p>)}</div>
-        {item.detail.links.length > 0 && <nav className="detail-links" aria-label="Related links">{item.detail.links.map(link => <a key={link.href} href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined}><span><InlineCodeText text={link.label} /></span><ArrowUpRight /></a>)}</nav>}
+        {item.detail.links.length > 0 && <nav className="detail-links" aria-label="Related links">{item.detail.links.map(link => <a key={link.href} href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noreferrer' : undefined} onClick={event => followInternalLink(event, link.href)}><span><InlineCodeText text={link.label} /></span><ArrowUpRight /></a>)}</nav>}
         {item.tags.length > 0 && <ul className="detail-tags" aria-label="Topics">{item.tags.map(tag => <li key={tag}>{tag}</li>)}</ul>}
       </div>
     </div>

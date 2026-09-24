@@ -141,7 +141,7 @@ export const collectionItems: readonly CollectionItem[] = [
       links: [
         { label: 'See what I’m reading', href: links.goodreads },
         { label: 'Find me on Apple Music', href: links.appleMusic },
-        { label: 'Say hello', href: '#/contact' },
+        { label: 'Say hello', href: '/contact/' },
       ],
     },
   },

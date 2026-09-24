@@ -4,12 +4,13 @@ This is Christoph Pader's personal site: an interactive collection of work and l
 
 ## Source of truth
 
-- `src/data.ts` owns the authored objects, their stories, public links, and `featuredIds`. Keep object IDs unique and stable because `#/item/<id>` is shareable. Put profile URLs in `links` and reuse them across the header, About me, Say hello, and detail views.
+- `src/data.ts` owns the authored objects, their stories, public links, and `featuredIds`. Keep object IDs unique and stable because `/item/<id>/` is shareable. Put profile URLs in `links` and reuse them across the header, About me, Say hello, and detail views.
 - Spell library names as their projects do, including `NitroSQLite` and `NitroFetch`. Use backticks in authored content only for lowercase hyphenated package names such as `react-native-nitro-sqlite`; `InlineCodeText` renders those names in Space Mono. Keep other names and labels in the body font.
 - `src/collection/layout.ts` chooses up to six opening objects and places any others in the continuation. Shuffle can rearrange all objects; reset restores the authored order. Keep the center hero fixed while objects move around it.
 - `src/collection/Artwork.tsx` dispatches artwork types defined in `src/collection/types.ts`. New art belongs in a focused component under `src/collection/artwork/`, with bounded dimensions and an explicit interaction. Use `ArrowUpRight` or drawn SVG for arrows, never emoji substitutes.
-- `src/App.tsx` owns the header, hash navigation, focus restoration, and the detail overlay. Preserve direct URLs, browser history, collection scroll position, and a reliable return to the collection. The index must remain searchable as items are added.
-- Design tokens and cursors live in `src/styles/base.css`; the collection, artwork, site shell, and detail views have separate stylesheets. The title, social metadata, and initial default cursor live in `index.html` so they are available before the app loads. Static images, icons, cursors, and fonts live in `public/`.
+- `src/App.tsx` owns the header, path navigation, focus restoration, and the detail overlay. Preserve direct URLs, old hash bookmarks, browser history, collection scroll position, and a reliable return to the collection. The index must remain searchable as items are added.
+- `src/seo.ts` owns route metadata and structured data. `scripts/generate-seo.mjs` builds static HTML for every route and a sitemap from the same authored objects. Keep the static pages and client metadata consistent when adding content.
+- Design tokens and cursors live in `src/styles/base.css`; the collection, artwork, site shell, and detail views have separate stylesheets. The initial default cursor lives in `index.html` before the app loads. Static images, icons, cursors, and fonts live in `public/`.
 
 ## Interaction and layout
 

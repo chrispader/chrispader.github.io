@@ -183,6 +183,41 @@ test('social links appear in the header and detail pages', async ({ page }) => {
   await expect(page.locator('.contact-socials').getByRole('link', { name: 'Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/chrispader.com')
 })
 
+test('header moves directly from one row to a left-aligned stack', async ({ page }) => {
+  for (const width of [390, 680, 740, 741, 900]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/')
+    await page.evaluate(() => document.fonts.ready)
+
+    const positions = await page.evaluate(() => {
+      const brand = document.querySelector('.brand')!.getBoundingClientRect()
+      const mark = document.querySelector('.brand-mark')!.getBoundingClientRect()
+      const caption = document.querySelector('.brand-caption')!.getBoundingClientRect()
+      const nav = document.querySelector('.site-nav')!.getBoundingClientRect()
+      return {
+        brandX: brand.x,
+        brandBottom: brand.bottom,
+        brandMiddle: brand.top + brand.height / 2,
+        markMiddle: mark.top + mark.height / 2,
+        captionMiddle: caption.top + caption.height / 2,
+        navX: nav.x,
+        navTop: nav.top,
+        navMiddle: nav.top + nav.height / 2,
+        pageWidth: document.documentElement.scrollWidth,
+      }
+    })
+
+    if (width <= 740) {
+      expect(Math.abs(positions.navX - positions.brandX)).toBeLessThan(1)
+      expect(positions.navTop - positions.brandBottom).toBeGreaterThanOrEqual(16)
+    } else {
+      expect(Math.abs(positions.navMiddle - positions.brandMiddle)).toBeLessThan(2)
+    }
+    expect(Math.abs(positions.markMiddle - positions.captionMiddle)).toBeLessThanOrEqual(4)
+    expect(positions.pageWidth).toBeLessThanOrEqual(width)
+  }
+})
+
 test('reduced motion keeps all controls usable', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/#/item/record')

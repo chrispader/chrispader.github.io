@@ -63,7 +63,7 @@
   .collection-object__link:is(:hover, :focus-visible) .paper-note { transform: rotate(-3deg) translateY(-8px); }
   .collection-object__link:is(:hover, :focus-visible) .note-star { transform: rotate(50deg) scale(1.2); }
   .collection-object__link:is(:hover, :focus-visible) .workmark { transform: rotate(0deg) translateY(-8px); }
-  .collection-object__link:is(:hover, :focus-visible) .workmark__orbit { transform: translate(10px, -10px) rotate(45deg); }
+  .collection-object__link:is(:hover, :focus-visible) .workmark__orbit { transform: translate(3cqw, -3cqw) rotate(45deg); }
   .collection-object__link:is(:hover, :focus-visible) .vinyl { animation: record-groove 2.8s linear infinite; }
 }
 @keyframes record-groove { to { transform: rotate(360deg); } }

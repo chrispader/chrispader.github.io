@@ -31,8 +31,8 @@ export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props)
     }
   }, [reducedMotion])
 
-  function trackHover(event: PointerEvent<HTMLDivElement>) {
-    if (onProgressChange || reducedMotion) return
+  function trackWave(event: PointerEvent<HTMLDivElement>) {
+    if (reducedMotion || (onProgressChange && pointerId.current !== event.pointerId)) return
     const bounds = event.currentTarget.getBoundingClientRect()
     if (!bounds.width || !bounds.height) return
     waveX.current = clamp((event.clientX - bounds.left) / bounds.width) * 100
@@ -102,10 +102,10 @@ export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props)
   }
 
   return <div className="graph-artwork-interaction"
-    onPointerEnter={trackHover}
+    onPointerEnter={trackWave}
     onPointerDown={event => {
       if (!onProgressChange) {
-        trackHover(event)
+        trackWave(event)
         return
       }
       if (event.button !== 0) return
@@ -113,12 +113,13 @@ export function GraphArtwork({ samples, progress = 1, onProgressChange }: Props)
       event.currentTarget.setPointerCapture(event.pointerId)
       if (event.pointerType !== 'touch') event.preventDefault()
       scrub(event)
+      trackWave(event)
     }}
-    onPointerMove={event => { if (pointerId.current === event.pointerId) scrub(event); else trackHover(event) }}
-    onPointerLeave={stopWave}
-    onPointerUp={event => { finishPointer(event); if (event.pointerType === 'touch') stopWave() }}
+    onPointerMove={event => { if (pointerId.current === event.pointerId) scrub(event); trackWave(event) }}
+    onPointerLeave={() => { if (pointerId.current === null) stopWave() }}
+    onPointerUp={event => { finishPointer(event); if (onProgressChange) stopWave() }}
     onPointerCancel={event => { finishPointer(event); stopWave() }}
-    onLostPointerCapture={event => { if (pointerId.current === event.pointerId) pointerId.current = null }}>
+    onLostPointerCapture={event => { if (pointerId.current === event.pointerId) { pointerId.current = null; stopWave() } }}>
     <svg viewBox="-8 -8 116 116" preserveAspectRatio="none" className="graph-drawing" aria-hidden="true">
       <path className="graph-grid" d="M0 20H100M0 40H100M0 60H100M0 80H100M20 0V100M40 0V100M60 0V100M80 0V100" />
       <path ref={shadowPath} className="graph-curve-shadow" d={curve} pathLength="100" />

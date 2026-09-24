@@ -23,9 +23,9 @@
   position: relative;
   isolation: isolate;
   width: 100%;
-  height: clamp(740px, calc(100svh - var(--header-height, 112px) - 120px), 800px);
-  max-width: 1480px;
-  margin: max(0px, calc((100svh - 800px) / 2 - var(--header-height, 112px) - 28px)) auto 0;
+  height: clamp(740px, calc(100svh - var(--header-height, 112px) - 140px), 1400px);
+  max-width: 3200px;
+  margin: 0 auto;
 }
 
 .collection-thread { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: visible; }
@@ -124,13 +124,13 @@
 }
 .collection-reset[data-visible='false'] { visibility: hidden; pointer-events: none; }
 
-.collection-opening__slot { position: absolute; width: 24%; min-width: 0; }
-.collection-opening__slot--1 { top: 8%; left: 6%; }
+.collection-opening__slot { position: absolute; width: min(24%, 500px); min-width: 0; }
+.collection-opening__slot--1 { top: 4%; left: 6%; }
 .collection-opening__slot--2 { top: 0; right: 0; }
-.collection-opening__slot--3 { top: 39%; left: 0; }
-.collection-opening__slot--4 { top: 31%; right: 6%; }
+.collection-opening__slot--3 { top: 37%; left: 0; }
+.collection-opening__slot--4 { top: 32%; right: 6%; }
 .collection-opening__slot--5 { bottom: 0; left: 6%; }
-.collection-opening__slot--6 { bottom: 6%; right: 0; }
+.collection-opening__slot--6 { bottom: 1%; right: 0; }
 
 .collection-object { min-width: 0; }
 .collection-object[data-drift-layer='1'] { --drift-x: var(--drift-x-1); --drift-y: var(--drift-y-1); }
@@ -165,15 +165,16 @@
 .collection-object--stack .collection-object__envelope { min-height: 280px; }
 .collection-object--workmark .collection-object__envelope { min-height: 310px; }
 @media (min-width: 1024px) {
-  .collection-opening .collection-object__envelope { min-height: 0; height: 190px; padding: 12px; }
-  .collection-opening .collection-object__pose { width: min(calc(100% - 28px), 140px); }
-  .collection-opening .collection-object--portrait .collection-object__envelope { height: 210px; }
-  .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), 130px); }
-  .collection-opening .collection-object--record .collection-object__pose,
-  .collection-opening .collection-object--stack .collection-object__pose { width: min(calc(100% - 28px), 145px); }
-  .collection-opening .collection-object--stack .collection-object__envelope { height: 180px; }
-  .collection-opening .collection-object--graph .collection-object__envelope { height: 155px; }
-  .collection-opening .collection-object--graph .collection-object__pose { width: min(calc(100% - 28px), 170px); }
+  .collection-opening .collection-object__envelope { min-height: 0; height: clamp(190px, min(12vw, calc(22svh - 20px)), 350px); padding: 12px; }
+  .collection-opening .collection-object__pose { width: min(calc(100% - 28px), clamp(140px, min(10vw, calc(20svh - 20px)), 340px)); }
+  .collection-opening .collection-object--portrait .collection-object__envelope,
+  .collection-opening .collection-object--record .collection-object__envelope { height: clamp(210px, min(13vw, calc(23svh - 20px)), 420px); }
+  .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), clamp(130px, min(9vw, calc(18svh - 24px)), 310px)); }
+  .collection-opening .collection-object--record .collection-object__pose { width: min(calc(100% - 28px), clamp(145px, min(10vw, calc(20svh - 20px)), 340px)); }
+  .collection-opening .collection-object--stack .collection-object__pose { width: min(calc(100% - 28px), clamp(145px, min(10.5vw, calc(20svh - 20px)), 340px)); }
+  .collection-opening .collection-object--stack .collection-object__envelope { height: clamp(180px, min(11.5vw, calc(21svh - 20px)), 335px); }
+  .collection-opening .collection-object--graph .collection-object__envelope { height: clamp(155px, min(10vw, calc(19svh - 20px)), 270px); }
+  .collection-opening .collection-object--graph .collection-object__pose { width: min(calc(100% - 28px), clamp(170px, min(13vw, calc(22svh - 20px)), 400px)); }
 }
 .collection-object__art { display: block; width: 100%; aspect-ratio: 1.2; }
 .collection-object--record .collection-object__art { aspect-ratio: 1; }
@@ -186,16 +187,21 @@
 .collection-object__number { display: block; color: var(--collection-muted); line-height: 1.45; overflow-wrap: anywhere; }
 .collection-object__link:hover .collection-object__number { text-decoration: underline; text-underline-offset: 4px; }
 
-.collection-continuation { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 35px clamp(16px, 3vw, 52px); max-width: 1480px; width: 100%; margin: 35px auto 0; }
+.collection-continuation { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 35px clamp(16px, 3vw, 52px); max-width: 3200px; width: 100%; margin: 35px auto 0; }
 .collection-continuation .collection-object:nth-child(4n + 2) { padding-top: 40px; }
 .collection-continuation .collection-object:nth-child(4n + 3) { padding-top: 15px; }
 .collection-continuation .collection-object:nth-child(4n + 4) { padding-top: 55px; }
 
 @media (min-width: 1024px) and (max-height: 900px) {
   .collection-opening { height: clamp(640px, calc(100svh - var(--header-height, 112px) - 68px), 700px); }
+  .collection-opening__slot--1 { top: 8%; }
+  .collection-opening__slot--3 { top: 39%; }
+  .collection-opening__slot--4 { top: 31%; }
+  .collection-opening__slot--6 { bottom: 6%; }
   .collection-opening .collection-object__envelope { height: 170px; }
   .collection-opening .collection-object__pose { width: min(calc(100% - 28px), 125px); }
   .collection-opening .collection-object--portrait .collection-object__envelope { height: 180px; }
+  .collection-opening .collection-object--record .collection-object__envelope { height: 180px; }
   .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), 115px); }
   .collection-opening .collection-object--record .collection-object__pose { width: min(calc(100% - 28px), 135px); }
   .collection-opening .collection-object--stack .collection-object__envelope { height: 160px; }
@@ -211,6 +217,7 @@
   .collection-opening .collection-object__envelope { height: 140px; padding: 8px; }
   .collection-opening .collection-object__pose { width: min(calc(100% - 28px), 105px); }
   .collection-opening .collection-object--portrait .collection-object__envelope { height: 145px; }
+  .collection-opening .collection-object--record .collection-object__envelope { height: 145px; }
   .collection-opening .collection-object--portrait .collection-object__pose { width: min(calc(100% - 28px), 95px); }
   .collection-opening .collection-object--record .collection-object__pose { width: min(calc(100% - 28px), 110px); }
   .collection-opening .collection-object--stack .collection-object__envelope { height: 130px; }
@@ -253,12 +260,12 @@
   .collection-shuffle-dock .collection-shuffle { pointer-events: auto; }
   .collection-shuffle--desktop { display: none; }
   .collection-opening { column-gap: 12px; row-gap: 48px; }
-  .collection-opening__slot--1 { width: 94%; justify-self: start; translate: -5px -12px; }
-  .collection-opening__slot--2 { width: 92%; justify-self: end; translate: 5px 22px; }
-  .collection-opening__slot--3 { width: 90%; justify-self: start; translate: 8px 12px; }
-  .collection-opening__slot--4 { width: 98%; justify-self: end; translate: -5px -13px; }
-  .collection-opening__slot--5 { width: 92%; justify-self: start; translate: -6px -12px; }
-  .collection-opening__slot--6 { width: 96%; justify-self: end; translate: 5px 19px; }
+  .collection-opening__slot--1 { width: 100%; justify-self: start; translate: -5px -12px; }
+  .collection-opening__slot--2 { width: 100%; justify-self: end; translate: 5px 22px; }
+  .collection-opening__slot--3 { width: 100%; justify-self: start; translate: 8px 12px; }
+  .collection-opening__slot--4 { width: 100%; justify-self: end; translate: -3px -13px; }
+  .collection-opening__slot--5 { width: 100%; justify-self: start; translate: -6px -12px; }
+  .collection-opening__slot--6 { width: 100%; justify-self: end; translate: 5px 19px; }
   .collection-hero { padding: 20px 0 35px; }
   .collection-hero h1 { margin-top: 25px; font-size: clamp(72px, 23vw, 92px); line-height: 1.02; }
   .collection-hero p { margin-top: 30px; }
@@ -277,8 +284,9 @@
   .collection-object--portrait .collection-object__pose,
   .collection-object--record .collection-object__pose,
   .collection-object--stack .collection-object__pose,
-  .collection-object--workmark .collection-object__pose { width: min(75%, 160px); }
-  .collection-object--graph .collection-object__pose { width: min(84%, 165px); }
+  .collection-object--workmark .collection-object__pose { width: min(83%, 185px); }
+  .collection-object--graph .collection-object__pose { width: min(90%, 200px); }
+  .collection-continuation .collection-object__pose { width: min(77%, 170px); }
   .collection-object__caption { padding-top: 0; }
   .collection-object__number { font-size: 9px; }
   .collection-continuation { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 10px; margin-top: 25px; }
@@ -307,6 +315,7 @@
   .collection-object--record .collection-object__pose,
   .collection-object--stack .collection-object__pose,
   .collection-object--workmark .collection-object__pose { width: min(70%, 150px); }
+  .collection-object--graph .collection-object__pose { width: min(80%, 170px); }
   .collection-object--continuation.collection-object--portrait .collection-object__pose { width: min(60%, 150px); }
   .collection-shuffle-dock { margin-top: 140px; margin-bottom: -192px; }
   .collection-hero__actions { top: 202px; }

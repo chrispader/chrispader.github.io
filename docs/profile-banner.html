@@ -29,10 +29,10 @@
       .thread { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
       .thread path { fill: none; stroke: #d8d6ca; stroke-width: 1.2; stroke-dasharray: 2 6; }
       .object { position: absolute; display: block; }
-      .postcard { top: 50px; left: 51%; width: 137px; height: 176px; padding: 8px 8px 23px; background: #fffefa; box-shadow: 0 10px 20px #22241f25; transform: rotate(-9deg); }
+      .postcard { top: 50px; left: 42%; width: 137px; height: 176px; padding: 8px 8px 23px; background: #fffefa; box-shadow: 0 10px 20px #22241f25; transform: rotate(-9deg); }
       .postcard::before { position: absolute; left: 46px; top: -9px; width: 53px; height: 18px; content: ''; background: #d7fd6aca; transform: rotate(-3deg); clip-path: polygon(0 11%, 100% 0, 95% 100%, 4% 89%); }
       .postcard img { width: 100%; height: 100%; object-fit: cover; object-position: center 24%; filter: saturate(.78); }
-      .graph { top: 160px; left: 66%; width: 169px; height: 133px; transform: rotate(8deg); }
+      .graph { top: 202px; left: 61%; width: 169px; height: 133px; transform: rotate(8deg); }
       .graph svg { overflow: visible; width: 100%; height: 100%; }
       .graph-grid { stroke: #22241f; stroke-width: .6; stroke-dasharray: 1.5 4; opacity: .16; }
       .graph-line { fill: none; stroke: #3b56ef; stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; }
@@ -41,13 +41,14 @@
       .record::after { position: absolute; left: calc(50% - 2px); top: calc(50% - 2px); width: 4px; height: 4px; border-radius: 50%; background: #22241f; content: ''; }
       .record-center { position: absolute; inset: 39%; display: grid; place-items: center; color: #22241f; font-size: 17px; font-weight: 800; letter-spacing: -.1em; }
       @media (prefers-reduced-motion: no-preference) {
-        .postcard { animation: float-a 4s ease-in-out infinite; }
-        .graph { animation: float-b 5s ease-in-out infinite; }
+        .postcard { animation: float-a 3.6s ease-in-out infinite; }
+        .graph { animation: float-b 4.3s ease-in-out infinite; }
         .graph-line { stroke-dasharray: 305; stroke-dashoffset: 305; animation: draw 3.5s ease-in-out infinite alternate; }
-        .record { animation: float-b 6s ease-in-out infinite, spin 8s linear infinite; }
+        .record { animation: float-record 5.2s ease-in-out infinite, spin 8s linear infinite; }
       }
-      @keyframes float-a { 50% { translate: 0 -6px; } }
-      @keyframes float-b { 50% { translate: 0 5px; } }
+      @keyframes float-a { 50% { translate: 0 -10px; } }
+      @keyframes float-b { 50% { translate: 0 9px; } }
+      @keyframes float-record { 50% { translate: 0 9px; } }
       @keyframes spin { to { transform: rotate(372deg); } }
       @keyframes draw { 0%, 15% { stroke-dashoffset: 305; } 85%, 100% { stroke-dashoffset: 0; } }
       @media (max-width: 800px) {
@@ -55,9 +56,9 @@
         .head { left: 26px; }
         .copy { left: 38px; top: 112px; }
         h1 { font-size: clamp(57px, 10vw, 76px); }
-        .postcard { left: 62%; top: 118px; }
-        .graph { left: 56%; top: 280px; width: 140px; }
-        .record { left: 79%; top: 268px; width: 120px; height: 120px; }
+        .postcard { left: 48%; top: 98px; }
+        .graph { left: 61%; top: 285px; width: 140px; height: 110px; }
+        .record { left: 76%; top: 105px; width: 120px; height: 120px; }
       }
       @media (max-width: 540px) {
         .banner { min-height: 610px; }
@@ -65,9 +66,9 @@
         .copy { top: 115px; left: 30px; }
         h1 { font-size: 67px; }
         .tagline { max-width: 270px; font-size: 12px; }
-        .postcard { left: 8%; top: 323px; width: 100px; height: 130px; }
-        .graph { left: 33%; top: 392px; width: 110px; height: 87px; }
-        .record { left: 60%; top: 469px; width: 100px; height: 100px; }
+        .postcard { left: 5%; top: 316px; width: 94px; height: 122px; }
+        .graph { left: 31%; top: 418px; width: 94px; height: 74px; }
+        .record { left: 58%; top: 488px; width: 94px; height: 94px; }
       }
     </style>
   </head>

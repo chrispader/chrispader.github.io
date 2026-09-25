@@ -21,7 +21,7 @@ export const collectionItems: readonly CollectionItem[] = [
     detail: {
       eyebrow: '01 / A LITTLE CONTEXT',
       paragraphs: [
-        'I’m Christoph Pader, a software engineer in Vienna.',
+        'I’m Christoph Pader, a software engineer based in Vienna.',
         'I was already spending a lot of time on computers before I started coding at around 14. I played video games, made mods, and tried out just about any bit of tech I could get my hands on.',
         'I became the person family and friends call when a printer stops printing or a computer acts up. I still like figuring out what went wrong, even when the answer turns out to be embarrassingly simple.',
         'These days I work at Margelo on mobile apps and React Native libraries. I still make time to build things just because I’m curious about them.',

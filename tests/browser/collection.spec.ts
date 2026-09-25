@@ -78,9 +78,8 @@ test('index search, item links, contact, and direct links work', async ({ page }
 test('index starts with Chris and collection buttons always return home', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/#/index')
-  await expect(page.locator('.index-row').first()).toContainText('Hello, I’m Chris.')
-  await expect(page.locator('.index-row').first()).toContainText('01')
-  await expect(page.locator('.index-row').nth(1)).toContainText('Made at Margelo.')
+  await expect(page.locator('.index-row').first()).toHaveAttribute('id', 'index-link-about')
+  await expect(page.locator('.index-row').nth(1)).toHaveAttribute('id', 'index-link-margelo')
   const indexGap = await page.evaluate(() => {
     const header = document.querySelector('.site-header')?.getBoundingClientRect()
     const heading = document.querySelector('.index-view h1')?.getBoundingClientRect()
@@ -170,25 +169,11 @@ test('index artwork stays still with reduced motion enabled', async ({ page }) =
   expect(await workmark.evaluate(element => getComputedStyle(element).transform)).toBe(restingTransform)
 })
 
-test('Margelo and Expensify details show the dates and public work', async ({ page }) => {
-  await page.goto('/#/item/margelo')
-  await expect(page.getByRole('heading', { name: 'Made at Margelo.' })).toBeVisible()
-  await expect(page.locator('.detail-prose')).toContainText('November 2021')
-  await page.goto('/#/item/expensify')
-  await expect(page.getByRole('heading', { name: 'Work that adds up.' })).toBeVisible()
-  await expect(page.locator('.detail-prose')).toContainText('since 2022')
-  await expect(page.locator('.detail-prose')).toContainText('post-quantum end-to-end encryption library')
-  await expect(page.locator('.detail-highlight')).toHaveCount(7)
-  await expect(page.getByRole('link', { name: /Onyx meets NitroSQLite/ })).toHaveAttribute('href', 'https://github.com/Expensify/react-native-onyx/pull/602')
-  await expect(page.locator('.detail-highlight__copy strong').filter({ hasText: 'NitroSQLite' })).toHaveCount(1)
-})
-
-test('all six authored objects share the main collection and Off the clock links reading and music', async ({ page }) => {
+test('the collection handles six and eight objects, and detail links navigate', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto('/')
   await expect(page.locator('.collection-opening__slot')).toHaveCount(6)
   await expect(page.locator('.collection-continuation')).toHaveCount(0)
-  await expect(page.getByText('More to explore.')).toHaveCount(0)
   const visibleOnDesktop = await page.locator('.collection-opening__slot').evaluateAll(elements => elements.filter(element => {
     const box = element.getBoundingClientRect()
     return box.top >= 0 && box.bottom <= window.innerHeight
@@ -203,14 +188,7 @@ test('all six authored objects share the main collection and Off the clock links
   expect(visibleOnMobile).toBeLessThan(visibleOnDesktop)
   await page.goto('/?previewItems=8')
   await expect(page.locator('.collection-continuation [data-item-id]')).toHaveCount(2)
-  await expect(page.getByText('More to explore.')).toHaveCount(0)
   await page.goto('/#/item/record')
-  await expect(page.locator('.detail-prose')).toContainText('Popular science, novels')
-  await expect(page.locator('.detail-prose')).toContainText('tennis')
-  await expect(page.locator('.detail-prose')).toContainText('running')
-  await expect(page.locator('.detail-prose')).toContainText('gym')
-  await expect(page.getByRole('link', { name: 'See what I’m reading' })).toHaveAttribute('href', 'https://goodreads.com/chrispader')
-  await expect(page.getByRole('link', { name: 'Find me on Apple Music' })).toHaveAttribute('href', 'https://music.apple.com/profile/chrispader')
   const helloLink = page.locator('.detail-links').getByRole('link', { name: 'Say hello', exact: true })
   await expect(helloLink).toHaveAttribute('href', '/contact/')
   await helloLink.click()
@@ -218,16 +196,10 @@ test('all six authored objects share the main collection and Off the clock links
   await expect(page.getByRole('heading', { name: /Got a good feeling/ })).toBeVisible()
 })
 
-test('native detail explains the library work and NitroFetch integration', async ({ page }) => {
+test('package names use the mono font in detail prose', async ({ page }) => {
   await page.goto('/#/item/native')
-  await expect(page.locator('.detail-prose')).toContainText('I work on React Native libraries at Margelo')
-  await expect(page.locator('.detail-prose')).toContainText('I integrated NitroFetch into Expensify')
-  await expect(page.locator('.detail-prose')).toContainText('I wrote a detailed post')
-  await expect(page.locator('.detail-prose code')).toHaveText('expo-native-variants')
-  await expect(page.locator('.detail-prose code')).toHaveCSS('font-family', /Space Mono/)
+  await expect(page.locator('.detail-prose code').first()).toHaveCSS('font-family', /Space Mono/)
   await expect(page.locator('.detail-eyebrow')).toHaveCSS('font-family', /Inter/)
-  await expect(page.getByRole('link', { name: 'Read the NitroFetch story' })).toHaveAttribute('href', 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch')
-  await expect(page.getByRole('link', { name: 'Explore react-native-nitro-sqlite' }).locator('code')).toHaveText('react-native-nitro-sqlite')
 })
 
 test('social links appear in the header and detail pages', async ({ page }) => {

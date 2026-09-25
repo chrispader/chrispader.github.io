@@ -55,4 +55,68 @@ test('larger text grows the header and keeps detail content below it', async ({ 
   expect(navigation!.y + navigation!.height).toBeLessThanOrEqual(header!.y + header!.height + 1)
   await expect.poll(() => page.locator('.view-layer').evaluate(element => element.getBoundingClientRect().top)).toBeCloseTo(header!.y + header!.height, 0)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+
+  await page.locator('.view-layer').evaluate(element => { element.scrollTop = 200 })
+  await expect.poll(() => page.locator('.view-layer').evaluate(element => element.getBoundingClientRect().top)).toBeLessThan(detail!.y - 20)
+  const collapsedHeader = await page.locator('.site-header').boundingBox()
+  const collapsedNavigation = await page.locator('.site-nav').boundingBox()
+  const expandedDetail = await page.locator('.view-layer').boundingBox()
+  expect(collapsedNavigation!.y).toBeGreaterThanOrEqual(30)
+  expect(Math.abs(expandedDetail!.y - (collapsedHeader!.y + collapsedHeader!.height))).toBeLessThan(2)
+})
+
+test('mobile header sheds top spacing while keeping its identity visible', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/')
+  await page.evaluate(() => document.fonts.ready)
+
+  const header = page.locator('.site-header')
+  const navigation = page.locator('.site-nav')
+  const initialHeader = await header.boundingBox()
+  const initialNavigation = await navigation.boundingBox()
+  expect(initialHeader).not.toBeNull()
+  expect(initialNavigation).not.toBeNull()
+
+  await page.evaluate(() => window.scrollTo(0, 220))
+  await expect.poll(() => header.evaluate(element => element.getBoundingClientRect().top)).toBeLessThan(-20)
+  const scrolledHeader = await header.boundingBox()
+  const scrolledNavigation = await navigation.boundingBox()
+  const scrolledBrand = await page.locator('.brand').boundingBox()
+  expect(scrolledNavigation!.y).toBeLessThan(initialNavigation!.y - 20)
+  expect(scrolledBrand!.y).toBeGreaterThanOrEqual(3)
+  expect(scrolledHeader!.y + scrolledHeader!.height).toBeLessThan(initialHeader!.height - 20)
+  await expect(page.locator('.brand')).toHaveCSS('opacity', '1')
+
+  await page.locator('.brand').evaluate(element => element.focus({ preventScroll: true }))
+  await expect.poll(() => header.evaluate(element => element.getBoundingClientRect().top)).toBeLessThan(-20)
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(100)
+
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await expect.poll(() => header.evaluate(element => element.getBoundingClientRect().top)).toBeCloseTo(0, 0)
+
+  await page.goto('/item/graph/')
+  const layer = page.locator('.view-layer')
+  const initialLayerTop = await layer.evaluate(element => element.getBoundingClientRect().top)
+  await layer.evaluate(element => { element.scrollTop = 220 })
+  await expect.poll(() => layer.evaluate(element => element.getBoundingClientRect().top)).toBeLessThan(initialLayerTop - 20)
+  const detailHeader = await header.boundingBox()
+  const detailLayer = await layer.boundingBox()
+  expect(Math.abs(detailLayer!.y - (detailHeader!.y + detailHeader!.height))).toBeLessThan(2)
+  await layer.evaluate(element => { element.scrollTop = 0 })
+  await expect.poll(() => layer.evaluate(element => element.getBoundingClientRect().top)).toBeCloseTo(initialLayerTop, 0)
+})
+
+test('mobile header keeps the logo below a larger safe area', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/')
+  await page.evaluate(() => {
+    document.documentElement.style.setProperty('--header-safe-top', '59px')
+    document.documentElement.style.scrollBehavior = 'auto'
+    window.scrollTo(0, 220)
+  })
+
+  await expect.poll(() => page.locator('.site-header').evaluate(element => element.getBoundingClientRect().top)).toBeLessThan(-7)
+  const brand = await page.locator('.brand').boundingBox()
+  expect(brand!.y).toBeGreaterThanOrEqual(58)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
 })

@@ -277,7 +277,7 @@
 
 @media (max-width: 599px) {
   .collection-scene { padding: 20px 22px 35px; }
-  .collection-shuffle-dock { position: sticky; top: calc(var(--header-height) - 26px); z-index: 31; display: flex; justify-content: end; width: 52px; height: 52px; margin: 150px 0 -202px auto; pointer-events: none; }
+  .collection-shuffle-dock { position: sticky; top: calc(var(--header-height) - var(--header-collapse-limit) - 26px); z-index: 31; display: flex; justify-content: end; width: 52px; height: 52px; margin: 150px 0 -202px auto; pointer-events: none; }
   .collection-shuffle-dock .collection-shuffle { pointer-events: auto; }
   .collection-shuffle--desktop { display: none; }
   .collection-opening { column-gap: 12px; row-gap: 48px; }

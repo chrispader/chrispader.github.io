@@ -25,9 +25,19 @@ export default function App() {
 
   useEffect(() => updateDocumentSeo(route, items), [route])
 
+  useEffect(() => {
+    if (isOpen) return
+    const update = () => setHeaderScroll(window.scrollY)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [isOpen])
+
   useLayoutEffect(() => {
     document.body.dataset.viewOpen = String(isOpen)
-    if (layer.current) layer.current.scrollTop = viewScroll.current.get(routeKey) ?? 0
+    const restoredScroll = viewScroll.current.get(routeKey) ?? 0
+    if (layer.current) layer.current.scrollTop = restoredScroll
+    setHeaderScroll(isOpen ? restoredScroll : window.scrollY)
     const frame = requestAnimationFrame(() => {
       const restored = returnFocusId ? document.getElementById(returnFocusId) : null
       const target = restored && !restored.closest('[inert]')
@@ -68,7 +78,10 @@ export default function App() {
             <ViewLayer
               key="detail-layer"
               elementRef={layer}
-              onScroll={(scrollTop) => viewScroll.current.set(routeKey, scrollTop)}
+              onScroll={(scrollTop) => {
+                viewScroll.current.set(routeKey, scrollTop)
+                setHeaderScroll(scrollTop)
+              }}
               onBack={back}
             >
                 {item && <ItemDetail key={item.id} item={item} onBack={back} onNavigate={handleNavigate} />}
@@ -130,6 +143,10 @@ function SiteHeader({ route, onNavigate }: { route: CollectionRoute; onNavigate:
       </nav>
     </header>
   )
+}
+
+function setHeaderScroll(scrollTop: number) {
+  document.documentElement.style.setProperty('--header-scroll', `${Math.max(0, scrollTop)}px`)
 }
 
 function followRoute(event: MouseEvent<HTMLAnchorElement>, destination: CollectionRoute, navigate: Navigate) {

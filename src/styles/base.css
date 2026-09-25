@@ -18,6 +18,9 @@
   --font-display: 'Instrument Serif', Georgia, serif;
   --font-mono: 'Space Mono', monospace;
   --header-height: 112px;
+  --header-scroll: 0px;
+  --header-collapse-limit: 0px;
+  --header-hidden: clamp(0px, var(--header-scroll), var(--header-collapse-limit));
 }
 * { box-sizing: border-box; }
 html { scrollbar-gutter: stable; scroll-behavior: smooth; }
@@ -36,7 +39,12 @@ h1, h2, h3, p, figure { margin: 0; }
 .skip-link { position: fixed; top: 12px; left: 12px; z-index: 100; padding: 12px 18px; background: var(--lime); transform: translateY(-180%); }
 .skip-link:focus { transform: translateY(0); }
 @media (max-width: 600px) {
-  :root { --header-height: calc(110px + env(safe-area-inset-top)); }
+  :root {
+    --header-height: calc(110px + env(safe-area-inset-top));
+    --header-safe-top: env(safe-area-inset-top);
+    --header-top-padding: max(33px, calc(var(--header-safe-top) + 8px));
+    --header-collapse-limit: max(0px, calc(var(--header-top-padding) - max(4px, var(--header-safe-top))));
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

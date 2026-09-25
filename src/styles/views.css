@@ -136,6 +136,9 @@
   .index-intro { margin-bottom: 38px; }
   .index-row { grid-template-columns: 25px 72px minmax(0,1fr) 27px; gap: 12px; min-height: 128px; padding-block: 12px; }
   .index-art { width: 68px; height: 90px; }
+  .index-art .workmark__index, .index-art .workmark__date { font-size: clamp(4px, 7cqw, 6px); letter-spacing: .06em; white-space: nowrap; }
+  .index-art .workmark strong { font-size: clamp(9px, 16cqw, 12px); }
+  .index-art .workmark__orbit { width: clamp(8px, 15cqw, 12px); }
   .index-art .graph-curve { stroke-width: 6px; }
   .index-art .graph-curve-shadow { stroke-width: 8px; }
   .detail-art-graph .graph-curve { stroke-width: clamp(18px, 6.4vw, 28px); }
@@ -163,5 +166,6 @@
   .index-art .graph-curve-shadow { stroke-width: 6px; }
   .index-row-title { font-size: 24px; }
   .index-row-teaser { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-  .index-row-tags { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .index-row-copy { min-width: 0; }
+  .index-row-tags { white-space: normal; overflow-wrap: break-word; line-height: 1.4; }
 }

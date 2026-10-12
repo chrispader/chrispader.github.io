@@ -151,6 +151,9 @@
 .collection-object:hover, .collection-object:focus-within { position: relative; z-index: 2; }
 .collection-object__link { display: block; width: 100%; min-height: 44px; padding: 0; border: 0; background: transparent; color: inherit; text-align: inherit; touch-action: pan-y; transform: translate3d(calc(var(--drift-x, 0px) + var(--touch-x, 0px)), calc(var(--drift-y, 0px) + var(--scroll-y, 0px)), 0) rotate(var(--touch-rotate, 0deg)); transition: transform .28s ease; }
 .collection-object__link img { -webkit-user-drag: none; }
+/* Keep animated graph wrappers out of cursor hit-testing. */
+.collection-object--graph .collection-object__link > * { pointer-events: none; }
+.collection-object--graph .graph-artwork-interaction { pointer-events: auto; }
 .collection-object__link[data-touch-dragging='true'] { transition: none; }
 .collection-object__link:focus-visible { outline: 2px solid var(--collection-ink); outline-offset: 4px; }
 .collection-object__envelope {

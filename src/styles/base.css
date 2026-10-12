@@ -56,6 +56,7 @@ h1, h2, h3, p, figure { margin: 0; }
   .collection-object__link { cursor: url('/cursors/open.svg') 16 16, pointer; }
   .detail-back { cursor: url('/cursors/back.svg') 16 16, pointer; }
   .graph-artwork-interaction { cursor: crosshair; }
+  .collection-object__link:has(.graph-artwork-interaction:hover) { cursor: crosshair; }
   .detail-art-record .artwork-record { cursor: url('/cursors/drag.svg') 16 16, grab; }
   .detail-art-record .artwork-record.is-dragging { cursor: url('/cursors/drag.svg') 16 16, grabbing; }
 }

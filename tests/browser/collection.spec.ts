@@ -451,12 +451,54 @@ test('detail content starts near the top and interactive controls have distinct 
   await page.screenshot({ path: testInfo.outputPath('native-detail.png') })
 
   await page.goto('/')
-  await expect(page.locator('body')).toHaveCSS('cursor', /cursors\/default\.svg/)
+  await expect(page.locator('body')).toHaveCSS('cursor', /data:image\/svg\+xml/)
   await expect(page.locator('#object-link-native')).toHaveCSS('cursor', /cursors\/open\.svg/)
   await expect(page.getByRole('button', { name: 'Rearrange objects' })).toHaveCSS('cursor', /cursors\/action\.svg/)
   await expect(page.locator('#object-link-graph .graph-artwork-interaction')).toHaveCSS('cursor', 'crosshair')
   await page.goto('/#/item/record')
   await expect(page.locator('.detail-art-record .artwork-record')).toHaveCSS('cursor', /cursors\/drag\.svg/)
+})
+
+test('graph cursor targets stay consistent while its artwork animates', async ({ page }) => {
+  await page.goto('/')
+  const object = page.locator('#object-link-graph')
+  const graph = object.locator('.graph-artwork-interaction')
+  const curve = graph.locator('.graph-curve')
+  const restingCurve = await curve.getAttribute('d')
+
+  for (const region of ['.collection-object__caption', '.collection-object__envelope', '.graph-artwork-interaction', '.collection-object__caption']) {
+    const target = object.locator(region)
+    const bounds = await target.boundingBox()
+    if (!bounds) throw new Error(`Missing graph region: ${region}`)
+    const x = bounds.x + (region === '.collection-object__envelope' ? 5 : bounds.width / 2)
+    const y = bounds.y + bounds.height / 2
+    await page.mouse.move(x, y, { steps: 8 })
+
+    const cursors = await page.evaluate(async ({ x, y }) => {
+      const frames: { cursor: string; target: string; parentCursor: string }[] = []
+      for (let frame = 0; frame < 20; frame += 1) {
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+        const element = document.elementFromPoint(x, y)
+        const parent = document.querySelector('#object-link-graph')
+        if (!element || !parent) throw new Error('Missing cursor target')
+        frames.push({
+          cursor: getComputedStyle(element).cursor,
+          target: element.id || element.className,
+          parentCursor: getComputedStyle(parent).cursor,
+        })
+      }
+      return frames
+    }, { x, y })
+
+    const overGraph = region === '.graph-artwork-interaction'
+    expect(cursors.every(frame => frame.target === (overGraph ? 'graph-artwork-interaction' : 'object-link-graph'))).toBe(true)
+    expect(cursors.every(frame => overGraph ? frame.cursor === 'crosshair' : /cursors\/open\.svg/.test(frame.cursor))).toBe(true)
+    expect(cursors.every(frame => frame.parentCursor === frame.cursor)).toBe(true)
+    if (overGraph) await expect.poll(() => curve.getAttribute('d')).not.toBe(restingCurve)
+  }
+
+  await object.locator('.collection-object__caption').click()
+  await expect(page).toHaveURL(/\/item\/graph\/$/)
 })
 
 test('the graph follows pointer scrubbing and the record responds to touch activation', async ({ page, browser }) => {

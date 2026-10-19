@@ -56,7 +56,7 @@ test('the mobile landing and desktop landing are reviewable', async ({ page }, t
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 })
     await page.goto('/')
-    await expect(page.getByRole('heading', { name: 'A work in play.' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: "Hi, I'm Chris." })).toBeVisible()
     await page.waitForTimeout(850)
     await page.screenshot({ path: testInfo.outputPath(`collection-${width}.png`), fullPage: true })
   }

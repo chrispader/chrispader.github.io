@@ -77,7 +77,7 @@ function renderCollection(items) {
     const number = String(index + 1).padStart(2, '0')
     return `<li><a href="/item/${encodeURIComponent(item.id)}/">${number} / ${escapeHtml(item.label)} — ${escapeHtml(item.teaser)}</a></li>`
   }).join('')
-  return `<p>A small collection by Chris</p><h1>A work in play.</h1><p>Pick something up. See where it goes.</p><ul>${entries}</ul>`
+  return `<p>A small collection by Chris</p><h1>Hi, I'm Chris.</h1><p>Pick something up. See where it goes.</p><ul>${entries}</ul>`
 }
 
 function renderIndex(items) {

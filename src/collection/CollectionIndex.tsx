@@ -36,6 +36,6 @@ export function CollectionIndex({ items, onNavigate, onBack, missingId, query: c
       <span className="index-row-copy"><span className="index-row-title">{item.title}</span><span className="index-row-teaser">{item.teaser}</span><span className="index-row-tags">{item.tags.join(' · ')}</span></span>
       <span className="index-arrow"><ArrowUpRight /></span>
     </a>)}{filteredItems.length === 0 && <p className="index-empty">Nothing here by that name. Try another word.</p>}</div>
-    <p className="index-endnote">{filteredItems.length} {filteredItems.length === 1 ? 'object' : 'objects'}, still in progress.</p>
+    <p className="index-endnote">Thanks for having a look around.</p>
   </section>
 }

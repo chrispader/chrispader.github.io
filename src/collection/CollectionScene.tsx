@@ -106,7 +106,7 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
           </svg>
           <div className="collection-hero">
             <span className="collection-kicker">A SMALL COLLECTION BY CHRIS</span>
-            <h1 id="collection-heading" tabIndex={-1}>A work<br />in play.</h1>
+            <h1 id="collection-heading" tabIndex={-1}>Hi, I'm<br />Chris.</h1>
             <p>Pick something up. See where it goes.</p>
             <div className="collection-hero__actions">
               <ShuffleButton seed={seed} onClick={() => setSeed((value) => value + 1)} desktop />

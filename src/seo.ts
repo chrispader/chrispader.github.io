@@ -26,10 +26,10 @@ export function seoForRoute(route: CollectionRoute, items: readonly CollectionIt
   const description = item
     ? `${item.teaser} ${item.detail.paragraphs[0]}`
     : route.kind === 'index'
-      ? 'Explore Christoph Pader’s work in React Native, mobile performance, open source, and the things he enjoys away from code.'
+      ? 'Everything in Christoph Pader’s collection: React Native work, mobile performance, open source, and the things he enjoys away from code.'
       : route.kind === 'contact'
         ? 'Get in touch with Christoph Pader, a software engineer based in Vienna. Find his email and social profiles.'
-        : 'Christoph Pader is a software engineer based in Vienna. Explore his interactive collection of React Native work, mobile apps, and open source projects.'
+        : 'Christoph Pader is a software engineer based in Vienna. He works on React Native apps, mobile performance, and open source libraries.'
   const person = {
     '@type': 'Person',
     '@id': `${siteUrl}/#person`,

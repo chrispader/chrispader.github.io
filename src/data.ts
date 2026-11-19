@@ -13,11 +13,11 @@ export const links = {
 export const collectionItems: readonly CollectionItem[] = [
   {
     id: 'about',
-    label: 'A face to the code',
+    label: 'About me',
     title: 'Hello, I’m Chris.',
     teaser: 'Engineer, curious person, based in Vienna.',
     tags: ['About', 'Margelo', 'Vienna', 'Christoph Pader'],
-    artwork: { kind: 'portrait', src: '/images/profilePicture.png', alt: 'Christoph Pader outdoors wearing sunglasses', caption: 'a face to the code.' },
+    artwork: { kind: 'portrait', src: '/images/profilePicture.png', alt: 'Christoph Pader outdoors wearing sunglasses', caption: 'yes, that’s me.' },
     detail: {
       eyebrow: '01 / A LITTLE CONTEXT',
       paragraphs: [
@@ -44,13 +44,13 @@ export const collectionItems: readonly CollectionItem[] = [
     detail: {
       eyebrow: '02 / AT MARGELO',
       paragraphs: [
-        'I’ve worked extensively on mobile apps and React Native at Margelo since 2021.',
-        'I work in TypeScript, C++, Swift, and Kotlin. AI is a big part of my day-to-day work, and I keep up with new models and developments. I still enjoy writing and debugging code myself.',
+        'I’ve worked on mobile apps and React Native at Margelo since 2021.',
+        'I work in TypeScript, C++, Swift, and Kotlin. AI is a big part of my day-to-day work, and I try new models as they come out. I still enjoy writing and debugging code myself.',
         'I maintain React Native Graph and NitroSQLite, and I also work on apps, including Expensify.',
       ],
       links: [
         { label: 'Visit Margelo', href: 'https://margelo.com/' },
-        { label: 'Explore `react-native-graph`', href: 'https://github.com/margelo/react-native-graph' },
+        { label: '`react-native-graph` on GitHub', href: 'https://github.com/margelo/react-native-graph' },
         { label: 'Read the NitroFetch story', href: 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch' },
       ],
     },
@@ -58,7 +58,7 @@ export const collectionItems: readonly CollectionItem[] = [
   {
     id: 'expensify',
     label: 'Building Expensify',
-    title: 'Work that adds up.',
+    title: 'I made it start faster.',
     teaser: 'App features, storage, and startup speed.',
     tags: ['Expensify', 'Since 2022', 'React Native', 'Onyx', 'Performance'],
     artwork: { kind: 'workmark', name: 'Expensify', since: '2022', color: 'blue' },
@@ -66,20 +66,20 @@ export const collectionItems: readonly CollectionItem[] = [
       eyebrow: '03 / EXPENSIFY',
       paragraphs: [
         'I’ve worked on Expensify’s React Native app through Margelo since 2022. I’ve built product features like theme switching and company card assignment, and worked on storage and startup performance.',
-        'I helped move App and Onyx to NitroSQLite. I also integrated NitroFetch so a critical request could start before JavaScript loaded while keeping Expensify’s usual authentication and request behavior. In that rollout, average request durations were 15–30% shorter, and the startup request finished more than 200 ms earlier.',
+        'I helped move App and Onyx to NitroSQLite. I also integrated NitroFetch. With it, OpenApp, the request that loads the app’s data at startup, could start before JavaScript loaded, and authentication worked as before. In that rollout, average request durations were 15–30% shorter, and the startup request finished more than 200 ms earlier.',
         'I’ve also worked on a post-quantum end-to-end encryption library. The public PRs below cover some of my Expensify work, and I wrote about the NitroFetch migration on Margelo’s blog.',
       ],
       links: [
-        { label: 'Explore my public Expensify PRs', href: 'https://github.com/Expensify/App/pulls?q=is%3Apr+author%3Achrispader' },
+        { label: 'My public Expensify PRs', href: 'https://github.com/Expensify/App/pulls?q=is%3Apr+author%3Achrispader' },
         { label: 'Read the NitroFetch story', href: 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch' },
       ],
       highlights: [
         { meta: '2023 / PRODUCT', title: 'Shareable QR codes', description: 'Added a quick way to share a profile by QR code.', href: 'https://github.com/Expensify/App/pull/18636' },
         { meta: '2023 / ONYX', title: 'Native Onyx merges', description: 'Used SQLite JSON_PATCH to merge changes in native storage.', href: 'https://github.com/Expensify/react-native-onyx/pull/238' },
         { meta: '2023 / PRODUCT', title: 'Theme switching', description: 'Helped bring the theme preference into the app and finish its migration.', href: 'https://github.com/Expensify/App/pull/21669' },
-        { meta: '2025 / ONYX', title: 'Onyx meets NitroSQLite', description: 'Moved Onyx to NitroSQLite, followed by the matching App migration.', href: 'https://github.com/Expensify/react-native-onyx/pull/602' },
+        { meta: '2025 / ONYX', title: 'Onyx on NitroSQLite', description: 'Moved Onyx to NitroSQLite, followed by the matching App migration.', href: 'https://github.com/Expensify/react-native-onyx/pull/602' },
         { meta: '2025 / PRODUCT', title: 'Company card assignments', description: 'Made assigning cards easier with a searchable table and a shorter inline flow.', href: 'https://github.com/Expensify/App/pull/78069' },
-        { meta: '2026 / ONYX', title: 'Storage at scale', description: 'Split large SQLite queries so Onyx can handle databases with many keys.', href: 'https://github.com/Expensify/react-native-onyx/pull/804' },
+        { meta: '2026 / ONYX', title: 'Splitting big queries', description: 'Split large SQLite queries so Onyx can handle databases with many keys.', href: 'https://github.com/Expensify/react-native-onyx/pull/804' },
         { meta: '2026 / PERFORMANCE', title: 'A faster start with NitroFetch', description: 'Replaced native fetch and began key startup requests before the JavaScript runtime was ready.', href: 'https://github.com/Expensify/App/pull/97069' },
       ],
     },
@@ -95,16 +95,16 @@ export const collectionItems: readonly CollectionItem[] = [
       eyebrow: '04 / INTERACTION & OPEN SOURCE',
       paragraphs: [
         'I love making software feel good to use. I notice when the spacing is off, a gesture feels awkward, or a screen makes you stop and think too hard.',
-        'I have a good eye for design, and I like sitting with designers and product people to work out the details. Then I can build those details myself.',
+        'I like sitting with designers and product people to work out the details. Then I can build those details myself.',
         'I’ve added features and fixes to `react-native-graph` and now maintain it. The charts use Skia. I pay attention to how the line follows your finger and whether you can read the data while moving it.',
       ],
-      links: [{ label: 'Explore `react-native-graph`', href: 'https://github.com/margelo/react-native-graph' }],
+      links: [{ label: '`react-native-graph` on GitHub', href: 'https://github.com/margelo/react-native-graph' }],
     },
   },
   {
     id: 'native',
     label: 'Native things',
-    title: 'Closer to the metal.',
+    title: 'Below the JavaScript.',
     teaser: 'The React Native libraries I work on.',
     tags: ['React Native', 'Expo', 'Nitro', 'SQLite', 'Performance', 'Writing'],
     artwork: { kind: 'stack', label: 'NATIVE / 05' },
@@ -117,16 +117,16 @@ export const collectionItems: readonly CollectionItem[] = [
         'I also built `expo-native-variants`. It generates development, preview, and production app variants in one Expo prebuild. I can pick the one I need in Xcode or Android Studio without keeping generated native folders in Git.',
       ],
       links: [
-        { label: 'Explore `react-native-nitro-sqlite`', href: 'https://github.com/margelo/react-native-nitro-sqlite' },
+        { label: '`react-native-nitro-sqlite` on GitHub', href: 'https://github.com/margelo/react-native-nitro-sqlite' },
         { label: 'Read the NitroFetch story', href: 'https://margelo.com/blog/speeding-up-expensifys-networking-with-nitro-fetch' },
-        { label: 'Explore `expo-native-variants`', href: 'https://github.com/chrispader/expo-native-variants' },
+        { label: '`expo-native-variants` on GitHub', href: 'https://github.com/chrispader/expo-native-variants' },
       ],
     },
   },
   {
     id: 'record',
     label: 'Off the clock',
-    title: 'A different tempo.',
+    title: 'When I log off.',
     teaser: 'Books, music, tennis, and side projects.',
     tags: ['Reading', 'Guitar', 'Piano', 'Tennis', 'Running', 'Coding'],
     artwork: { kind: 'record', label: 'SIDE A' },

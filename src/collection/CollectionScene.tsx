@@ -112,7 +112,7 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
           <div className="collection-hero">
             <span className="collection-kicker">A SMALL COLLECTION BY CHRIS</span>
             <h1 id="collection-heading" tabIndex={-1}>Hi, I'm<br />Chris.</h1>
-            <p>Pick something up. See where it goes.</p>
+            <p>Go on, poke around.</p>
             <div className="collection-hero__actions">
               <ShuffleButton seed={seed} onClick={() => setSeed((value) => value + 1)} desktop />
               <button className="collection-reset" type="button" aria-label="Reset arrangement" aria-hidden={seed === 0} data-visible={seed > 0} disabled={seed === 0} onClick={() => setSeed(0)}>Reset</button>

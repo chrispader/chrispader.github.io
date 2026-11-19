@@ -60,7 +60,7 @@
 
 .collection-hero h1 {
   margin: 30px 0 20px;
-  font-family: "Instrument Serif", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(83px, 9.2vw, 132px);
   font-weight: 400;
   letter-spacing: -.02em;

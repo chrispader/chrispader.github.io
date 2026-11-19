@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures'
 import { expectCollectionFits } from './geometry'
 
 for (const count of [1, 4, 6, 8, 16, 30]) {

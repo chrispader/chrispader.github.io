@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, pauseIdleFloat } from './fixtures'
 import { expectCollectionFits } from './geometry'
 
 test('graph opens, scrubs with the keyboard, and returns focus', async ({ page }) => {
@@ -311,12 +311,15 @@ test('the collection reacts to hovering and the pointer position', async ({ page
   await page.waitForTimeout(400)
   expect(await note.evaluate((element) => getComputedStyle(element).transform)).not.toBe(restingNote)
 
-  await page.mouse.move(100, 100)
+  const graphLink = page.locator('#object-link-graph')
+  await graphLink.scrollIntoViewIfNeeded()
+  const graphBox = await graphLink.boundingBox()
+  await page.mouse.move(10, 990)
   await page.waitForTimeout(350)
-  const leftPosition = await page.locator('#object-link-graph').evaluate((element) => getComputedStyle(element).transform)
-  await page.mouse.move(1300, 800)
+  const distantPosition = await graphLink.evaluate((element) => getComputedStyle(element).transform)
+  await page.mouse.move((graphBox?.x ?? 0) + (graphBox?.width ?? 0) / 2 + 90, (graphBox?.y ?? 0) + (graphBox?.height ?? 0) / 2 + 60)
   await page.waitForTimeout(350)
-  expect(await page.locator('#object-link-graph').evaluate((element) => getComputedStyle(element).transform)).not.toBe(leftPosition)
+  expect(await graphLink.evaluate((element) => getComputedStyle(element).transform)).not.toBe(distantPosition)
 })
 
 test('changing perspective moves every object into a new place', async ({ page }) => {
@@ -395,6 +398,8 @@ test('desktop collection fits the window and interactions do not grow its scroll
       return sizes
     })
     expect(duringShuffle.every(size => size.height <= viewport.height && size.width <= size.clientWidth)).toBe(true)
+    // Move the pointer out of the window to release its proximity pull, so only the layout is checked.
+    await page.mouse.move(-1, -1)
     await page.waitForTimeout(300)
     await expectCollectionFits(page, 6)
   }
@@ -515,6 +520,7 @@ test('the graph follows pointer scrubbing and the record responds to touch activ
   expect(Number(await page.getByRole('slider').inputValue())).toBeGreaterThan(700)
 
   const touchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true })
+  await pauseIdleFloat(touchContext)
   const touchPage = await touchContext.newPage()
   await touchPage.goto(new URL('/#/item/record', page.url()).toString())
   await touchPage.getByRole('button', { name: /Spin the record/ }).tap()
@@ -546,3 +552,27 @@ for (const width of [390, 1440]) {
     await expectCollectionFits(page, 30)
   })
 }
+
+test.describe('idle float', () => {
+  test.use({ idleFloat: true })
+
+  test('objects float on their own without leaving their slots', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/')
+    const offsets = () => page.locator('.collection-object').evaluateAll(objects => objects.map(object => getComputedStyle(object).translate))
+    const first = await offsets()
+    await page.waitForTimeout(600)
+    expect(await offsets()).not.toEqual(first)
+
+    for (let time = 0; time <= 12_500; time += 500) {
+      await page.evaluate((currentTime) => {
+        for (const animation of document.getAnimations()) {
+          if (!(animation instanceof CSSAnimation) || !animation.animationName.startsWith('collection-float')) continue
+          animation.pause()
+          animation.currentTime = currentTime
+        }
+      }, time)
+      await expectCollectionFits(page, 6)
+    }
+  })
+})

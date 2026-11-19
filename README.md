@@ -59,5 +59,5 @@ The animated banner is `public/profile-banner.gif`. Its eight-second loop includ
 The `chrispader/chrispader` profile README embeds it with:
 
 ```md
-[![Christoph Pader on GitHub. Explore my repositories and work below.](https://chrispader.com/profile-banner.gif?v=5)](https://chrispader.com/)
+[![Hello, I'm Chris. Explore my repositories and work below.](https://chrispader.com/profile-banner.gif?v=6)](https://chrispader.com/)
 ```

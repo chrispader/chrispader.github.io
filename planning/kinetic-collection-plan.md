@@ -17,7 +17,7 @@ The opening shows "A work / in play.", a short invitation to explore, four objec
 | Vinyl record | A different tempo. Music, food, and life outside code | Spin by activation or dragging in the detail |
 | Portrait postcard | Hello, I'm Chris. Short biography and GitHub | Lift the postcard and expand the portrait |
 
-Use Instrument Serif for display text, Inter for body text and the logo, and Space Mono for small labels. Keep paper `#F5F2E9`, ink `#22241F`, lime `#D7FD6A`, blue `#3B56EF`, orange `#FA734B`, and violet `#B5A3E8`. Check the final small-text colors against the paper background before treating the prototype's muted color as a production token.
+Use Brygada 1918 for display text, Inter for body text and the logo, and Space Mono for small labels. Keep paper `#F5F2E9`, ink `#22241F`, lime `#D7FD6A`, blue `#3B56EF`, orange `#FA734B`, and violet `#B5A3E8`. Check the final small-text colors against the paper background before treating the prototype's muted color as a production token.
 
 ## Stack and repository changes
 

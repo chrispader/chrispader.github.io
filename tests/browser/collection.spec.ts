@@ -149,7 +149,7 @@ test('index rows animate their artwork and graph strokes fit each view', async (
 
   const recordRow = page.locator('#index-link-record')
   await recordRow.locator('.index-row-title').hover()
-  await expect(recordRow.locator('.vinyl')).toHaveCSS('animation-name', 'record-groove')
+  await expect(recordRow.locator('.vinyl')).toHaveCSS('animation-play-state', 'running')
 })
 
 test('index artwork stays still with reduced motion enabled', async ({ page }) => {
@@ -264,7 +264,7 @@ test('reduced motion keeps all controls usable', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/#/item/record')
   await page.getByRole('button', { name: /Spin the record/ }).click()
-  await expect(page.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '180deg')
+  await expect(page.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '120deg')
   await page.getByRole('button', { name: /Back/ }).click()
   await expect(page.getByRole('heading', { name: "Hi, I'm Chris." })).toBeVisible()
   await page.getByRole('button', { name: 'Rearrange objects' }).click()
@@ -302,8 +302,13 @@ test('the collection reacts to hovering and the pointer position', async ({ page
   await page.waitForTimeout(400)
   expect(await stack.evaluate((element) => getComputedStyle(element).transform)).not.toBe('none')
 
-  await page.locator('#object-link-record .vinyl').hover()
-  await expect(page.locator('#object-link-record .vinyl')).toHaveCSS('animation-name', 'record-groove')
+  const vinyl = page.locator('#object-link-record .vinyl')
+  await vinyl.hover()
+  await expect(vinyl).toHaveCSS('animation-play-state', 'running')
+  await page.waitForTimeout(300)
+  await page.mouse.move(1, 1)
+  await expect(vinyl).toHaveCSS('animation-play-state', 'paused')
+  await expect(vinyl).not.toHaveCSS('rotate', '0deg')
 
   const note = page.locator('#object-link-example-11 .paper-note')
   const restingNote = await note.evaluate((element) => getComputedStyle(element).transform)
@@ -524,7 +529,7 @@ test('the graph follows pointer scrubbing and the record responds to touch activ
   const touchPage = await touchContext.newPage()
   await touchPage.goto(new URL('/#/item/record', page.url()).toString())
   await touchPage.getByRole('button', { name: /Spin the record/ }).tap()
-  await expect(touchPage.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '540deg')
+  await expect(touchPage.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '480deg')
   await expect(touchPage.locator('.detail-art-wrap .artwork-record')).toHaveCSS('touch-action', 'pan-y')
   await touchPage.getByRole('button', { name: /Back/ }).tap()
   await expect(touchPage.getByRole('heading', { name: "Hi, I'm Chris." })).toBeVisible()

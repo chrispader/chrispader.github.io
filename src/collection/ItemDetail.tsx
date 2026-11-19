@@ -37,7 +37,7 @@ export function ItemDetail({ item, onBack, onNavigate }: Props) {
   }
   function endRecord(event: PointerEvent<HTMLButtonElement>, complete = false) {
     if (dragStart.current?.pointerId !== event.pointerId) return
-    if (complete && Math.abs(event.clientX - dragStart.current.x) < 6) setSpin(value => value + 540)
+    if (complete && Math.abs(event.clientX - dragStart.current.x) < 6) setSpin(value => value + recordSpin)
     dragStart.current = null
     setDragging(false)
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
@@ -57,11 +57,11 @@ export function ItemDetail({ item, onBack, onNavigate }: Props) {
           {item.artwork.kind === 'graph'
             ? <div className="artwork artwork-graph"><GraphArtwork samples={graphSamples} progress={progress} onProgressChange={setProgress} /></div>
             : item.artwork.kind === 'record'
-              ? <button className={`artwork artwork-record${dragging ? ' is-dragging' : ''}`} type="button" aria-label="Play the record artwork" onPointerDown={beginRecordDrag} onPointerMove={moveRecord} onPointerUp={event => endRecord(event, true)} onPointerCancel={endRecord} onLostPointerCapture={endRecord} onClick={event => { if (event.detail === 0 || reducedMotion) setSpin(value => value + (reducedMotion ? 180 : 540)) }}><RecordArtwork angle={spin} dragging={dragging} /></button>
+              ? <button className={`artwork artwork-record${dragging ? ' is-dragging' : ''}`} type="button" aria-label="Play the record artwork" onPointerDown={beginRecordDrag} onPointerMove={moveRecord} onPointerUp={event => endRecord(event, true)} onPointerCancel={endRecord} onLostPointerCapture={endRecord} onClick={event => { if (event.detail === 0 || reducedMotion) setSpin(value => value + (reducedMotion ? recordSpin % 360 : recordSpin)) }}><RecordArtwork angle={spin} dragging={dragging} /></button>
               : <button className="detail-art-button" type="button" aria-label={artworkActionLabel(item.artwork.kind)} aria-pressed={artActive} data-active={artActive} onClick={() => setArtActive(value => !value)}><Artwork artwork={item.artwork} /></button>}
         </div>
         {item.artwork.kind === 'graph' && <div className="graph-scrubber"><label htmlFor="graph-progress">Explore the curve</label><input id="graph-progress" type="range" min="0" max="1000" value={Math.round(progress * 1000)} onChange={event => setProgress(Number(event.currentTarget.value) / 1000)} aria-label="Scrub the illustrative graph" aria-valuetext={`Sample ${Math.round(progress * 100)} percent; graph value ${Math.round(graphValue)} out of 100`} aria-describedby="graph-reading"/><output id="graph-reading">{graphValue.toFixed(1)}<span> / 100</span></output></div>}
-        {item.artwork.kind === 'record' && <button type="button" className="spin-button" onClick={() => setSpin(value => value + (reducedMotion ? 180 : 540))}>↻ <span>Spin the record</span></button>}
+        {item.artwork.kind === 'record' && <button type="button" className="spin-button" onClick={() => setSpin(value => value + (reducedMotion ? recordSpin % 360 : recordSpin))}>↻ <span>Spin the record</span></button>}
         {item.artwork.kind === 'graph' && <p className="art-note">An illustrative sample, pulled into motion.</p>}
       </div>
       <div className="detail-copy">
@@ -90,3 +90,6 @@ function artworkActionLabel(kind: CollectionItem['artwork']['kind']) {
     case 'record': return 'Spin the record'
   }
 }
+
+// One and a third turns, so three spins bring the record back to where it started.
+const recordSpin = 480

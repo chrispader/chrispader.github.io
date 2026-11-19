@@ -64,8 +64,10 @@
   :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .note-star { transform: rotate(50deg) scale(1.2); }
   :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .workmark { transform: rotate(0deg) translateY(-8px); }
   :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .workmark__orbit { transform: translate(3cqw, -3cqw) rotate(45deg); }
-  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .vinyl { animation: record-groove 2.8s linear infinite; }
+  /* Pause instead of removing the spin, so hover keeps the angle and never restarts from 0. */
+  :is(.collection-object__link, .index-row) .vinyl { animation: record-groove 2.8s linear infinite paused; }
+  :is(.collection-object__link, .index-row):is(:hover, :focus-visible) .vinyl { animation-play-state: running; }
 }
-@keyframes record-groove { to { transform: rotate(360deg); } }
+@keyframes record-groove { to { rotate: 360deg; } }
 @media (prefers-reduced-motion: reduce) { .vinyl { transition: none; } }
 @media (max-width: 760px) { .graph-curve-shadow { stroke-width: 12px; } .graph-curve { stroke-width: 10px; } .graph-handle-marker { width: 10px; } }

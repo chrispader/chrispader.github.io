@@ -141,7 +141,7 @@ test('every detail artwork reacts to a tap', async ({ page }) => {
 
   await page.goto('/#/item/record')
   await page.getByRole('button', { name: 'Play the record artwork' }).tap()
-  await expect(page.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '540deg')
+  await expect(page.locator('.detail-art-wrap .vinyl')).toHaveCSS('--record-angle', '480deg')
 
   await page.goto('/#/item/graph')
   const graph = page.locator('.detail-art-wrap .graph-artwork-interaction')

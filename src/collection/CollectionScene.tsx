@@ -21,40 +21,45 @@ export function CollectionScene({ items, featuredIds, onNavigate }: Props) {
   useEffect(() => {
     const motionAllowed = window.matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)')
     let frame = 0
-    let x = 0
-    let y = 0
+    let pointer: { x: number; y: number } | null = null
 
     function update() {
       frame = 0
-      const style = scene.current?.style
-      if (!style) return
-      for (const [layer, distance] of [6, 10, 14].entries()) {
-        style.setProperty(`--drift-x-${layer + 1}`, `${(x * distance).toFixed(2)}px`)
-        style.setProperty(`--drift-y-${layer + 1}`, `${(y * distance * .75).toFixed(2)}px`)
+      const objects = scene.current?.querySelectorAll<HTMLElement>('.collection-object')
+      if (!objects) return
+      for (const object of objects) {
+        const drift = pointer ? proximityDrift(object, pointer) : { x: 0, y: 0, rotate: 0 }
+        object.style.setProperty('--drift-x', `${drift.x.toFixed(2)}px`)
+        object.style.setProperty('--drift-y', `${drift.y.toFixed(2)}px`)
+        object.style.setProperty('--drift-rotate', `${drift.rotate.toFixed(2)}deg`)
       }
     }
 
-    function schedule(nextX: number, nextY: number) {
-      x = nextX
-      y = nextY
+    function schedule() {
       if (!frame) frame = requestAnimationFrame(update)
     }
 
     function move(event: PointerEvent) {
       if (!motionAllowed.matches || event.pointerType === 'touch') return
-      schedule((event.clientX / window.innerWidth) * 2 - 1, (event.clientY / window.innerHeight) * 2 - 1)
+      pointer = { x: event.clientX, y: event.clientY }
+      schedule()
     }
 
-    function reset() { schedule(0, 0) }
+    function reset() {
+      pointer = null
+      schedule()
+    }
     function leave(event: PointerEvent) { if (!event.relatedTarget) reset() }
 
     window.addEventListener('pointermove', move, { passive: true })
+    window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('pointerout', leave)
     window.addEventListener('blur', reset)
     motionAllowed.addEventListener('change', reset)
     return () => {
       cancelAnimationFrame(frame)
       window.removeEventListener('pointermove', move)
+      window.removeEventListener('scroll', schedule)
       window.removeEventListener('pointerout', leave)
       window.removeEventListener('blur', reset)
       motionAllowed.removeEventListener('change', reset)
@@ -139,4 +144,25 @@ function ShuffleButton({ seed, onClick, desktop = false }: { seed: number; onCli
       <span className="collection-shuffle__arrow"><ArrowUpRight /></span>
     </button>
   )
+}
+
+const proximityReach = 380
+// Each drift layer pulls, stretches, and tilts differently so nearby objects don't move in lockstep.
+const driftProfiles = [
+  { pull: .16, stretchY: .7, tilt: 9 },
+  { pull: .22, stretchY: 1.05, tilt: -13 },
+  { pull: .28, stretchY: .85, tilt: 7 },
+]
+
+function proximityDrift(object: HTMLElement, pointer: { x: number; y: number }) {
+  const rect = object.getBoundingClientRect()
+  const dx = pointer.x - (rect.left + rect.width / 2)
+  const dy = pointer.y - (rect.top + rect.height / 2)
+  const closeness = Math.max(0, 1 - Math.hypot(dx, dy) / proximityReach) ** 2
+  const profile = driftProfiles[Number(object.dataset.driftLayer) - 1]
+  return {
+    x: dx * closeness * profile.pull,
+    y: dy * closeness * profile.pull * profile.stretchY,
+    rotate: (dx / proximityReach) * closeness * profile.tilt,
+  }
 }

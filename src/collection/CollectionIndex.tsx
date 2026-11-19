@@ -24,11 +24,11 @@ export function CollectionIndex({ items, onNavigate, onBack, missingId, query: c
   }
 
   return <section className="index-view" aria-labelledby="view-heading">
-    <div className="index-topline"><button className="detail-back" type="button" onClick={onBack}>← <span>Back to collection</span></button><span className="detail-number">A SMALL ARCHIVE</span></div>
+    <div className="index-topline"><button className="detail-back" type="button" onClick={onBack}>← <span>Back to collection</span></button><span className="detail-number">THE WHOLE COLLECTION</span></div>
     {missingId && <p className="index-missing" role="status">“{missingId}” isn’t in the collection. Here’s everything that is.</p>}
     <p className="detail-eyebrow">Collected work & other things</p>
     <h1 id="view-heading" tabIndex={-1}>The index<span>.</span></h1>
-    <p className="index-intro">A few things I’ve made, learned from, and kept close.</p>
+    <p className="index-intro">Everything in the collection, in one list.</p>
     {items.length > 8 && <label className="index-search">Find an object<input type="search" value={query} onChange={event => updateQuery(event.currentTarget.value)} placeholder="Title or topic" /></label>}
     <div className="index-list" aria-live="polite">{filteredItems.map((item, index) => <a className="index-row" id={`index-link-${item.id}`} href={pathForRoute({ kind: 'item', id: item.id })} key={item.id} onClick={event => followItem(event, item)} onPointerEnter={() => setActiveArtworkId(item.id)} onPointerLeave={() => setActiveArtworkId(null)} onFocus={() => setActiveArtworkId(item.id)} onBlur={() => setActiveArtworkId(null)}>
       <span className="index-count">{String(index + 1).padStart(2, '0')}</span>

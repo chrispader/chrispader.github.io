@@ -77,16 +77,16 @@ function renderCollection(items) {
     const number = String(index + 1).padStart(2, '0')
     return `<li><a href="/item/${encodeURIComponent(item.id)}/">${number} / ${escapeHtml(item.label)} — ${escapeHtml(item.teaser)}</a></li>`
   }).join('')
-  return `<p>A small collection by Chris</p><h1>Hi, I'm Chris.</h1><p>Pick something up. See where it goes.</p><ul>${entries}</ul>`
+  return `<p>A small collection by Chris</p><h1>Hi, I'm Chris.</h1><p>Go on, poke around.</p><ul>${entries}</ul>`
 }
 
 function renderIndex(items) {
   const entries = items.map((item) => `<li><h2><a href="/item/${encodeURIComponent(item.id)}/">${escapeHtml(item.title)}</a></h2><p>${escapeHtml(item.teaser)}</p></li>`).join('')
-  return `<h1>The index.</h1><p>A few things I’ve made, learned from, and kept close.</p><ul>${entries}</ul>`
+  return `<h1>The index.</h1><p>Everything in the collection, in one list.</p><ul>${entries}</ul>`
 }
 
 function renderContact(links) {
-  return `<h1>Got a good feeling?</h1><p>If you have a question, an idea, or a song you think I should hear, I’m all ears.</p><p><a href="${escapeHtml(links.email)}">Write me a note</a></p><p><a href="${escapeHtml(links.github)}">GitHub</a> · <a href="${escapeHtml(links.linkedin)}">LinkedIn</a> · <a href="${escapeHtml(links.bluesky)}">Bluesky</a></p>`
+  return `<h1>Say hello.</h1><p>If you have a question, an idea, or a song you think I should hear, I’m all ears.</p><p><a href="${escapeHtml(links.email)}">Write me a note</a></p><p><a href="${escapeHtml(links.github)}">GitHub</a> · <a href="${escapeHtml(links.linkedin)}">LinkedIn</a> · <a href="${escapeHtml(links.bluesky)}">Bluesky</a></p>`
 }
 
 function renderItem(items, id) {

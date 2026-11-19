@@ -30,7 +30,7 @@
 .detail-art-workmark .detail-art-frame { aspect-ratio: 1.1; }
 .detail-copy { max-width: 640px; }
 .detail-eyebrow { margin: 0 0 20px; color: var(--blue, #3b56ef); }
-.detail-copy h1, .index-view h1, .contact-view h1 { margin: 0; font: 400 clamp(58px, 8vw, 108px)/.88 var(--font-display, Georgia), Georgia, serif; letter-spacing: -.052em; }
+.detail-copy h1, .index-view h1, .contact-view h1 { margin: 0; font: 400 clamp(58px, 8vw, 108px)/.96 var(--font-display, Georgia), Georgia, serif; letter-spacing: -.052em; }
 .detail-copy h1 { max-width: 10ch; }
 .detail-teaser { max-width: 35ch; margin: 28px 0 35px; font: 400 clamp(19px, 2.3vw, 25px)/1.3 var(--font-body, sans-serif); letter-spacing: -.025em; }
 .detail-prose { max-width: 54ch; color: #57574f; font-size: 15px; line-height: 1.75; }

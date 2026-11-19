@@ -193,7 +193,7 @@ test('the collection handles six and eight objects, and detail links navigate', 
   await expect(helloLink).toHaveAttribute('href', '/contact/')
   await helloLink.click()
   await expect(page).toHaveURL(/\/contact\/$/)
-  await expect(page.getByRole('heading', { name: /Got a good feeling/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Say hello/ })).toBeVisible()
 })
 
 test('package names use the mono font in detail prose', async ({ page }) => {

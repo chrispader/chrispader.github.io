@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 test('the page title and default cursor are available before the app starts', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false })

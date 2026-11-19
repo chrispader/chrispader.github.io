@@ -1,7 +1,8 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, pauseIdleFloat } from './fixtures'
 
 test('mobile objects move with scroll and respond to a finger drag without opening', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
+  await pauseIdleFloat(context)
   const page = await context.newPage()
   const devtools = await context.newCDPSession(page)
   await page.goto('/')
@@ -44,6 +45,7 @@ test('mobile objects move with scroll and respond to a finger drag without openi
 
 test('mobile record can be dragged and the graph returns to its resting shape', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
+  await pauseIdleFloat(context)
   const page = await context.newPage()
   const devtools = await context.newCDPSession(page)
   await page.goto('/#/item/record')
@@ -75,6 +77,7 @@ test('mobile record can be dragged and the graph returns to its resting shape', 
 
 test('detail graph follows a finger drag and settles after release', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
+  await pauseIdleFloat(context)
   const page = await context.newPage()
   const devtools = await context.newCDPSession(page)
   await page.goto('/#/item/graph')

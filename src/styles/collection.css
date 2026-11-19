@@ -2,12 +2,6 @@
   --collection-paper: #f5f2e9;
   --collection-ink: #22241f;
   --collection-muted: #55594d;
-  --drift-x-1: 0px;
-  --drift-y-1: 0px;
-  --drift-x-2: 0px;
-  --drift-y-2: 0px;
-  --drift-x-3: 0px;
-  --drift-y-3: 0px;
   color: var(--collection-ink);
   background: var(--collection-paper);
   min-height: calc(100svh - var(--header-height, 112px) - 79px);
@@ -145,11 +139,8 @@
 .collection-opening__slot--6 { bottom: 1%; right: 0; }
 
 .collection-object { min-width: 0; }
-.collection-object[data-drift-layer='1'] { --drift-x: var(--drift-x-1); --drift-y: var(--drift-y-1); }
-.collection-object[data-drift-layer='2'] { --drift-x: var(--drift-x-2); --drift-y: var(--drift-y-2); }
-.collection-object[data-drift-layer='3'] { --drift-x: var(--drift-x-3); --drift-y: var(--drift-y-3); }
 .collection-object:hover, .collection-object:focus-within { position: relative; z-index: 2; }
-.collection-object__link { display: block; width: 100%; min-height: 44px; padding: 0; border: 0; background: transparent; color: inherit; text-align: inherit; touch-action: pan-y; transform: translate3d(calc(var(--drift-x, 0px) + var(--touch-x, 0px)), calc(var(--drift-y, 0px) + var(--scroll-y, 0px)), 0) rotate(var(--touch-rotate, 0deg)); transition: transform .28s ease; }
+.collection-object__link { display: block; width: 100%; min-height: 44px; padding: 0; border: 0; background: transparent; color: inherit; text-align: inherit; touch-action: pan-y; transform: translate3d(calc(var(--drift-x, 0px) + var(--touch-x, 0px)), calc(var(--drift-y, 0px) + var(--scroll-y, 0px)), 0) rotate(calc(var(--drift-rotate, 0deg) + var(--touch-rotate, 0deg))); transition: transform .28s ease; }
 .collection-object__link img { -webkit-user-drag: none; }
 /* Keep animated graph wrappers out of cursor hit-testing. */
 .collection-object--graph .collection-object__link > * { pointer-events: none; }
@@ -344,6 +335,16 @@
   .collection-shuffle-dock { margin-top: 140px; margin-bottom: -192px; }
   .collection-hero__actions { top: 202px; }
 }
+
+/* Idle float: three uneven loops with different lengths, offset per object, so the collection never moves in sync. */
+@media (prefers-reduced-motion: no-preference) {
+  .collection-object { animation: collection-float-1 9.5s ease-in-out infinite; }
+  .collection-object[data-drift-layer='2'] { animation-name: collection-float-2; animation-duration: 12.5s; }
+  .collection-object[data-drift-layer='3'] { animation-name: collection-float-3; animation-duration: 11s; }
+}
+@keyframes collection-float-1 { 0%, 100% { translate: 0 0; rotate: 0deg; } 35% { translate: 3px -5px; rotate: .4deg; } 70% { translate: -2px 2px; rotate: -.3deg; } }
+@keyframes collection-float-2 { 0%, 100% { translate: 0 0; rotate: 0deg; } 25% { translate: -4px -2px; rotate: -.3deg; } 60% { translate: 2px -6px; rotate: .4deg; } }
+@keyframes collection-float-3 { 0%, 100% { translate: 0 0; rotate: 0deg; } 45% { translate: 2px 4px; rotate: .4deg; } 80% { translate: -3px -3px; rotate: -.2deg; } }
 
 @media (prefers-reduced-motion: reduce) {
   .collection-shuffle, .collection-shuffle__icon,

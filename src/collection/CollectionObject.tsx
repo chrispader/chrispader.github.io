@@ -46,7 +46,7 @@ export function CollectionObject({ item, index, seed, onNavigate, placement }: P
   }
 
   return (
-    <article className={`collection-object collection-object--${placement} collection-object--${item.artwork.kind}`} data-item-id={item.id} data-drift-layer={(index % 3) + 1}>
+    <article className={`collection-object collection-object--${placement} collection-object--${item.artwork.kind}`} data-item-id={item.id} data-drift-layer={(index % 3) + 1} style={{ animationDelay: `${index * -2.7}s` }}>
       <button
         id={`object-link-${item.id}`}
         className="collection-object__link"
